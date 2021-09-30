@@ -1,13 +1,17 @@
 package com.example.user_management_system.verification;
 
 import lombok.AllArgsConstructor;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 
+import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.Optional;
 
 @Controller
 @AllArgsConstructor
+@EnableScheduling
 public class TokenController {
 
     private TokenRepository tokenRepository;
@@ -33,6 +37,17 @@ public class TokenController {
         Iterable<Token> c=tokenRepository.findAll();
         for (Token e: c)
            deleteToken(e.getToken());
+    }
+
+    @Scheduled(fixedRate = 600000)
+    public void scheduleDeleteExpiredTokens() {
+        Iterable<Token> c=tokenRepository.findAll();
+        LocalDateTime localDateTime=LocalDateTime.now();
+        for (Token e: c){
+            if(e.getExpiresAt().isBefore(localDateTime)) {
+                deleteToken(e.getToken());
+            }
+        }
     }
 
 
