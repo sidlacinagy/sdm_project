@@ -2,7 +2,11 @@ package com.example.user_management_system.user;
 
 import com.example.user_management_system.verification.Token;
 import com.example.user_management_system.verification.TokenController;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -10,7 +14,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService {
+@NoArgsConstructor
+public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
@@ -19,39 +24,46 @@ public class UserService {
     private TokenController tokenController;
 
 
-    public void registerUser(User user){
-        boolean usernameInUse=getUserByEmail(user.getEmail()).isPresent();
-        if(usernameInUse){
-            if(!user.isActivated()){
+    public void registerUser(User user) throws IllegalStateException {
+        boolean usernameInUse = getUserByEmail(user.getEmail()).isPresent();
+        if (usernameInUse) {
+            User oldUser = getUserByEmail(user.getEmail()).get();
+
+            if (!oldUser.isActivated()) {
                 //TODO send new activation email
-            }
-            else
+            } else
                 throw new IllegalStateException("Email already in use");
+        } else {
+
+            //TODO setting the password
+            userRepository.save(user);
+
+            Token verificationToken = new Token(user.getEmail());
+            tokenController.saveToken(verificationToken);
+
+            //TODO send email with token
         }
-
-        //TODO setting the password
-        userRepository.save(user);
-
-        Token verificationToken=new Token(user.getId());
-        tokenController.saveToken(verificationToken);
-
-        //TODO send email with token
     }
 
-    public void activateUser(User user){
+    public void activateUser(User user) {
         user.setActivated(true);
         userRepository.save(user);
     }
 
-    public List<User> getAllUsers(){
-        List<User> users=new ArrayList<>();
+    public List<User> getAllUsers() {
+        List<User> users = new ArrayList<>();
         userRepository.findAll().forEach(users::add);
         return users;
     }
 
-    public Optional<User> getUserByEmail(String email){
-        List<User> users=getAllUsers();
-        User searchedUser=users.stream().filter(user->user.getEmail().equals(email)).findFirst().orElse(null);
-        return searchedUser==null? Optional.empty():userRepository.findById(searchedUser.getId());
+
+    public Optional<User> getUserByEmail(String email) {
+        return userRepository.findById(email);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return (UserDetails) userRepository.findById(email).orElseThrow(() -> new UsernameNotFoundException("No user defined with such email"));
+
     }
 }
