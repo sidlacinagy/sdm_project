@@ -12,7 +12,7 @@ import java.util.Collection;
 @Data
 @NoArgsConstructor
 @Entity
-public class User  implements UserDetails {
+public class User implements UserDetails {
 
     @Id
     @NotNull
@@ -21,13 +21,13 @@ public class User  implements UserDetails {
     private String firstName;
     private String lastName;
     private String password;
-    private boolean activated=false;
+    private boolean activated = false;
 
-    public User(String firstName, String lastName, String email, String password){
-        this.firstName=firstName;
-        this.lastName=lastName;
-        this.email=email;
-        this.password=password;
+    public User(String firstName, String lastName, String email, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
     }
 
 
@@ -43,17 +43,17 @@ public class User  implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override

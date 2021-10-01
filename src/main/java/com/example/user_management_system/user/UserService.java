@@ -24,18 +24,16 @@ public class UserService implements UserDetailsService {
     private TokenController tokenController;
 
 
-    public void registerUser(User user) throws IllegalStateException{
-        boolean usernameInUse=getUserByEmail(user.getEmail()).isPresent();
-        if(usernameInUse){
-            User oldUser=getUserByEmail(user.getEmail()).get();
+    public void registerUser(User user) throws IllegalStateException {
+        boolean usernameInUse = getUserByEmail(user.getEmail()).isPresent();
+        if (usernameInUse) {
+            User oldUser = getUserByEmail(user.getEmail()).get();
 
-            if(!oldUser.isActivated()){
+            if (!oldUser.isActivated()) {
                 //TODO send new activation email
-            }
-            else
+            } else
                 throw new IllegalStateException("Email already in use");
-        }
-        else {
+        } else {
 
             //TODO setting the password
             userRepository.save(user);
@@ -47,25 +45,25 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public void activateUser(User user){
+    public void activateUser(User user) {
         user.setActivated(true);
         userRepository.save(user);
     }
 
-    public List<User> getAllUsers(){
-        List<User> users=new ArrayList<>();
+    public List<User> getAllUsers() {
+        List<User> users = new ArrayList<>();
         userRepository.findAll().forEach(users::add);
         return users;
     }
 
 
-    public Optional<User> getUserByEmail(String email){
+    public Optional<User> getUserByEmail(String email) {
         return userRepository.findById(email);
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return (UserDetails) userRepository.findById(email).orElseThrow(()->new UsernameNotFoundException("No user defined with such email"));
+        return (UserDetails) userRepository.findById(email).orElseThrow(() -> new UsernameNotFoundException("No user defined with such email"));
 
     }
 }
