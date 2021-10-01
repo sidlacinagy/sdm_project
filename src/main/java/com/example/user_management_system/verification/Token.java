@@ -15,10 +15,10 @@ public class Token {
 
     private LocalDateTime expiresAt;
 
-    private long userId;
+    private String userEmail;
 
-    public Token(long userId){
-        this.userId=userId;
+    public Token(String userEmail){
+        this.userEmail=userEmail;
         this.token=UUID.randomUUID().toString();
         this.expiresAt=LocalDateTime.now().plusMinutes(15);
     }

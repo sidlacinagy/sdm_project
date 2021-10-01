@@ -4,6 +4,9 @@ import com.example.user_management_system.verification.Token;
 import com.example.user_management_system.verification.TokenController;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -12,7 +15,7 @@ import java.util.Optional;
 
 @Service
 @NoArgsConstructor
-public class UserService {
+public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
@@ -37,7 +40,7 @@ public class UserService {
             //TODO setting the password
             userRepository.save(user);
 
-            Token verificationToken = new Token(user.getId());
+            Token verificationToken = new Token(user.getEmail());
             tokenController.saveToken(verificationToken);
 
             //TODO send email with token
@@ -55,9 +58,14 @@ public class UserService {
         return users;
     }
 
+
     public Optional<User> getUserByEmail(String email){
-        List<User> users=getAllUsers();
-        User searchedUser=users.stream().filter(user->user.getEmail().equals(email)).findFirst().orElse(null);
-        return searchedUser==null? Optional.empty():userRepository.findById(searchedUser.getId());
+        return userRepository.findById(email);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return (UserDetails) userRepository.findById(email).orElseThrow(()->new UsernameNotFoundException("No user defined with such email"));
+
     }
 }
