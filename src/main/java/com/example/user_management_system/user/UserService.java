@@ -2,6 +2,7 @@ package com.example.user_management_system.user;
 
 import com.example.user_management_system.verification.Token;
 import com.example.user_management_system.verification.TokenController;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@NoArgsConstructor
 public class UserService {
 
     @Autowired
@@ -19,23 +21,27 @@ public class UserService {
     private TokenController tokenController;
 
 
-    public void registerUser(User user){
+    public void registerUser(User user) throws IllegalStateException{
         boolean usernameInUse=getUserByEmail(user.getEmail()).isPresent();
         if(usernameInUse){
-            if(!user.isActivated()){
+            User oldUser=getUserByEmail(user.getEmail()).get();
+
+            if(!oldUser.isActivated()){
                 //TODO send new activation email
             }
             else
                 throw new IllegalStateException("Email already in use");
         }
+        else {
 
-        //TODO setting the password
-        userRepository.save(user);
+            //TODO setting the password
+            userRepository.save(user);
 
-        Token verificationToken=new Token(user.getId());
-        tokenController.saveToken(verificationToken);
+            Token verificationToken = new Token(user.getId());
+            tokenController.saveToken(verificationToken);
 
-        //TODO send email with token
+            //TODO send email with token
+        }
     }
 
     public void activateUser(User user){
