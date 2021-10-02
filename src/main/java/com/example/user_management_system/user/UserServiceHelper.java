@@ -30,10 +30,7 @@ public class UserServiceHelper {
         Token token = createToken(user);
         try {
             emailSender.send(emailSender.createVerificationMessage(user.getEmail(), user.getFirstName(), "/regitrationConfirm.html?token=" + token.getToken()));
-        } catch (IOException ioException) {
-            //TODO Logging
-            return false;
-        } catch (MessagingException messagingException) {
+        } catch (IOException | MessagingException ioException) {
             //TODO Logging
             return false;
         }
