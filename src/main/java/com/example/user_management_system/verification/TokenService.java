@@ -21,7 +21,11 @@ public class TokenService {
     }
 
     public Optional<Token> getToken(String tokenID){
-        return tokenRepository.findById(tokenID);
+        Optional<Token> token = tokenRepository.findById(tokenID);
+        if (token.isPresent() && !token.get().isExpired()) {
+            return token;
+        }
+        return Optional.empty();
     }
 
     public Token getOne(){
@@ -42,9 +46,8 @@ public class TokenService {
     @Scheduled(fixedRate = 600000)
     public void scheduleDeleteExpiredTokens() {
         Iterable<Token> c=tokenRepository.findAll();
-        LocalDateTime localDateTime=LocalDateTime.now();
         for (Token e: c){
-            if(e.getExpiresAt().isBefore(localDateTime)) {
+            if(e.isExpired()) {
                 deleteToken(e.getToken());
             }
         }

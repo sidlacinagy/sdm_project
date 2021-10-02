@@ -23,4 +23,8 @@ public class Token {
         this.expiresAt=LocalDateTime.now().plusMinutes(15);
     }
 
+    public boolean isExpired() {
+        return expiresAt.isBefore(LocalDateTime.now());
+    }
+
 }

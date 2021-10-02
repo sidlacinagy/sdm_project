@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -52,5 +53,17 @@ public class RegistrationService {
         return true;
     }
 
+    public boolean enableAccount(String token) {
+        Optional<Token> userToken = tokenService.getToken(token);
+        if (userToken.isEmpty()) {
+            return false;
+        }
+        Optional<User> user = userService.getUserByEmail(userToken.get().getUserEmail());
+        if (user.isEmpty()) {
+            return false;
+        }
+        userService.enableUser(user.get());
+        return true;
+    }
 
 }
