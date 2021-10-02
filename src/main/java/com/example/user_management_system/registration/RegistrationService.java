@@ -45,7 +45,7 @@ public class RegistrationService {
     public boolean sendVerificationEmail(User user) {
         Token token = createToken(user);
         try {
-            emailSender.send(emailSender.createVerificationMessage(user.getEmail(), user.getFirstName(), "/regitrationConfirm.html?token=" + token.getToken()));
+            emailSender.send(emailSender.createVerificationMessage(user.getEmail(), user.getFirstName(), "localhost:8080/confirm?token=" + token.getToken()));
         } catch (IOException | MessagingException ioException) {
             //TODO Logging
             return false;
@@ -62,6 +62,8 @@ public class RegistrationService {
         if (user.isEmpty()) {
             return false;
         }
+        if(user.get().isEnabled())
+            return false;
         userService.enableUser(user.get());
         return true;
     }

@@ -22,7 +22,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/register")
+                .antMatchers("/register","/confirm")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
@@ -34,8 +34,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        /*auth.inMemoryAuthentication()
-                .withUser("user").password(bCryptPasswordEncoder.encode("password")).roles("USER");*/
         auth.authenticationProvider(daoAuthenticationProvider());
     }
 
