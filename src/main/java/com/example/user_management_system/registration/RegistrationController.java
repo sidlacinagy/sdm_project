@@ -10,7 +10,7 @@ public class RegistrationController {
 
     private final RegistrationService registrationService;
 
-    @PostMapping(path = "/register")
+    @PostMapping(path = "/home", params = "signUp")
     public String postRegistration(@ModelAttribute Request request) {
         if (!isMatchingPassword(request.getPassword(), request.getPassword_confirm())) {
             throw new IllegalStateException("Passwords not matching");
