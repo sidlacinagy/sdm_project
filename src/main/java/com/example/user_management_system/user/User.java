@@ -21,7 +21,7 @@ public class User implements UserDetails {
     private String firstName;
     private String lastName;
     private String password;
-    private boolean activated = false;
+    private boolean enabled = false;
 
     public User(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
@@ -58,6 +58,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return activated;
+        return enabled;
     }
 }

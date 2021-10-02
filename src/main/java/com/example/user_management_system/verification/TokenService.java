@@ -12,7 +12,7 @@ import java.util.Optional;
 @Controller
 @AllArgsConstructor
 @EnableScheduling
-public class TokenController {
+public class TokenService {
 
     private TokenRepository tokenRepository;
 
