@@ -7,9 +7,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import javax.mail.MessagingException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,8 +18,6 @@ public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private UserServiceHelper userServiceHelper;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
@@ -30,19 +25,11 @@ public class UserService implements UserDetailsService {
     public void registerUser(User user) throws IllegalStateException {
         boolean usernameInUse = getUserByEmail(user.getEmail()).isPresent();
         if (usernameInUse) {
-            User oldUser = getUserByEmail(user.getEmail()).get();
-
-            if (!oldUser.isEnabled()) {
-                userServiceHelper.sendVerificationEmail(user);
-            } else
-                throw new IllegalStateException("Email already in use");
+            throw new IllegalStateException("Email already in use");
         } else {
 
             user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
             userRepository.save(user);
-
-            userServiceHelper.sendVerificationEmail(user);
-
         }
     }
 

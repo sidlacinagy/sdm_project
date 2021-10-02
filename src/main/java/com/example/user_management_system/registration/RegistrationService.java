@@ -1,24 +1,39 @@
-package com.example.user_management_system.user;
+package com.example.user_management_system.registration;
 
 import com.example.user_management_system.email.EmailSender;
+import com.example.user_management_system.user.User;
+import com.example.user_management_system.user.UserService;
 import com.example.user_management_system.verification.Token;
 import com.example.user_management_system.verification.TokenService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
 
-@Component
+@Service
 @AllArgsConstructor
-public class UserServiceHelper {
+public class RegistrationService {
+
     @Autowired
     private TokenService tokenService;
 
     @Autowired
     private EmailSender emailSender;
 
+    @Autowired
+    private final UserService userService;
+
+
+    public boolean registration(Request request) {
+        if (!emailSender.isValidEmailAddress(request.getEmail()))
+            throw new IllegalStateException("Not a valid email!");
+        User user = new User(request.getFirstName(), request.getLastName(), request.getEmail(), request.getPassword());
+        userService.registerUser(user);
+        sendVerificationEmail(user);
+        return true;
+    }
 
     public Token createToken(User user) {
         Token verificationToken = new Token(user.getEmail());
@@ -36,5 +51,6 @@ public class UserServiceHelper {
         }
         return true;
     }
+
 
 }
