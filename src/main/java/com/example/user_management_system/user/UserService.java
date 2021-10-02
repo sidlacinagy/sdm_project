@@ -1,8 +1,5 @@
 package com.example.user_management_system.user;
 
-import com.example.user_management_system.email.EmailSender;
-import com.example.user_management_system.verification.Token;
-import com.example.user_management_system.verification.TokenController;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,22 +22,18 @@ public class UserService implements UserDetailsService {
     private UserRepository userRepository;
 
     @Autowired
-    private TokenController tokenController;
+    private UserServiceHelper userServiceHelper;
 
-    @Autowired
-    private EmailSender emailSender;
-
-    private final BCryptPasswordEncoder bCryptPasswordEncoder=new BCryptPasswordEncoder();
+    private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
 
-
-    public void registerUser(User user) throws IllegalStateException,IOException,MessagingException {
+    public void registerUser(User user) throws IllegalStateException{
         boolean usernameInUse = getUserByEmail(user.getEmail()).isPresent();
         if (usernameInUse) {
             User oldUser = getUserByEmail(user.getEmail()).get();
 
-            if (!oldUser.isActivated()) {
-                emailSender.send(emailSender.createVerificationMessage(user.getEmail(),user.getFirstName(),"token link"));
+            if (!oldUser.isEnabled()) {
+                userServiceHelper.sendVerificationEmail(user);
             } else
                 throw new IllegalStateException("Email already in use");
         } else {
@@ -48,15 +41,13 @@ public class UserService implements UserDetailsService {
             user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
             userRepository.save(user);
 
-            Token verificationToken = new Token(user.getEmail());
-            tokenController.saveToken(verificationToken);
+            userServiceHelper.sendVerificationEmail(user);
 
-            emailSender.send(emailSender.createVerificationMessage(user.getEmail(),user.getFirstName(),"token link"));
         }
     }
 
-    public void activateUser(User user) {
-        user.setActivated(true);
+    public void enableUser(User user) {
+        user.setEnabled(true);
         userRepository.save(user);
     }
 
@@ -73,7 +64,7 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return  userRepository.findById(email).orElseThrow(() -> new UsernameNotFoundException("No user defined with such email"));
+        return userRepository.findById(email).orElseThrow(() -> new UsernameNotFoundException("No user defined with such email"));
 
     }
 }
