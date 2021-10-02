@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" th:href="@{/css/login.css}"/>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+</head>
+<body>
+<h2>Welcome</h2>
+<div class="container" id="container">
+    <div class="form-container sign-up-container">
+        <form action="#" method="post">
+            <h1>Create Account</h1>
+            <input name="email" type="email" placeholder="Email" />
+            <input name="firstName" type="text" placeholder="First Name" />
+            <input name="lastName" type="text" placeholder="Last Name" />
+            <input name="password" type="password" placeholder="Password" />
+            <input name="password_confirm" type="password" placeholder="Confirm Password" />
+            <button name="signUp">Sign Up</button>
+        </form>
+    </div>
+    <div class="form-container sign-in-container">
+        <form action="#" method="post">
+            <h1>Sign in</h1>
+            <input type="email" placeholder="Email" name="username" id="username"/>
+            <input type="password" placeholder="Password" name="password" id="password"/>
+            <a href="#">Forgot your password?</a>
+            <button>Sign In</button>
+        </form>
+    </div>
+    <div class="overlay-container">
+        <div class="overlay">
+            <div class="overlay-panel overlay-left">
+                <h1>Welcome Back!</h1>
+                <p>If you already have an account please sign in</p>
+                <button class="ghost" id="signIn">Sign In</button>
+            </div>
+            <div class="overlay-panel overlay-right">
+                <h1>Welcome aboard!</h1>
+                <p>If you don't have an account yet kindly register by filling the form below</p>
+                <button class="ghost" id="signUp">Sign Up</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    const signUpButton = document.getElementById('signUp');
+    const signInButton = document.getElementById('signIn');
+    const container = document.getElementById('container');
+
+    signUpButton.addEventListener('click', () => {
+        container.classList.add("right-panel-active");
+    });
+
+    signInButton.addEventListener('click', () => {
+        container.classList.remove("right-panel-active");
+    });
+</script>
+</html>
