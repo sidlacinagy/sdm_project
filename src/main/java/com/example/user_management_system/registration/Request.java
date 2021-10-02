@@ -2,8 +2,10 @@ package com.example.user_management_system.registration;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class Request {
+public class Request implements Serializable {
 
     private final String email;
     private final String firstName;
