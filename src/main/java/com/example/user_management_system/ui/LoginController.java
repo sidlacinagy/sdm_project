@@ -17,6 +17,9 @@ public class LoginController {
     @GetMapping("/profile_home")
     public String viewProfile() {return "profile_home";}
 
+    @GetMapping("/reset**")
+    public String viewReset() {return "reset";}
+
 }
 
 
