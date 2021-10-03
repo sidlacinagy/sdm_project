@@ -26,7 +26,6 @@ public class RegistrationService {
     @Autowired
     private final UserService userService;
 
-
     public boolean registration(Request request) {
         if (!emailSender.isValidEmailAddress(request.getEmail()))
             throw new IllegalStateException("Not a valid email!");
@@ -54,13 +53,13 @@ public class RegistrationService {
     }
 
     public boolean sendPasswordResetEmail(String email) {
-        Optional<User> user=userService.getUserByEmail(email);
-        if(user.isEmpty()){
+        Optional<User> user = userService.getUserByEmail(email);
+        if (user.isEmpty()) {
             return false;
         }
         try {
             Token token = createToken(user.get());
-            emailSender.send(emailSender.createPasswordResetMessage(email,  "http://localhost:8080/reset?token=" + token.getToken()));
+            emailSender.send(emailSender.createPasswordResetMessage(email, "http://localhost:8080/reset?token=" + token.getToken()));
         } catch (IOException | MessagingException ioException) {
             //TODO Logging
             return false;
@@ -70,7 +69,7 @@ public class RegistrationService {
 
     }
 
-    public boolean changePassword(String password,String token){
+    public boolean changePassword(String password, String token) {
         Optional<Token> userToken = tokenService.getToken(token);
         if (userToken.isEmpty()) {
             return false;
@@ -80,12 +79,9 @@ public class RegistrationService {
             return false;
         }
 
-        userService.changePassword(user.get(),password);
+        userService.changePassword(user.get(), password);
         return true;
     }
-
-
-
 
     public boolean enableAccount(String token) {
         Optional<Token> userToken = tokenService.getToken(token);
@@ -96,7 +92,7 @@ public class RegistrationService {
         if (user.isEmpty()) {
             return false;
         }
-        if(user.get().isEnabled())
+        if (user.get().isEnabled())
             return false;
         userService.enableUser(user.get());
         return true;

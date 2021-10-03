@@ -18,16 +18,13 @@ public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
-
     private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-
 
     public void registerUser(User user) throws IllegalStateException {
         boolean usernameInUse = getUserByEmail(user.getEmail()).isPresent();
         if (usernameInUse) {
             throw new IllegalStateException("Email already in use");
         } else {
-
             user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
             userRepository.save(user);
         }
@@ -43,7 +40,6 @@ public class UserService implements UserDetailsService {
         userRepository.findAll().forEach(users::add);
         return users;
     }
-
 
     public Optional<User> getUserByEmail(String email) {
         return userRepository.findById(email);
