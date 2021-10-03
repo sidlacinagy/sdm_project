@@ -28,7 +28,6 @@ public class RegistrationController {
         throw new IllegalStateException("Unsuccessful registration.");
     }
 
-
     @GetMapping(path = "/confirm")
     public ModelAndView getConfirm(@RequestParam(name = "token") String token) {
         if (registrationService.enableAccount(token))

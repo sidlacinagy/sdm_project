@@ -7,6 +7,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 
 @Data
@@ -22,14 +24,16 @@ public class User implements UserDetails {
     private String lastName;
     private String password;
     private boolean enabled = false;
+    private String registerDate;
 
     public User(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        this.registerDate = LocalDateTime.now().format(formatter);
     }
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -60,4 +64,5 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return enabled;
     }
+
 }
