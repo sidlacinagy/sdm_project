@@ -70,4 +70,10 @@
         container.classList.remove("right-panel-active");
     });
 </script>
+<script th:if="${T(com.example.user_management_system.registration.RegistrationController).getCurrentException()!=null}" >
+    var msg="[[${T(com.example.user_management_system.registration.RegistrationController).getCurrentException()}]]";
+    alert(msg);
+    var msg="[[${T(com.example.user_management_system.registration.RegistrationController).setCurrentExceptionToNull()}]]";
+
+</script>
 </html>

@@ -51,6 +51,10 @@ public class UserService implements UserDetailsService {
 
     }
 
+    public static String getString(){
+        return "EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE";
+    }
+
     public void changePassword(User user, String newPassword) {
         user.setPassword(bCryptPasswordEncoder.encode(newPassword));
         userRepository.save(user);

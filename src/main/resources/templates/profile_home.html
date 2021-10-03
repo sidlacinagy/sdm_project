@@ -7,7 +7,7 @@
         <div class="info">Here is your personal information: </div>
         <table>
             <tr>
-                <td>First name:</td>
+                <td>First name:  <span th:text="${T(com.example.user_management_system.user.UserService).getString()}"></span></td>
                 <td><span sec:authentication="principal.firstName"></span></td>
             </tr>
             <tr>
