@@ -3,7 +3,6 @@ package com.example.user_management_system.registration;
 import com.example.user_management_system.user.User;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -29,11 +28,6 @@ public class RegistrationController {
         throw new IllegalStateException("Unsuccessful registration.");
     }
 
-    @GetMapping(path="/profile_home")
-    public String getProfileHome() throws IOException {
-        User currentUser= (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return generateCustomHomePage(currentUser);
-    }
 
     @GetMapping(path = "/confirm")
     public ModelAndView getConfirm(@RequestParam(name = "token") String token) {

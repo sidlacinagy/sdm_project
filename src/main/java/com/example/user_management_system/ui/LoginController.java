@@ -13,8 +13,8 @@ public class LoginController {
             return "login";
         }
 
-    //@GetMapping("/profile_home")
-    //public String viewProfile() {return "profile_home";}
+    @GetMapping("/profile_home")
+    public String viewProfile() {return "profile_home";}
 
     @GetMapping("/reset**")
     public String viewReset() {return "reset";}

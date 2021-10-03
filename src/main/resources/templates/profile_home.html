@@ -1,16 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<html xmlns:th="https://www.thymeleaf.org"  xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<link rel="stylesheet" th:href="@{/css/profile.css}"/>
 <body>
-    <h1>Welcome to your profile, %1$s!</h1>
+<div class="container" sec:authorize="isAuthenticated()">
+    <form>
+    <h1>Welcome to your profile, <span id="firstSpan" sec:authentication="principal.firstName"></span>!</h1>
     <span class="message">Here is your personal information: </span>
     <table>
-        <tr><td>First name: </td><td>%1$s</td></tr>
-        <tr><td>Last name: </td><td>%2$s</td></tr>
-        <tr><td>Email address: </td><td>%3$s</td></tr>
+        <tr><td>First name: </td><td><span sec:authentication="principal.firstName"></span></td></tr>
+        <tr><td>Last name: </td><td><span sec:authentication="principal.lastName"></span></td></tr>
+        <tr><td>Email address: </td><td><span sec:authentication="principal.email"></span></td></tr>
     </table>
+    </form>
+</div>
 </body>
 </html>
