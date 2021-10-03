@@ -54,4 +54,9 @@ public class UserService implements UserDetailsService {
         return userRepository.findById(email).orElseThrow(() -> new UsernameNotFoundException("No user defined with such email"));
 
     }
+
+    public void changePassword(User user, String newPassword) {
+        user.setPassword(bCryptPasswordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
 }

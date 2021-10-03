@@ -53,6 +53,40 @@ public class RegistrationService {
         return true;
     }
 
+    public boolean sendPasswordResetEmail(String email) {
+        Optional<User> user=userService.getUserByEmail(email);
+        if(user.isEmpty()){
+            return false;
+        }
+        try {
+            Token token = createToken(user.get());
+            emailSender.send(emailSender.createPasswordResetMessage(email,  "localhost:8080/reset?token=" + token.getToken()));
+        } catch (IOException | MessagingException ioException) {
+            //TODO Logging
+            return false;
+        }
+        return true;
+
+
+    }
+
+    public boolean changePassword(String password,String token){
+        Optional<Token> userToken = tokenService.getToken(token);
+        if (userToken.isEmpty()) {
+            return false;
+        }
+        Optional<User> user = userService.getUserByEmail(userToken.get().getUserEmail());
+        if (user.isEmpty()) {
+            return false;
+        }
+
+        userService.changePassword(user.get(),password);
+        return true;
+    }
+
+
+
+
     public boolean enableAccount(String token) {
         Optional<Token> userToken = tokenService.getToken(token);
         if (userToken.isEmpty()) {

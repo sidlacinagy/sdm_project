@@ -28,7 +28,15 @@
             <script>
                 function pass() {
                     document.getElementById("123").innerHTML =
-                        ("<div class='reset-pass-container'><div><form action='#'><h1>Dear User!</h1><p>If you want to reset your password please add your email address and click on the \"Send new password\" button</p><input type='email' name='email' placeholder='Email'><button type='button' name='resetPassword' id='resetPassword'>Send new password!</button></form></div><div class='back-button'><form action='/home'> <button type='submit'>Back</button> </form></div></div>")
+                        ("<div class='reset-pass-container'><div>" +
+                            "<form action='/home' method='post'>" +
+                            "<h1>Dear User!</h1>" +
+                            "<p>If you want to reset your password please add your email address and click on the \"Send new password\" button</p>" +
+                            "<input type='text' name='email' placeholder='Email'>" +
+                            "<button type='submit' name='resetPassword' id='resetPassword'>Send new password!" +
+                            "</button>" +
+                            "</form></div><div class='back-button'><form action='/home'> " +
+                            "<button type='submit'>Back</button> </form></div></div>")
                 }
             </script>
             <button>Sign In</button>
