@@ -5,7 +5,12 @@
     <title>Title</title>
 </head>
 <body>
-    <h1>helo</h1>
-    <span class="message">Welcome ${userDetails.username}</span>
+    <h1>Welcome to your profile, %1$s!</h1>
+    <span class="message">Here is your personal information: </span>
+    <table>
+        <tr><td>First name: </td><td>%1$s</td></tr>
+        <tr><td>Last name: </td><td>%2$s</td></tr>
+        <tr><td>Email address: </td><td>%3$s</td></tr>
+    </table>
 </body>
 </html>

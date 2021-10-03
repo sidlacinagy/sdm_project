@@ -1,11 +1,15 @@
 package com.example.user_management_system.registration;
 
-import com.example.user_management_system.email.EmailSender;
-import com.example.user_management_system.user.UserService;
+import com.example.user_management_system.user.User;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.util.Pair;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
+import java.io.IOException;
+import java.nio.charset.Charset;
 
 @RestController
 @RequestMapping
@@ -16,47 +20,63 @@ public class RegistrationController {
 
 
     @PostMapping(path = "/home", params = "signUp")
-    public String postRegistration(@ModelAttribute Request request) {
+    public ModelAndView postRegistration(@ModelAttribute Request request) {
         if (!isMatchingPassword(request.getPassword(), request.getPassword_confirm())) {
             throw new IllegalStateException("Passwords not matching");
         }
         if (registrationService.registration(request))
-            return "Successful registration!";
-        return "Unsuccessful registration.";
+            return new ModelAndView("redirect:/home" );
+        throw new IllegalStateException("Unsuccessful registration.");
+    }
+
+    @GetMapping(path="/profile_home")
+    public String getProfileHome() throws IOException {
+        User currentUser= (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return generateCustomHomePage(currentUser);
     }
 
     @GetMapping(path = "/confirm")
-    public String getConfirm(@RequestParam(name = "token") String token) {
+    public ModelAndView getConfirm(@RequestParam(name = "token") String token) {
         if (registrationService.enableAccount(token))
-            return "Account successfully confirmed!";
-        return "Cannot confirm account.";
+            return new ModelAndView("redirect:/home" );
+        throw new IllegalStateException("Cannot confirm account.");
     }
 
     @PostMapping(path = "/home", params = "resetPassword")
-    public String postResetEmail( @RequestParam String email) {
+    public ModelAndView postResetEmail( @RequestParam String email) {
         if(registrationService.sendPasswordResetEmail(email)){
-            return "Password reset email sent.";
+            return new ModelAndView("redirect:/home" );
         }
         else {
-            return "Cannot send email.";
+            throw new IllegalStateException("Cannot send email.");
         }
     }
 
     @PostMapping(path = "/reset**")
-    public String postResetPassword(@RequestParam(name = "token") String token,@RequestParam (name = "password") String password,
+    public ModelAndView postResetPassword(@RequestParam(name = "token") String token,@RequestParam (name = "password") String password,
                                     @RequestParam (name = "password_confirm") String password_confirm) {
         if(!isMatchingPassword(password,password_confirm)){
-            return "Passwords not matching";
+            throw new IllegalStateException("Passwords not matching");
         }
         if(registrationService.changePassword(password, token))
-            return "Password successfully changed.";
+            return new ModelAndView("redirect:/home" );
 
-        return "Cannot change password.";
+        throw new IllegalStateException("Cannot change password.");
 
     }
 
     public boolean isMatchingPassword(String password, String password_confirm) {
         return password.equals(password_confirm);
+    }
+
+    public String generateCustomHomePage(User user){
+        try {
+            return String.format(StreamUtils.copyToString(new ClassPathResource("templates/profile_home.html").getInputStream(), Charset.defaultCharset()), user.getFirstName(),user.getLastName(),user.getEmail());
+        }
+        catch (IOException e){
+            return "Cannot load home page";
+        }
+
     }
 
 }
