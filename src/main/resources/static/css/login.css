@@ -275,3 +275,13 @@ input {
     height: 40px;
     width: 40px;
 }
+
+div.back-button {
+    padding: 5px;
+}
+
+div.reset-pass-container {
+    justify-content: center;
+    align-items: center;
+    padding-top: 8em;
+}
