@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 
 
 @RestController
@@ -21,14 +20,6 @@ public class RegistrationController {
         ModelAndView modelAndView=new ModelAndView("redirect:/home");
         currentException=ex.getMessage();
         return modelAndView;
-    }
-
-    public static String getCurrentException(){
-        return currentException;
-    }
-
-    public static void setCurrentExceptionToNull(){
-        currentException=null;
     }
 
     @PostMapping(path = "/home", params = "signUp")
@@ -73,6 +64,14 @@ public class RegistrationController {
 
     public boolean isMatchingPassword(String password, String password_confirm) {
         return password.equals(password_confirm);
+    }
+
+    public static String getCurrentException(){
+        return currentException;
+    }
+
+    public static void setCurrentExceptionToNull(){
+        currentException=null;
     }
 
 

@@ -4,9 +4,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
-
-import java.time.LocalDateTime;
-import java.util.Iterator;
 import java.util.Optional;
 
 @Controller

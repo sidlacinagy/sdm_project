@@ -46,7 +46,6 @@ public class RegistrationService {
         try {
             emailSender.send(emailSender.createVerificationMessage(user.getEmail(), user.getFirstName(), "http://localhost:8080/confirm?token=" + token.getToken()));
         } catch (IOException | MessagingException ioException) {
-            //TODO Logging
             return false;
         }
         return true;
@@ -61,20 +60,13 @@ public class RegistrationService {
             Token token = createToken(user.get());
             emailSender.send(emailSender.createPasswordResetMessage(email, "http://localhost:8080/reset?token=" + token.getToken()));
         } catch (IOException | MessagingException ioException) {
-            //TODO Logging
             return false;
         }
         return true;
-
-
     }
 
     public boolean changePassword(String password, String token) {
-        Optional<Token> userToken = tokenService.getToken(token);
-        if (userToken.isEmpty()) {
-            return false;
-        }
-        Optional<User> user = userService.getUserByEmail(userToken.get().getUserEmail());
+        Optional<User> user=getUserByToken(token);
         if (user.isEmpty()) {
             return false;
         }
@@ -84,11 +76,7 @@ public class RegistrationService {
     }
 
     public boolean enableAccount(String token) {
-        Optional<Token> userToken = tokenService.getToken(token);
-        if (userToken.isEmpty()) {
-            return false;
-        }
-        Optional<User> user = userService.getUserByEmail(userToken.get().getUserEmail());
+        Optional<User> user=getUserByToken(token);
         if (user.isEmpty()) {
             return false;
         }
@@ -98,4 +86,11 @@ public class RegistrationService {
         return true;
     }
 
+    public Optional<User> getUserByToken(String token){
+        Optional<Token> userToken = tokenService.getToken(token);
+        if (userToken.isEmpty()) {
+            return Optional.empty();
+        }
+        return userService.getUserByEmail(userToken.get().getUserEmail());
+    }
 }
