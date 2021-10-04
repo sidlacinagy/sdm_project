@@ -10,11 +10,14 @@
 	</parent>
 	<groupId>com.example</groupId>
 	<artifactId>user_management_system</artifactId>
+	<packaging>jar</packaging>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>user_management_system</name>
 	<description>User management system</description>
 	<properties>
+		<maven.compiler.release>11</maven.compiler.release>
 		<java.version>11</java.version>
+		<start-class>com.example.user_management_system.UserManagementSystemApplication</start-class>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -111,6 +114,18 @@
 						</exclude>
 					</excludes>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.2.4</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
