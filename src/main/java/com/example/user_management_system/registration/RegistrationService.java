@@ -5,26 +5,27 @@ import com.example.user_management_system.user.User;
 import com.example.user_management_system.user.UserService;
 import com.example.user_management_system.verification.Token;
 import com.example.user_management_system.verification.TokenService;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import javax.mail.MessagingException;
 import java.io.IOException;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
 public class RegistrationService {
 
-    @Autowired
-    private TokenService tokenService;
+    private final TokenService tokenService;
 
-    @Autowired
-    private EmailSender emailSender;
+    private final EmailSender emailSender;
 
-    @Autowired
     private final UserService userService;
+
+    @Autowired
+    public RegistrationService(TokenService tokenService, EmailSender emailSender, UserService userService){
+        this.tokenService = tokenService;
+        this.emailSender = emailSender;
+        this.userService = userService;
+    }
 
     public boolean registration(Request request) {
         if (!emailSender.isValidEmailAddress(request.getEmail()))
