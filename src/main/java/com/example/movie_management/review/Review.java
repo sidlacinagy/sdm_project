@@ -29,7 +29,6 @@ public class Review {
         this.reviewDate = LocalDateTime.now().format(formatter);
     }
 
-
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
@@ -40,7 +39,5 @@ public class Review {
 
         @Column(nullable = false)
         private int movieId;
-
-
     }
 }
