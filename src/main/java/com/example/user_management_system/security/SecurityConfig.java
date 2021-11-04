@@ -11,6 +11,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 @Configuration
 @AllArgsConstructor
 @EnableWebSecurity
@@ -21,15 +26,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/home**", "/css/**", "/confirm", "/reset**")
-                .permitAll()
-                .anyRequest()
-                .authenticated()
-                .and()
-                .formLogin().defaultSuccessUrl("/profile_home", true).failureUrl("http://localhost:8080/home?error").and()
-                .logout().logoutSuccessUrl("/home").and()
-                .csrf().disable();
+        try (InputStream input = new FileInputStream("src/main/resources/application.properties")) {
+            Properties prop = new Properties();
+            prop.load(input);
+            String port = prop.getProperty("server.port");
+            http.authorizeRequests()
+                    .antMatchers("/home**", "/css/**", "/confirm", "/reset**")
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated()
+                    .and()
+                    .formLogin().defaultSuccessUrl("/profile_home", true).failureUrl("http://localhost:" + port + "/home?error").and()
+                    .logout().logoutSuccessUrl("/home").and()
+                    .csrf().disable();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override
