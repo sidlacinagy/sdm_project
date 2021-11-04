@@ -27,7 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest()
                 .authenticated()
                 .and()
-                .formLogin().defaultSuccessUrl("/profile_home", true).and()
+                .formLogin().defaultSuccessUrl("/profile_home", true).failureUrl("http://localhost:8080/home?error=true").and()
                 .logout().logoutSuccessUrl("/home").and()
                 .csrf().disable();
     }
