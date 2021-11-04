@@ -17,7 +17,7 @@
 	<properties>
 		<maven.compiler.release>11</maven.compiler.release>
 		<java.version>11</java.version>
-		<start-class>com.example.user_management_system.UserManagementSystemApplication</start-class>
+		<start-class>com.example.UserManagementSystemApplication</start-class>
 	</properties>
 	<dependencies>
 		<dependency>

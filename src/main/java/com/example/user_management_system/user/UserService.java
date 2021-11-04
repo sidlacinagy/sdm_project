@@ -18,7 +18,6 @@ public class UserService implements UserDetailsService {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
-
     public void registerUser(User user) throws IllegalStateException {
         boolean emailAlreadyInUse = getUserByEmail(user.getEmail()).isPresent();
         if (emailAlreadyInUse) {
