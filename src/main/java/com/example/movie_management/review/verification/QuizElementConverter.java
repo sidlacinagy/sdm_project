@@ -11,7 +11,8 @@ public class QuizElementConverter implements AttributeConverter<List<QuizElement
     public String convertToDatabaseColumn(List<QuizElement> quizElements) {
         StringBuilder str = new StringBuilder();
         for (QuizElement element : quizElements) {
-            str.append(element.getQuestion()).append("#").append(element.getCorrectAnswer()).append("#").append(String.join("#", element.getWrongAnswers())).append("~");
+            str.append(element.getQuestion()).append("#").append(element.getCorrectAnswer()).
+                    append("#").append(String.join("#", element.getWrongAnswers())).append("~");
 
         }
         return str.substring(0, str.length() - 1);

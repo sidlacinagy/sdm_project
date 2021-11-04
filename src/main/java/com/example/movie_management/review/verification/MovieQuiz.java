@@ -22,8 +22,4 @@ public class MovieQuiz {
     private List<QuizElement> quizElements = new ArrayList<>();
 
 
-
-
-
-
 }

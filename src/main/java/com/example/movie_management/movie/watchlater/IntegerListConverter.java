@@ -1,4 +1,4 @@
-package com.example.movie_management.movie;
+package com.example.movie_management.movie.watchlater;
 
 import javax.persistence.AttributeConverter;
 import java.util.ArrayList;

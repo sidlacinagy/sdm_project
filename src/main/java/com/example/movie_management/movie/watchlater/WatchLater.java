@@ -1,4 +1,4 @@
-package com.example.movie_management.movie;
+package com.example.movie_management.movie.watchlater;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
