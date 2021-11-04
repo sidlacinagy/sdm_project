@@ -117,4 +117,7 @@ buildNumber.properties
 ### application.properties ##
 src/main/resources/application.properties
 
+### api.properties ##
+src/main/resources/api.properties
+
 # End of https://www.toptal.com/developers/gitignore/api/intellij+all,maven
