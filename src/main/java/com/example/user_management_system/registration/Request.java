@@ -7,6 +7,7 @@ import java.io.Serializable;
 @Data
 public class Request implements Serializable {
 
+    private final String nickname;
     private final String email;
     private final String firstName;
     private final String lastName;

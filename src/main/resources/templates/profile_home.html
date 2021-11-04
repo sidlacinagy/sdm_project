@@ -7,6 +7,10 @@
         <div class="info">Here is your personal information: </div>
         <table>
             <tr>
+                <td>Nickname:</td>
+                <td><span sec:authentication="principal.nickname"></span></td>
+            </tr>
+            <tr>
                 <td>First name:</td>
                 <td><span sec:authentication="principal.firstName"></span></td>
             </tr>

@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
@@ -19,14 +20,17 @@ public class User implements UserDetails {
     @Id
     @NotNull
     private String email;
-
     private String firstName;
     private String lastName;
     private String password;
     private boolean enabled = false;
     private String registerDate;
+    @Column(unique=true)
+    private String nickname;
+    private int watchtime = 0;
 
-    public User(String firstName, String lastName, String email, String password) {
+    public User(String nickname, String firstName, String lastName, String email, String password) {
+        this.nickname = nickname;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -63,6 +67,10 @@ public class User implements UserDetails {
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
+    }
+
+    public void incrementWatchtime(int runtime){
+        watchtime+=runtime;
     }
 
 }

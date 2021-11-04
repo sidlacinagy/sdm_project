@@ -20,10 +20,15 @@ public class UserService implements UserDetailsService {
 
 
     public void registerUser(User user) throws IllegalStateException {
-        boolean usernameInUse = getUserByEmail(user.getEmail()).isPresent();
-        if (usernameInUse) {
+        boolean emailAlreadyInUse = getUserByEmail(user.getEmail()).isPresent();
+        if (emailAlreadyInUse) {
             throw new IllegalStateException("Email already in use");
-        } else {
+        }
+        boolean nicknameAlreadyInUse = getUserByNickname(user.getNickname()).isPresent();
+        if (nicknameAlreadyInUse) {
+            throw new IllegalStateException("Nickname already in use");
+        }
+        else {
             user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
             userRepository.save(user);
         }
@@ -34,9 +39,18 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
+    public void incrementUserWatchtime(User user, int runtime){
+        user.incrementWatchtime(runtime);
+    }
+
     public Optional<User> getUserByEmail(String email) {
         return userRepository.findById(email);
     }
+
+    public Optional<User> getUserByNickname(String nickname){
+        return userRepository.findByNickname(nickname);
+    }
+
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
