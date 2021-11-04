@@ -1,6 +1,7 @@
 package com.example.user_management_system.user;
 
-import com.example.movie_management.movie.WatchLaterService;
+import com.example.movie_management.movie.logger.LoggedMoviesService;
+import com.example.movie_management.movie.watchlater.WatchLaterService;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,6 +21,9 @@ public class UserService implements UserDetailsService {
     @Autowired
     private WatchLaterService watchLaterService;
 
+    @Autowired
+    private LoggedMoviesService loggedMoviesService;
+
     private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     public void registerUser(User user) throws IllegalStateException {
@@ -35,6 +39,8 @@ public class UserService implements UserDetailsService {
             user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
             userRepository.save(user);
             watchLaterService.initializeWatchLater(user.getEmail());
+            loggedMoviesService.initializeLogs(user.getEmail());
+
         }
     }
 

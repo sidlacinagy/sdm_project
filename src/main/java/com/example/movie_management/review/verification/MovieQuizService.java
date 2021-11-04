@@ -1,8 +1,6 @@
 package com.example.movie_management.review.verification;
 
 
-import com.example.movie_management.movie.WatchLater;
-import com.example.movie_management.movie.WatchLaterRepository;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

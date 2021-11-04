@@ -1,4 +1,4 @@
-package com.example.movie_management.movie;
+package com.example.movie_management.movie.watchlater;
 
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
