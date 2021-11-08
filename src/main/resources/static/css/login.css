@@ -42,7 +42,7 @@ input {
 }
 
 body {
-    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background: linear-gradient(-45deg, #ff6200, #ff6426, #332f2f, #000000);
     background-size: 400% 400%;
     animation: gradient 15s ease infinite;
     display: flex;
@@ -52,6 +52,7 @@ body {
     font-family: 'Montserrat', sans-serif;
     height: 100vh;
     margin: -20px 0 50px;
+    overflow: hidden;
 }
 
 @keyframes gradient {
@@ -284,4 +285,158 @@ div.reset-pass-container {
     justify-content: center;
     align-items: center;
     padding-top: 8em;
+}
+.wrap{
+    perspective-origin: 50% 50%;
+}
+
+.img{
+    position:absolute;
+    bottom: -100vh;
+    transform-style: preserve-3d;
+}
+
+/*
+
+ */
+
+.img:nth-child(1) {
+    left: 40%;
+    animation: raise1 9s linear infinite;
+    animation-delay: -3s;
+    transform: scale(-0.3) rotate(273deg);
+    z-index: -6;
+    filter: blur(-5px);
+}
+@keyframes raise1 {
+    to {
+        bottom: 150vh;
+        transform: scale(-0.3) rotate(75deg);
+    }
+}
+.img:nth-child(2) {
+    left: 10%;
+    animation: raise2 10s linear infinite;
+    animation-delay: -1s;
+    transform: scale(0) rotate(3deg);
+    z-index: -5;
+    filter: blur(-4px);
+}
+@keyframes raise2 {
+    to {
+        bottom: 150vh;
+        transform: scale(0) rotate(43deg);
+    }
+}
+.img:nth-child(3) {
+    left: 93%;
+    animation: raise3 17s linear infinite;
+    animation-delay: -4s;
+    transform: scale(0.3) rotate(92deg);
+    z-index: -4;
+    filter: blur(-3px);
+}
+@keyframes raise3 {
+    to {
+        bottom: 150vh;
+        transform: scale(0.3) rotate(353deg);
+    }
+}
+.img:nth-child(4) {
+    left: 19%;
+    animation: raise4 7s linear infinite;
+    animation-delay: 0s;
+    transform: scale(0.6) rotate(257deg);
+    z-index: -3;
+    filter: blur(-2px);
+}
+@keyframes raise4 {
+    to {
+        bottom: 150vh;
+        transform: scale(0.6) rotate(107deg);
+    }
+}
+.img:nth-child(5) {
+    left: 89%;
+    animation: raise5 18s linear infinite;
+    animation-delay: -1s;
+    transform: scale(0.9) rotate(150deg);
+    z-index: -2;
+    filter: blur(-1px);
+}
+@keyframes raise5 {
+    to {
+        bottom: 150vh;
+        transform: scale(0.9) rotate(98deg);
+    }
+}
+.img:nth-child(6) {
+    left: 12%;
+    animation: raise6 8s linear infinite;
+    animation-delay: -4s;
+    transform: scale(1.2) rotate(157deg);
+    z-index: -1;
+    filter: blur(0px);
+}
+@keyframes raise6 {
+    to {
+        bottom: 150vh;
+        transform: scale(1.2) rotate(269deg);
+    }
+}
+.img:nth-child(7) {
+    left: -2%;
+    animation: raise7 7s linear infinite;
+    animation-delay: 0s;
+    transform: scale(1.5) rotate(27deg);
+    z-index: 0;
+    filter: blur(1px);
+}
+@keyframes raise7 {
+    to {
+        bottom: 150vh;
+        transform: scale(1.5) rotate(300deg);
+    }
+}
+.img:nth-child(8) {
+    left: 19%;
+    animation: raise8 20s linear infinite;
+    animation-delay: -2s;
+    transform: scale(1.8) rotate(172deg);
+    z-index: 1;
+    filter: blur(2px);
+}
+@keyframes raise8 {
+    to {
+        bottom: 150vh;
+        transform: scale(1.8) rotate(15deg);
+    }
+}
+.img:nth-child(9) {
+    left: 17%;
+    animation: raise9 19s linear infinite;
+    animation-delay: -3s;
+    transform: scale(2.1) rotate(12deg);
+    z-index: 2;
+    filter: blur(3px);
+}
+@keyframes raise9 {
+    to {
+        bottom: 150vh;
+        transform: scale(2.1) rotate(57deg);
+    }
+}
+.img:nth-child(10) {
+    left: 51%;
+    animation: raise10 17s linear infinite;
+    animation-delay: -3s;
+    transform: scale(2.4) rotate(108deg);
+    z-index: 3;
+    filter: blur(4px);
+}
+@keyframes raise10 {
+    to {
+        bottom: 150vh;
+        transform: scale(2.4) rotate(123deg);
+    }
 }
