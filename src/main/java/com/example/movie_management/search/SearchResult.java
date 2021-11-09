@@ -1,5 +1,6 @@
 package com.example.movie_management.search;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import java.util.List;
@@ -40,6 +41,9 @@ public class SearchResult {
         boolean video;
 
         double vote_average;
+
+        @JsonIgnore
+        String media_type;
     }
 }
 

@@ -8,7 +8,9 @@ import java.util.Properties;
 public enum ApiCall {
     SEARCH_BY_MOVIE_NAME("https://api.themoviedb.org/3/search/movie?api_key=","&query=%s&page=%s"),
     GET_MOVIE_BY_ID("https://api.themoviedb.org/3/movie/%s?api_key=","&language=en-US"),
-    GET_GENRE_LIST("https://api.themoviedb.org/3/genre/movie/list?api_key=","&language=en-US");
+    GET_GENRE_LIST("https://api.themoviedb.org/3/genre/movie/list?api_key=","&language=en-US"),
+    GET_TRENDING("https://api.themoviedb.org/3/trending/movie/week?api_key=","");
+
     String call;
 
     ApiCall(String callStart, String callEnd){

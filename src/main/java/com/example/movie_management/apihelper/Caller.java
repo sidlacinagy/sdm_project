@@ -1,6 +1,5 @@
 package com.example.movie_management.apihelper;
 
-
 import com.example.movie_management.movie.Genres;
 import com.example.movie_management.movie.Movie;
 import com.example.movie_management.search.SearchResult;
@@ -14,11 +13,17 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
+import java.util.stream.Collectors;
+
 
 public class Caller<T> {
 
     private final Class<T> type;
+
+    public static String poster = "https://image.tmdb.org/t/p/original/d5NXSklXo0qyIYkgV94XAgMIckC.jpg";
 
     public Caller(Class<T> type){
         this.type = type;
@@ -37,9 +42,11 @@ public class Caller<T> {
             throw new IllegalStateException("Cannot reach service");
         String result = readResponse(connection.getInputStream());
         connection.disconnect();
+        System.out.println(result);
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(result, getType());
     }
+
 
     public static String readResponse(InputStream response) throws IOException {
         BufferedReader in = new BufferedReader(
@@ -53,8 +60,19 @@ public class Caller<T> {
         return content.toString();
     }
 
+    public static String getRandomTrendingPoster() throws IOException {
+
+        Caller<SearchResult> trendingCaller = new Caller<>(SearchResult.class);
+        SearchResult trending = trendingCaller.call(ApiCall.GET_TRENDING.getCall());
+        List<String> trendingPosters = trending.getResults().stream().map(m->"https://image.tmdb.org/t/p/original"+m.getPoster_path()).collect(Collectors.toList());
+        Random rnd = new Random();
+        return trendingPosters.get(rnd.nextInt(trendingPosters.size()));
+    }
+
 
     public static void main(String[] args) throws IOException {
+
+        System.out.println(getRandomTrendingPoster());
 
 
         Caller<SearchResult> searchResultCaller = new Caller<>(SearchResult.class);
@@ -84,6 +102,12 @@ public class Caller<T> {
         Caller<Genres> genreCaller = new Caller(Genres.class);
         Genres genres = genreCaller.call(ApiCall.GET_GENRE_LIST.getCall());
         System.out.println(genres.getGenres().get(0).getName());
+
+
+
+
+
+
 
 
 
