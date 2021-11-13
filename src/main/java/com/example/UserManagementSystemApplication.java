@@ -10,5 +10,4 @@ public class UserManagementSystemApplication {
 		SpringApplication.run(UserManagementSystemApplication.class, args);
 	}
 
-
 }
