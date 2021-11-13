@@ -1,19 +1,17 @@
 package com.example.user_management_system.registration;
 
 import lombok.AllArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
 @RestController
 @RequestMapping
 @AllArgsConstructor
+@CrossOrigin
 public class RegistrationController {
 
     private final RegistrationService registrationService;
@@ -22,27 +20,8 @@ public class RegistrationController {
 
     private List<String> loginList;
 
-    /*@PostMapping(path="/loginSecure")
-    public String login(@RequestAttribute("username") String userName, @RequestAttribute("password")  String password) {
 
-        final Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        userName,
-                        password
-                )
-        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        return "index";
-    }*/
 
-    @PostMapping(path = "/home", params = "signUp")
-    public ModelAndView postRegistration(@ModelAttribute Request request) {
-        if (!isMatchingPassword(request.getPassword(), request.getPassword_confirm())) {
-            throw new IllegalStateException("Passwords not matching");
-        }
-        if (registrationService.registration(request)) return new ModelAndView("redirect:/home");
-        throw new IllegalStateException("Unsuccessful registration.");
-    }
 
     @PostMapping(path = "/home", params = "resetPassword")
     public ModelAndView postResetEmail(@RequestParam String email) {
@@ -78,7 +57,7 @@ public class RegistrationController {
         return modelAndView;
     }
 
-    public boolean isMatchingPassword(String password, String password_confirm) {
+    public static boolean isMatchingPassword(String password, String password_confirm) {
         return password.equals(password_confirm);
     }
 

@@ -30,7 +30,7 @@ public class RegistrationService {
     public boolean registration(Request request) {
         if (!emailSender.isValidEmailAddress(request.getEmail()))
             throw new IllegalStateException("Not a valid email!");
-        User user = new User(request.getNickname(),request.getFirstName(), request.getLastName(), request.getEmail(), request.getPassword());
+        User user = new User(request.getNickName(),request.getFirstName(), request.getLastName(), request.getEmail(), request.getPassword());
         userService.registerUser(user);
         sendVerificationEmail(user);
         return true;
