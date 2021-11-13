@@ -32,7 +32,6 @@ public enum ApiCall {
         return this.call;
     }
 
-
     public String setParameters(String str, String... moreStrs){
 
         String[] args = new String[moreStrs.length + 1];

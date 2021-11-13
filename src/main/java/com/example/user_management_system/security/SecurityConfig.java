@@ -1,7 +1,9 @@
 package com.example.user_management_system.security;
 
+import com.example.user_management_system.registration.RegistrationController;
 import com.example.user_management_system.user.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -22,6 +24,7 @@ import java.util.Properties;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     public UserService userService;
+
     public static final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     @Override
@@ -31,14 +34,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             prop.load(input);
             String port = prop.getProperty("server.port");
             http.authorizeRequests()
-                    .antMatchers("/home**", "/css/**", "/confirm", "/reset**")
-                    .permitAll()
-                    .anyRequest()
-                    .authenticated()
+                    .antMatchers("/home*", "/static/**", "/*.js", "/*.json", "/*.ico", "/css/**", "/confirm", "/reset**")
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated()
                     .and()
-                    .formLogin().defaultSuccessUrl("/profile_home", true).failureUrl("http://localhost:" + port + "/home?error").and()
-                    .logout().logoutSuccessUrl("/home").and()
-                    .csrf().disable();
+                    .formLogin()
+                        .defaultSuccessUrl("/profile_home", true)
+                        .failureUrl("http://localhost:" + port + "/index?error").and()
+                        .logout().logoutSuccessUrl("/home")
+                    .and()
+                    .csrf()
+                    .disable();
         } catch (IOException ex) {
             ex.printStackTrace();
         }

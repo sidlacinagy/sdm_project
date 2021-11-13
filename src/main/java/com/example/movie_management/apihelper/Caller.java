@@ -18,7 +18,6 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
-
 public class Caller<T> {
 
     private final Class<T> type;
@@ -47,7 +46,6 @@ public class Caller<T> {
         return mapper.readValue(result, getType());
     }
 
-
     public static String readResponse(InputStream response) throws IOException {
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(response));
@@ -60,19 +58,23 @@ public class Caller<T> {
         return content.toString();
     }
 
-    public static String getRandomTrendingPoster() throws IOException {
+    public String getRandomTrendingPoster() {
 
         Caller<SearchResult> trendingCaller = new Caller<>(SearchResult.class);
-        SearchResult trending = trendingCaller.call(ApiCall.GET_TRENDING.getCall());
+        SearchResult trending = null;
+        try {
+            trending = trendingCaller.call(ApiCall.GET_TRENDING.getCall());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         List<String> trendingPosters = trending.getResults().stream().map(m->"https://image.tmdb.org/t/p/original"+m.getPoster_path()).collect(Collectors.toList());
         Random rnd = new Random();
         return trendingPosters.get(rnd.nextInt(trendingPosters.size()));
     }
 
-
     public static void main(String[] args) throws IOException {
 
-        System.out.println(getRandomTrendingPoster());
+        //System.out.println(getRandomTrendingPoster());
 
 
         Caller<SearchResult> searchResultCaller = new Caller<>(SearchResult.class);
@@ -102,19 +104,6 @@ public class Caller<T> {
         Caller<Genres> genreCaller = new Caller(Genres.class);
         Genres genres = genreCaller.call(ApiCall.GET_GENRE_LIST.getCall());
         System.out.println(genres.getGenres().get(0).getName());
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     }
 }
