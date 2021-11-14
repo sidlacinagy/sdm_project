@@ -22,7 +22,7 @@ export const fetchUserData = (request) => {
         'method': 'GET',
         'url': `${process.env.hostUrl || 'http://localhost:8080'}/api/userinfo`,
         'headers': {
-            'Authorization': request
+            'Authorization': 'Bearer' + request
         }
     });
 }

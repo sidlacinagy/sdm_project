@@ -1,12 +1,10 @@
 import React, {useState} from 'react';
-import {useSelector, useDispatch} from 'react-redux'
-import {load, userToken} from '../../redux/UserSlice'
-import "./home.css"
+import {useDispatch} from 'react-redux'
+import {load} from '../../redux/UserSlice'
 import {userLogin} from "../../api/apicalls";
 
 export default function LoginForm(props) {
 
-    const token = useSelector(userToken)
     const dispatch = useDispatch()
 
     const [email, setEmail] = useState("");
@@ -14,10 +12,13 @@ export default function LoginForm(props) {
 
     const handleSubmit = (event) => {
         userLogin({email: email, password: password}).then((response) => {
-            alert(response.data.token);
             dispatch(load(response.data.token));
-            console.log(token)
-            //props.data.history.push("/profile_home");
+            if (response.data.token === undefined) {
+                alert("Login failed");
+                props.data.history.push("/home");
+            } else {
+                props.data.history.push("/profile_home");
+            }
         });
         event.preventDefault();
     }
@@ -37,6 +38,7 @@ export default function LoginForm(props) {
 
     return (
         <form onSubmit={handleSubmit} method="POST">
+            <h1>Sign in</h1>
             <input
                 name="email"
                 type="email"

@@ -1,20 +1,18 @@
 import React, {useState} from 'react';
-import "./home.css"
 import {userRegister} from "../../api/apicalls";
 
 export default function RegisterForm() {
 
-    const [nickName, setNickName] = useState("");
+    const [nickname, setNickname] = useState("");
     const [email, setEmail] = useState("");
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [password, setPassword] = useState("");
     const [passwordConfirm, setPasswordConfirm] = useState("");
 
-
     const handleSubmit = (event) => {
         userRegister({
-            nickName: nickName,
+            nickname: nickname,
             email: email,
             firstName: firstName,
             lastName: lastName,
@@ -28,6 +26,7 @@ export default function RegisterForm() {
 
     return (
         <form onSubmit={handleSubmit} method="POST">
+            <h1>Sign up</h1>
             <input
                 name="email"
                 type="email"
@@ -39,8 +38,8 @@ export default function RegisterForm() {
                 name="nickName"
                 type="text"
                 placeholder={"Nickname"}
-                value={nickName}
-                onChange={e => setNickName(e.target.value)}/>
+                value={nickname}
+                onChange={e => setNickname(e.target.value)}/>
             <br/>
             <input
                 name="firstName"

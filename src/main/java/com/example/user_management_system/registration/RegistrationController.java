@@ -20,9 +20,6 @@ public class RegistrationController {
 
     private List<String> loginList;
 
-
-
-
     @PostMapping(path = "/home", params = "resetPassword")
     public ModelAndView postResetEmail(@RequestParam String email) {
         if (registrationService.sendPasswordResetEmail(email)) {

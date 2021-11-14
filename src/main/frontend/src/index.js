@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import store from './redux/store'
-import "./pages/loginpage/home.css"
 import {Provider} from 'react-redux'
 import {BrowserRouter, Route, Switch} from "react-router-dom";
 import {LoginPage} from "./pages/loginpage/LoginPage";
