@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {useDispatch} from 'react-redux'
 import {load} from '../../redux/UserSlice'
 import {userLogin} from "../../api/apicalls";
+import "./home.css";
 
 export default function LoginForm(props) {
 

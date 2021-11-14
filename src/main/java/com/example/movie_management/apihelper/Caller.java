@@ -41,7 +41,6 @@ public class Caller<T> {
             throw new IllegalStateException("Cannot reach service");
         String result = readResponse(connection.getInputStream());
         connection.disconnect();
-        System.out.println(result);
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(result, getType());
     }

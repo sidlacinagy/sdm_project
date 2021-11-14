@@ -1,12 +1,16 @@
 import RegisterForm from "./RegisterForm";
 import LoginForm from "./LoginForm";
+import React from "react";
 import {Helmet} from "react-helmet";
-import React, {useEffect} from "react";
+import "./home.css";
 
 export function LoginPage(props) {
-
     return (
         <div>
+            <Helmet>
+                <meta charSet="UTF-8"/>
+                <title>Welcome</title>
+            </Helmet>
             <div className="container" id="container">
                 <div id="register-container" className="form-container sign-up-container">
                     <RegisterForm/>
@@ -45,11 +49,6 @@ export function LoginPage(props) {
                      src="https://m.media-amazon.com/images/M/MV5BN2FjNmEyNWMtYzM0ZS00NjIyLTg5YzYtYThlMGVjNzE1OGViXkEyXkFqcGdeQXVyMTkxNjUyNQ@@._V1_FMjpg_UX1000_.jpg"/>
                 <img alt="error" className="img" src="https://www.kolpaper.com/wp-content/uploads/2020/04/La-Casa-De-Papel-Poster.jpg"/>
             </div>
-            <Helmet>
-                <meta charSet="UTF-8"/>
-                <title>Welcome</title>
-                <link rel="stylesheet" href="./home.css"/>
-            </Helmet>
         </div>
     );
 }

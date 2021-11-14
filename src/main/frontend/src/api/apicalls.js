@@ -26,3 +26,19 @@ export const fetchUserData = (request) => {
         }
     });
 }
+
+export const searchMovie = (request) => {
+    return axios({
+        'method': 'POST',
+        'url': `${process.env.hostUrl || 'http://localhost:8080'}/api/search`,
+        'data': request
+    });
+}
+
+export const loadMovie = (request) => {
+    return axios({
+        'method': 'POST',
+        'url': `${process.env.hostUrl || 'http://localhost:8080'}/api/movie`,
+        'data': request
+    });
+}

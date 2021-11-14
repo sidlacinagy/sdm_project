@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {userRegister} from "../../api/apicalls";
+import "./home.css";
 
 export default function RegisterForm() {
 
