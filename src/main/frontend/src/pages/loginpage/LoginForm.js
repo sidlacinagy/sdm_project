@@ -1,34 +1,30 @@
-import axios from "axios";
 import React, {useState} from 'react';
-import {useSelector, useDispatch} from 'react-redux'
-import {load, userToken} from '../../redux/userSlice'
-import "./home.css"
+import {useDispatch} from 'react-redux'
+import {load} from '../../redux/UserSlice'
+import {userLogin} from "../../api/apicalls";
+import "./home.css";
 
-export default function LoginForm() {
+export default function LoginForm(props) {
 
-    const user = useSelector(userToken)
     const dispatch = useDispatch()
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-
     const handleSubmit = (event) => {
-        axios({
-            'method': 'POST',
-            'url': `${process.env.hostUrl || 'http://localhost:8080'}/api/auth/login`,
-            'data': {email: email, password: password}
-        }).then((response) => {
-
-            alert(response.data.token);
+        userLogin({email: email, password: password}).then((response) => {
             dispatch(load(response.data.token));
-            console.log(user);
-
+            if (response.data.token === undefined) {
+                alert("Login failed");
+                props.data.history.push("/home");
+            } else {
+                props.data.history.push("/profile_home");
+            }
         });
         event.preventDefault();
     }
 
-    function pass(){
+    function pass() {
         document.getElementById("login-container").innerHTML =
             ("<div class='reset-pass-container'><div>" +
                 "<form action='/home' method='post'>" +
@@ -43,6 +39,7 @@ export default function LoginForm() {
 
     return (
         <form onSubmit={handleSubmit} method="POST">
+            <h1>Sign in</h1>
             <input
                 name="email"
                 type="email"
