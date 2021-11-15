@@ -26,12 +26,6 @@ export function Dashboard(props) {
         props.history.push("/home");
     }
 
-    function handleMovieClick(event, movie) {
-        loadMovie(event.target.id).then((response) => {
-            console.log(response.data);
-        });
-    }
-
     function handleSearch(event) {
         searchMovie(title).then((response) => {
             setResults(response.data.map((movie) => (
@@ -46,6 +40,10 @@ export function Dashboard(props) {
             )));
         });
         event.preventDefault();
+    }
+
+    function handleMovieClick(event, movie) {
+        props.history.push("/movie?" + event.target.id);
     }
 
     return (
