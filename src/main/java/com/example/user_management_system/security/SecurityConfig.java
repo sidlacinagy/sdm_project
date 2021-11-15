@@ -48,7 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .anyRequest()
                     .authenticated()).addFilterBefore(new JWTAuthenticationFilter(userService, jWTTokenHelper), UsernamePasswordAuthenticationFilter.class);
             http.formLogin()
-                    .defaultSuccessUrl("/profile_home", true)
+                    .defaultSuccessUrl("/dashboard", true)
                     .failureUrl("http://localhost:" + port + "/index?error").and()
                     .logout().logoutSuccessUrl("/home")
                     .and()
