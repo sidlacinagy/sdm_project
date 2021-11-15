@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {useDispatch} from 'react-redux'
 import {load} from '../../redux/UserSlice'
 import {userLogin} from "../../api/apicalls";
-import "./home.css";
 
 export default function LoginForm(props) {
 
@@ -18,7 +17,7 @@ export default function LoginForm(props) {
                 alert("Login failed");
                 props.data.history.push("/home");
             } else {
-                props.data.history.push("/profile_home");
+                props.data.history.push("/dashboard");
             }
         });
         event.preventDefault();

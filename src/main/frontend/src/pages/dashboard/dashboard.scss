@@ -1,12 +1,14 @@
-body {
-    background: url("https://sm.ign.com/t/ign_hu/screenshot/default/cinema-familyandmedia_a8ax.1280.jpg%22) center / cover no-repeat");
+.dashboard {
+
+  #body {
+    background: url("https://sm.ign.com/t/ign_hu/screenshot/default/cinema-familyandmedia_a8ax.1280.jpg") center / cover no-repeat;
     height: 100vh;
     margin: 0;
     display: flex;
     justify-content: center;
-}
+  }
 
-.menu-bar {
+  .menu-bar {
     border-radius: 25px;
     height: fit-content;
     display: inline-flex;
@@ -16,9 +18,9 @@ body {
     align-items: center;
     padding: 0 10px;
     margin: 50px 0 0 0;
-}
+  }
 
-.menu-bar li {
+  .menu-bar li {
     list-style: none;
     color: white;
     font-family: sans-serif;
@@ -28,9 +30,9 @@ body {
     position: relative;
     cursor: pointer;
     white-space: nowrap;
-}
+  }
 
-.menu-bar li::before {
+  .menu-bar li::before {
     content: " ";
     position: absolute;
     top: 0;
@@ -40,19 +42,19 @@ body {
     z-index: -1;
     transition: 0.2s;
     border-radius: 25px;
-}
+  }
 
-.menu-bar li:hover {
+  .menu-bar li:hover {
     color: black;
-}
+  }
 
-.menu-bar li:hover::before {
+  .menu-bar li:hover::before {
     background: linear-gradient(to bottom, #e8edec, #d2d1d3);
     box-shadow: 0px 3px 20px 0px black;
     transform: scale(1.2);
-}
+  }
 
-button {
+  button {
     background-color: transparent;
     border-radius: 0;
     list-style: none;
@@ -64,12 +66,37 @@ button {
     position: relative;
     cursor: pointer;
     white-space: nowrap;
-}
+  }
 
-button:hover {
+  button:hover {
     color: black;
-}
+  }
 
-#logout:hover {
+  #logout:hover {
     color: firebrick;
+  }
+
+  #searchresult {
+    margin: 13em auto auto auto;
+    align-content: center;
+  }
+
+  #searchlist {
+    margin: auto;
+    align-content: center;
+    list-style-type: none;
+  }
+
+  #searchlist li {
+    display: inline-block;
+    align-content: center;
+    padding: 0.5em;
+    list-style-type: none;
+  }
+
+  #searchlist li div {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
 }
