@@ -8,8 +8,8 @@ export function Dashboard(props) {
     const user = useSelector(userToken);
     const dispatch = useDispatch();
 
-    const [title, setTitle] = useState("");
-    const [results, setResults] = useState([]);
+    const [searchTerm, setSearchTerm] = useState("");
+
 
     fetchUserData({
         user
@@ -27,24 +27,11 @@ export function Dashboard(props) {
     }
 
     function handleSearch(event) {
-        searchMovie(title).then((response) => {
-            setResults(response.data.map((movie) => (
-                <li>
-                    <div id={movie.id} onClick={handleMovieClick}>
-                        {movie.title}
-                    </div>
-                    <div>
-                        <img alt="pic" src={"https://image.tmdb.org/t/p/original" + movie.poster_path} width="100px"/>
-                    </div>
-                </li>
-            )));
-        });
+        props.history.push("/search?term="+searchTerm+"&page=1");
         event.preventDefault();
     }
 
-    function handleMovieClick(event, movie) {
-        props.history.push("/movie?" + event.target.id);
-    }
+
 
     return (
         <div className="dashboard">
@@ -62,18 +49,13 @@ export function Dashboard(props) {
                                     <input
                                         type="text"
                                         placeholder="Search Films"
-                                        value={title}
-                                        onChange={e => setTitle(e.target.value)}/>
+                                        value={searchTerm}
+                                        onChange={e => setSearchTerm(e.target.value)}/>
                                     <button name="search">Search</button>
                                 </form>
                             </li>
                             <li onClick={handleSwitchToProfile}>Profile</li>
                             <li id="logout" onClick={handleLogout}>Log out</li>
-                        </ul>
-                    </div>
-                    <div id="searchresult">
-                        <ul id="searchlist">
-                            {results}
                         </ul>
                     </div>
                 </div>

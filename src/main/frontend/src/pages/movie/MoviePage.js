@@ -1,15 +1,18 @@
 import {loadMovie} from "../../api/apicalls";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Helmet} from "react-helmet";
 
 export function MoviePage(props) {
 
     const [movieInfo, setMovieInfo] = useState({});
 
-    loadMovie((window.location.href).split('?')[1]).then((response) => {
-        console.log(response.data)
-        setMovieInfo(response.data)
-    });
+
+    useEffect(() => {
+        loadMovie((window.location.href).split('?')[1]).then((response) => {
+            console.log(response.data)
+            setMovieInfo(response.data)
+        })
+    },[]);
 
     function handleSwitchToDashboard() {
         props.history.push("/dashboard");
@@ -25,7 +28,8 @@ export function MoviePage(props) {
                 <div className="container">
                     <div className="form">
                         <h1>{movieInfo.title}</h1>
-                        <img alt={movieInfo.title+" poster"} src={"https://image.tmdb.org/t/p/original"+movieInfo.poster_path} width="200px"></img>
+                        <img alt={movieInfo.title + " poster"}
+                             src={"https://image.tmdb.org/t/p/original" + movieInfo.poster_path} width="200px"></img>
                         <div className="info">{movieInfo.overview}</div>
                         <table>
                             <tr>
@@ -34,7 +38,7 @@ export function MoviePage(props) {
                             </tr>
                             <tr>
                                 <td>Runtime:</td>
-                                <td><span>{movieInfo.runtime+" min"}</span></td>
+                                <td><span>{movieInfo.runtime + " min"}</span></td>
                             </tr>
                             <tr>
                                 <td>Original title:</td>

@@ -11,6 +11,7 @@ import "./pages/loginpage/home.scss";
 import "./pages/dashboard/dashboard.scss";
 import "./pages/profile/profile.scss";
 import "./pages/movie/movie.scss";
+import {SearchResult} from "./pages/searchresult/SearchResult";
 
 ReactDOM.render(
     <Provider store={store}>
@@ -20,6 +21,7 @@ ReactDOM.render(
                 <Route exact path="/dashboard" component={Dashboard}/>
                 <Route exact path="/profile_home" component={ProfileHome}/>
                 <Route exact path="/movie" component={MoviePage}/>
+                <Route exact path="/search" component={SearchResult}/>
             </Switch>
         </BrowserRouter>
     </Provider>,

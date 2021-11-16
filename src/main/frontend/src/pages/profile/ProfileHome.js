@@ -20,11 +20,6 @@ export function ProfileHome(props) {
         props.history.push("/dashboard");
     }
 
-    function handleLogout() {
-        dispatch(unload);
-        props.history.push("/home");
-    }
-
     return (
         <div className="profile">
             <Helmet>
@@ -60,7 +55,7 @@ export function ProfileHome(props) {
                         </table>
                     </div>
                     <div className="back-button">
-                        <div onClick={handleLogout}>Log out</div>
+                        <div onClick={handleSwitchToDashboard}>Dashboard</div>
                     </div>
                 </div>
             </div>

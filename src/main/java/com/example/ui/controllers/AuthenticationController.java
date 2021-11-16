@@ -84,21 +84,6 @@ public class AuthenticationController {
         return ResponseEntity.ok(userObj);
     }
 
-    @PostMapping(path = "/search")
-    public ResponseEntity<?> getSearchedMovie(@RequestBody String title) throws IOException {
-        Caller<SearchResult> caller = new Caller<>(SearchResult.class);
-        SearchResult searchResult = caller.call(ApiCall.SEARCH_BY_MOVIE_NAME.setParameters(URLEncoder.encode(title.substring(0, title.length() - 1)
-                , StandardCharsets.UTF_8), Integer.toString(1)));
-        if (searchResult.getResults().size() < 5) return ResponseEntity.ok(searchResult.getResults());
-        return ResponseEntity.ok(searchResult.getResults().subList(0, 5));
-    }
-
-    @PostMapping(path = "/movie")
-    public ResponseEntity<?> loadMovie(@RequestBody String id) throws IOException {
-        Caller<Movie> caller = new Caller<>(Movie.class);
-        Movie movie = caller.call(ApiCall.GET_MOVIE_BY_ID.setParameters(id));
-        return ResponseEntity.ok(movie);
-    }
 
     @ExceptionHandler(IllegalStateException.class)
     public ModelAndView handleError(Exception ex) {
