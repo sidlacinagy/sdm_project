@@ -2,22 +2,12 @@ import RegisterForm from "./RegisterForm";
 import LoginForm from "./LoginForm";
 import React, {useEffect, useState} from "react";
 import {Helmet} from "react-helmet";
-import {getError, searchMovie} from "../../api/apicalls";
+
 
 
 export function LoginPage(props) {
 
-    useEffect(() => {
-        const scriptTag = document.createElement('script');
 
-        scriptTag.src = "./slidingScript.js";
-        scriptTag.async = true;
-
-        document.body.appendChild(scriptTag);
-        return () => {
-            document.body.removeChild(scriptTag);
-        }
-    }, []);
 
     return (
         <div className="homepage">

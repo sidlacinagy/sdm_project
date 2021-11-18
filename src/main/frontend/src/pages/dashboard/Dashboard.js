@@ -24,7 +24,7 @@ export function Dashboard(props) {
     function handleLogout() {
         dispatch(unload);
         props.history.push("/home");
-        console.log(user);
+        console.log(user1);
     }
 
     function handleSearch(event) {

@@ -49,7 +49,7 @@ public class AuthenticationController {
     @Autowired
     private RegistrationService registrationService;
 
-    private static String currentException="a";
+    private static String currentException;
 
     @PostMapping("/auth/login")
     public ResponseEntity<?> login(@RequestBody AuthenticationRequest authenticationRequest) throws InvalidKeySpecException,

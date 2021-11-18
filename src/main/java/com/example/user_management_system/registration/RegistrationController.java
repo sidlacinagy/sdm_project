@@ -1,18 +1,10 @@
 package com.example.user_management_system.registration;
 
-import com.example.ui.requests.AuthenticationRequest;
-import com.example.ui.responses.LoginResponse;
-import com.example.user_management_system.user.User;
+
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
 
