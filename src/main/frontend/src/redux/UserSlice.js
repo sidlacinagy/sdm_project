@@ -10,7 +10,8 @@ export const userSlice = createSlice({
             state.token = action.payload
         },
         unload: (state) => {
-            state.value = ""
+            state.name = ""
+            state.token = ""
         },
     },
 })

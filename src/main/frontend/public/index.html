@@ -11,22 +11,15 @@
 
 </div>
 </body>
-<script>
-    const signUpButton = document.getElementById('signUp');
-    const signInButton = document.getElementById('signIn');
-    const container = document.getElementById('container');
+<script>const signUpButton = document.getElementById('signUp');
+const signInButton = document.getElementById('signIn');
+const container = document.getElementById('container');
 
-    signUpButton.addEventListener('click', () => {
-        container.classList.add("right-panel-active");
-    });
+signUpButton.addEventListener('click', () => {
+    container.classList.add("right-panel-active");
+});
 
-    signInButton.addEventListener('click', () => {
-        container.classList.remove("right-panel-active");
-    });
-</script>
-<script th:if="${T(com.example.user_management_system.registration.RegistrationController).getCurrentException()!=null}">
-    var msg = "[[${T(com.example.user_management_system.registration.RegistrationController).getCurrentException()}]]";
-    alert(msg);
-    var msg = "[[${T(com.example.user_management_system.registration.RegistrationController).setCurrentExceptionToNull()}]]";
-</script>
+signInButton.addEventListener('click', () => {
+    container.classList.remove("right-panel-active");
+});</script>
 </html>

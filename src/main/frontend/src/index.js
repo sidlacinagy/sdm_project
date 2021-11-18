@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import store from './redux/store'
 import {Provider} from 'react-redux'
-import {BrowserRouter, Route, Switch} from "react-router-dom";
+import  {BrowserRouter, Route, Switch,Redirect} from "react-router-dom";
 import {LoginPage} from "./pages/loginpage/LoginPage";
 import {Dashboard} from "./pages/dashboard/Dashboard";
 import {ProfileHome} from "./pages/profile/ProfileHome";
@@ -22,6 +22,7 @@ ReactDOM.render(
                 <Route exact path="/profile_home" component={ProfileHome}/>
                 <Route exact path="/movie" component={MoviePage}/>
                 <Route exact path="/search" component={SearchResult}/>
+                <Redirect from="/" to="/home" />
             </Switch>
         </BrowserRouter>
     </Provider>,

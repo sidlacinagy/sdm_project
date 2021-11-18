@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.security.spec.InvalidKeySpecException;
+import java.util.stream.Stream;
 
 import com.example.movie_management.apihelper.ApiCall;
 import com.example.movie_management.apihelper.Caller;
@@ -18,6 +19,7 @@ import com.example.user_management_system.registration.Request;
 import com.example.user_management_system.security.jwt.JWTTokenHelper;
 import com.example.user_management_system.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -47,7 +49,7 @@ public class AuthenticationController {
     @Autowired
     private RegistrationService registrationService;
 
-    private static String currentException;
+    private static String currentException="a";
 
     @PostMapping("/auth/login")
     public ResponseEntity<?> login(@RequestBody AuthenticationRequest authenticationRequest) throws InvalidKeySpecException,
@@ -69,13 +71,18 @@ public class AuthenticationController {
         return ResponseEntity.ok(response);
     }
 
+
     @PostMapping(path = "/register")
-    public ResponseEntity<?> postRegistration(@RequestBody Request request) {
-        if (!isMatchingPassword(request.getPassword(), request.getPasswordConfirm())) {
-            throw new IllegalStateException("Passwords not matching");
+    public ResponseEntity<?> postRegistration(@RequestBody Request request) throws IllegalAccessException {
+        System.out.println(request.getFirstName());
+        if(request.checkAnyNull()){
+            return ResponseEntity.ok().body("Fill out all the fields");
         }
-        if (registrationService.registration(request)) return ResponseEntity.ok("Successful");
-        throw new IllegalStateException("Unsuccessful registration.");
+
+        if (!isMatchingPassword(request.getPassword(), request.getPasswordConfirm())) {
+            return ResponseEntity.ok().body("Passwords not matching");
+        }
+        return ResponseEntity.ok().body(registrationService.registration(request));
     }
 
     @GetMapping(path = "/userinfo")
@@ -85,12 +92,7 @@ public class AuthenticationController {
     }
 
 
-    @ExceptionHandler(IllegalStateException.class)
-    public ModelAndView handleError(Exception ex) {
-        ModelAndView modelAndView = new ModelAndView("redirect:/home");
-        currentException = ex.getMessage();
-        return modelAndView;
-    }
+
 
     public static String getCurrentException() {
         return currentException;

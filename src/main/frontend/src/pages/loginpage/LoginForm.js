@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux'
 import {load} from '../../redux/UserSlice'
 import {userLogin} from "../../api/apicalls";
@@ -9,19 +9,23 @@ export default function LoginForm(props) {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
 
     const handleSubmit = (event) => {
         userLogin({email: email, password: password}).then((response) => {
             dispatch(load(response.data.token));
             if (response.data.token === undefined) {
-                alert("Login failed");
-                props.data.history.push("/home");
+                setError("Unsuccesful login!");
             } else {
                 props.data.history.push("/dashboard");
             }
         });
         event.preventDefault();
     }
+
+    useEffect(() => {
+        document.getElementById("error1").innerHTML=error;
+    },[error])
 
     function pass() {
         document.getElementById("login-container").innerHTML =
@@ -38,6 +42,7 @@ export default function LoginForm(props) {
 
     return (
         <form onSubmit={handleSubmit} method="POST">
+            <div id="error1"></div>
             <h1>Sign in</h1>
             <input
                 name="email"

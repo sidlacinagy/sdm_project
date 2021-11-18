@@ -27,13 +27,16 @@ public class RegistrationService {
         this.userService = userService;
     }
 
-    public boolean registration(Request request) {
+    public String registration(Request request) {
         if (!emailSender.isValidEmailAddress(request.getEmail()))
-            throw new IllegalStateException("Not a valid email!");
+            return "Not a valid email!";
         User user = new User(request.getNickname(),request.getFirstName(), request.getLastName(), request.getEmail(), request.getPassword());
-        userService.registerUser(user);
+        String msg=userService.registerUser(user);
+        if("Successful registration".equals(msg)){
         sendVerificationEmail(user);
-        return true;
+        }
+        return msg;
+
     }
 
     public Token createToken(User user) {
