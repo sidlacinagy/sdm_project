@@ -1,9 +1,14 @@
 import RegisterForm from "./RegisterForm";
 import LoginForm from "./LoginForm";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {Helmet} from "react-helmet";
 
+
+
 export function LoginPage(props) {
+
+
+
     return (
         <div className="homepage">
             <Helmet>
@@ -13,7 +18,7 @@ export function LoginPage(props) {
             <div id="body">
                 <div className="container" id="container">
                     <div id="register-container" className="form-container sign-up-container">
-                        <RegisterForm/>
+                        <RegisterForm data={props}/>
                     </div>
                     <div id="login-container" className="form-container sign-in-container">
                         <LoginForm data={props}/>
@@ -50,6 +55,8 @@ export function LoginPage(props) {
                     <img alt="error" className="img" src="https://www.kolpaper.com/wp-content/uploads/2020/04/La-Casa-De-Papel-Poster.jpg"/>
                 </div>
             </div>
+
         </div>
+
     );
 }

@@ -1,10 +1,10 @@
 package com.example.user_management_system.registration;
 
+
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
 import java.util.List;
 
 
@@ -41,6 +41,7 @@ public class RegistrationController {
 
     }
 
+
     @GetMapping(path = "/confirm")
     public ModelAndView getConfirm(@RequestParam(name = "token") String token) {
         if (registrationService.enableAccount(token)) return new ModelAndView("redirect:/home");
@@ -53,6 +54,10 @@ public class RegistrationController {
         currentException = ex.getMessage();
         return modelAndView;
     }
+
+
+
+
 
     public static boolean isMatchingPassword(String password, String password_confirm) {
         return password.equals(password_confirm);

@@ -26,14 +26,14 @@ public class UserService implements UserDetailsService {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
-    public void registerUser(User user) throws IllegalStateException {
+    public String registerUser(User user) throws IllegalStateException {
         boolean emailAlreadyInUse = getUserByEmail(user.getEmail()).isPresent();
         if (emailAlreadyInUse) {
-            throw new IllegalStateException("Email already in use");
+            return "Email already in use";
         }
         boolean nicknameAlreadyInUse = getUserByNickname(user.getNickname()).isPresent();
         if (nicknameAlreadyInUse) {
-            throw new IllegalStateException("Nickname already in use");
+            return "Nickname already in use";
         }
         else {
             user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
@@ -42,6 +42,7 @@ public class UserService implements UserDetailsService {
             loggedMoviesService.initializeLogs(user.getEmail());
 
         }
+        return "Successful registration";
     }
 
     public void enableUser(User user) {

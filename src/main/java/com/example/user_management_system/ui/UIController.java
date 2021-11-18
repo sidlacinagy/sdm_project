@@ -12,10 +12,6 @@ public class UIController {
         return new ModelAndView("/static/index");
     }
 
-    @GetMapping("/profile_home")
-    public ModelAndView viewProfile() {
-        return new ModelAndView("/templates/profile_home");
-    }
 
     @GetMapping("/reset**")
     public ModelAndView viewReset() {

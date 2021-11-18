@@ -1,7 +1,9 @@
-import React, {useState} from 'react';
-import {userRegister} from "../../api/apicalls";
+import React, {useEffect, useState} from 'react';
+import {getError, userRegister} from "../../api/apicalls";
 
-export default function RegisterForm() {
+export default function RegisterForm(props) {
+
+    const [error, setError] = useState("");
 
     const [nickname, setNickname] = useState("");
     const [email, setEmail] = useState("");
@@ -9,6 +11,11 @@ export default function RegisterForm() {
     const [lastName, setLastName] = useState("");
     const [password, setPassword] = useState("");
     const [passwordConfirm, setPasswordConfirm] = useState("");
+
+    useEffect(() => {
+        document.getElementById("error").innerHTML=error;
+    },[error])
+
 
     const handleSubmit = (event) => {
         userRegister({
@@ -18,14 +25,14 @@ export default function RegisterForm() {
             lastName: lastName,
             password: password,
             passwordConfirm: passwordConfirm
-        }).then((response) => {
-            alert(response.status);
+        }).then((response) => {console.log(response.data); setError(response.data)
         });
         event.preventDefault();
     }
 
     return (
         <form onSubmit={handleSubmit} method="POST">
+            <div id="error"></div>
             <h1>Sign up</h1>
             <input
                 name="email"
