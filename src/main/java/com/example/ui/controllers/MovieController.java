@@ -23,8 +23,6 @@ public class MovieController {
         Caller<SearchResult> caller = new Caller<>(SearchResult.class);
         SearchResult searchResult = caller.call(ApiCall.SEARCH_BY_MOVIE_NAME.setParameters(URLEncoder.encode(searchRequest.getSearchTerm()
                 , StandardCharsets.UTF_8), searchRequest.getPage()));
-        System.out.println(searchRequest.getSearchTerm()+searchRequest.getPage());
-        System.out.println(searchResult.getResults());
         return ResponseEntity.ok(searchResult.getResults());
     }
 

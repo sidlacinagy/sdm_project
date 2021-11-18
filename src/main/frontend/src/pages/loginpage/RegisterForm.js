@@ -13,8 +13,8 @@ export default function RegisterForm(props) {
     const [passwordConfirm, setPasswordConfirm] = useState("");
 
     useEffect(() => {
-        document.getElementById("error").innerHTML=error;
-    },[error])
+        document.getElementById("error").innerHTML = error;
+    }, [error])
 
 
     const handleSubmit = (event) => {
@@ -25,14 +25,15 @@ export default function RegisterForm(props) {
             lastName: lastName,
             password: password,
             passwordConfirm: passwordConfirm
-        }).then((response) => {console.log(response.data); setError(response.data)
+        }).then((response) => {
+            setError(response.data);
         });
         event.preventDefault();
     }
 
     return (
         <form onSubmit={handleSubmit} method="POST">
-            <div id="error"></div>
+            <div id="error"/>
             <h1>Sign up</h1>
             <input
                 name="email"

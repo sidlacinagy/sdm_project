@@ -9,10 +9,9 @@ export function MoviePage(props) {
 
     useEffect(() => {
         loadMovie((window.location.href).split('?')[1]).then((response) => {
-            console.log(response.data)
             setMovieInfo(response.data)
         })
-    },[]);
+    }, []);
 
     function handleSwitchToDashboard() {
         props.history.push("/dashboard");
@@ -29,7 +28,7 @@ export function MoviePage(props) {
                     <div className="form">
                         <h1>{movieInfo.title}</h1>
                         <img alt={movieInfo.title + " poster"}
-                             src={"https://image.tmdb.org/t/p/original" + movieInfo.poster_path} width="200px"></img>
+                             src={"https://image.tmdb.org/t/p/original" + movieInfo.poster_path} width="200px"/>
                         <div className="info">{movieInfo.overview}</div>
                         <table>
                             <tr>

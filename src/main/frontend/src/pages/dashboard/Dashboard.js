@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux'
-import {unload, userToken} from '../../redux/UserSlice'
-import {fetchUserData, loadMovie, searchMovie} from "../../api/apicalls";
+import {useDispatch, useSelector} from 'react-redux';
+import {load, unload, userToken} from '../../redux/UserSlice';
+import {fetchUserData, userLogout} from "../../api/apicalls";
 import {Helmet} from 'react-helmet';
 
 export function Dashboard(props) {
@@ -9,7 +9,6 @@ export function Dashboard(props) {
     const dispatch = useDispatch();
 
     const [searchTerm, setSearchTerm] = useState("");
-
 
     fetchUserData({
         user
@@ -23,16 +22,16 @@ export function Dashboard(props) {
 
     function handleLogout() {
         dispatch(unload);
+        userLogout().then((response) => {
+            alert(response.data);
+        });
         props.history.push("/home");
-        console.log(user1);
     }
 
     function handleSearch(event) {
-        props.history.push("/search?term="+searchTerm+"&page=1");
+        props.history.push("/search?term=" + searchTerm + "&page=1");
         event.preventDefault();
     }
-
-
 
     return (
         <div className="dashboard">
