@@ -18,6 +18,19 @@
     color:grey;
   }
 
+  .pages_list{
+    list-style: none;
+    display: inline-block;
+  }
+
+  .pages_list li{
+    display: inline-block;
+  }
+
+  .pages_list .true{
+    background-color: orangered;
+  }
+
   #searchlist li{
     transition: all 0.3s ease 0s;
 
