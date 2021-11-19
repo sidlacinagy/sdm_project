@@ -1,13 +1,9 @@
 import RegisterForm from "./RegisterForm";
 import LoginForm from "./LoginForm";
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {Helmet} from "react-helmet";
 
-
-
 export function LoginPage(props) {
-
-
 
     return (
         <div className="homepage">
@@ -55,8 +51,6 @@ export function LoginPage(props) {
                     <img alt="error" className="img" src="https://www.kolpaper.com/wp-content/uploads/2020/04/La-Casa-De-Papel-Poster.jpg"/>
                 </div>
             </div>
-
         </div>
-
     );
 }

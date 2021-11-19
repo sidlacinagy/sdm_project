@@ -24,8 +24,8 @@ export default function LoginForm(props) {
     }
 
     useEffect(() => {
-        document.getElementById("error1").innerHTML=error;
-    },[error])
+        document.getElementById("error1").innerHTML = error;
+    }, [error])
 
     function pass() {
         document.getElementById("login-container").innerHTML =
