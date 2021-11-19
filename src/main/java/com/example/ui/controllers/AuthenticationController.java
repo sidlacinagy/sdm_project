@@ -1,18 +1,11 @@
 package com.example.ui.controllers;
 
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.security.spec.InvalidKeySpecException;
-import java.util.stream.Stream;
 
-import com.example.movie_management.apihelper.ApiCall;
-import com.example.movie_management.apihelper.Caller;
-import com.example.movie_management.movie.Movie;
-import com.example.movie_management.search.SearchResult;
 import com.example.ui.requests.AuthenticationRequest;
+import com.example.ui.requests.ResetRequest;
 import com.example.ui.responses.LoginResponse;
 import com.example.user_management_system.registration.RegistrationService;
 import com.example.user_management_system.registration.Request;
@@ -47,8 +40,6 @@ public class AuthenticationController {
     @Autowired
     private RegistrationService registrationService;
 
-    private static String currentException;
-
     @PostMapping("/auth/login")
     public ResponseEntity<?> login(@RequestBody AuthenticationRequest authenticationRequest) throws InvalidKeySpecException,
             NoSuchAlgorithmException {
@@ -67,7 +58,6 @@ public class AuthenticationController {
 
         return ResponseEntity.ok(response);
     }
-
 
     @PostMapping(path = "/register")
     public ResponseEntity<?> postRegistration(@RequestBody Request request) throws IllegalAccessException {
@@ -94,12 +84,15 @@ public class AuthenticationController {
         return ResponseEntity.ok().body("Successfully logged out");
     }
 
-    public static String getCurrentException() {
-        return currentException;
-    }
-
-    public static void setCurrentExceptionToNull() {
-        currentException = null;
+    @PostMapping(path = "/reset")
+    public ResponseEntity<?> postResetPassword(@RequestBody ResetRequest resetRequest) {
+        if (!isMatchingPassword(resetRequest.getPassword(), resetRequest.getPassword_confirm())) {
+            return ResponseEntity.ok().body("Passwords not matching");
+        }
+        if (registrationService.changePassword(resetRequest.getPassword(), resetRequest.getToken())) {
+            return ResponseEntity.ok().body("Successfully changed password");
+        }
+        return ResponseEntity.ok().body("Cannot change password");
     }
 
 }

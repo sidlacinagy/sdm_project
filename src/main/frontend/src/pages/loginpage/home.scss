@@ -20,6 +20,10 @@
     margin: -20px 0 50px;
   }
 
+  #error, #error1 {
+    color: crimson;
+  }
+
   @keyframes gradient {
     0% {
       background-position: 0% 50%;
@@ -114,7 +118,7 @@
     overflow: hidden;
     width: 768px;
     max-width: 100%;
-    min-height: 510px;
+    min-height: 550px;
   }
 
   .form-container {

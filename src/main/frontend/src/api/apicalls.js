@@ -50,3 +50,11 @@ export const loadMovie = (request) => {
         'data': request
     });
 }
+
+export const reset = (request) => {
+    return axios({
+        'method': 'POST',
+        'url': `${process.env.hostUrl || 'http://localhost:8080'}/api/reset`,
+        'data': request
+    });
+}

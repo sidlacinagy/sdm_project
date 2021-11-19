@@ -29,19 +29,6 @@ public class RegistrationController {
         }
     }
 
-    @PostMapping(path = "/reset**")
-    public ModelAndView postResetPassword(@RequestParam(name = "token") String token, @RequestParam(name = "password") String password,
-                                          @RequestParam(name = "password_confirm") String password_confirm) {
-        if (!isMatchingPassword(password, password_confirm)) {
-            throw new IllegalStateException("Passwords not matching");
-        }
-        if (registrationService.changePassword(password, token)) return new ModelAndView("redirect:/home");
-
-        throw new IllegalStateException("Cannot change password.");
-
-    }
-
-
     @GetMapping(path = "/confirm")
     public ModelAndView getConfirm(@RequestParam(name = "token") String token) {
         if (registrationService.enableAccount(token)) return new ModelAndView("redirect:/home");
@@ -54,10 +41,6 @@ public class RegistrationController {
         currentException = ex.getMessage();
         return modelAndView;
     }
-
-
-
-
 
     public static boolean isMatchingPassword(String password, String password_confirm) {
         return password.equals(password_confirm);

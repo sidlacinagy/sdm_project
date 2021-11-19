@@ -16,9 +16,9 @@ export function SearchResult(props) {
                     <div className="movie_li_div">
                         <span className="movie_title">{movie.title}</span>
                         <span className="movie_release_date"> {movie.release_date.split('-')[0]}</span>
-                        <br></br>
+                        <br/>
                         <span>Original title: {movie.original_title}</span>
-                        <br></br>
+                        <br/>
                         <span>Ratings</span>
                     </div>
                 </li>
