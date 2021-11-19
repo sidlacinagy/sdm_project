@@ -11,12 +11,15 @@ export function SearchResult(props) {
     useEffect(() => {
         searchMovie({searchTerm: searchTerm, page: new URLSearchParams(window.location.search).get("page")}).then((response) => {
             setResults(response.data.map((movie) => (
-                <li>
-                    <div id={movie.id} onClick={handleMovieClick}>
-                        {movie.title}
-                    </div>
-                    <div>
-                        <img alt="pic" src={"https://image.tmdb.org/t/p/original" + movie.poster_path} width="100px"/>
+                <li id={movie.id} onClick={handleMovieClick}>
+                    <img alt="pic" src={"https://image.tmdb.org/t/p/original" + movie.poster_path} width="100px"/>
+                    <div className="movie_li_div">
+                        <span className="movie_title">{movie.title}</span>
+                        <span className="movie_release_date"> {movie.release_date.split('-')[0]}</span>
+                        <br></br>
+                        <span>Original title: {movie.original_title}</span>
+                        <br></br>
+                        <span>Ratings</span>
                     </div>
                 </li>
             )));

@@ -11,6 +11,8 @@ import "./pages/loginpage/home.scss";
 import "./pages/dashboard/dashboard.scss";
 import "./pages/profile/profile.scss";
 import "./pages/movie/movie.scss";
+import "./index.scss"
+import "./pages/searchresult/searchresult.scss"
 import {SearchResult} from "./pages/searchresult/SearchResult";
 
 ReactDOM.render(
