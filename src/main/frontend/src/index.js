@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import store from './redux/store'
-import {Provider} from 'react-redux'
+import store from './redux/store';
+import {Provider} from 'react-redux';
 import  {BrowserRouter, Route, Switch,Redirect} from "react-router-dom";
 import {LoginPage} from "./pages/loginpage/LoginPage";
 import {Dashboard} from "./pages/dashboard/Dashboard";

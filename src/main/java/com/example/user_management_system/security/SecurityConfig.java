@@ -48,13 +48,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .anyRequest()
                     .authenticated()).addFilterBefore(new JWTAuthenticationFilter(userService, jWTTokenHelper), UsernamePasswordAuthenticationFilter.class);
             http.formLogin()
+                    .loginPage("http://localhost:" + port + "/home")
                     .defaultSuccessUrl("/dashboard", true)
                     .failureUrl("http://localhost:" + port + "/home?error").and()
                     .logout().logoutSuccessUrl("/home")
                     .and()
                     .csrf()
                     .disable();
-            http.formLogin().loginPage("http://localhost:" + port + "/home");
 
         } catch (IOException ex) {
             ex.printStackTrace();

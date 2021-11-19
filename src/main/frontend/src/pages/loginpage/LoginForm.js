@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {useDispatch} from 'react-redux'
-import {load} from '../../redux/UserSlice'
+import {useDispatch} from 'react-redux';
+import {load} from '../../redux/UserSlice';
 import {userLogin} from "../../api/apicalls";
 
 export default function LoginForm(props) {
@@ -42,7 +42,7 @@ export default function LoginForm(props) {
 
     return (
         <form onSubmit={handleSubmit} method="POST">
-            <div id="error1"></div>
+            <div id="error1"/>
             <h1>Sign in</h1>
             <input
                 name="email"

@@ -12,12 +12,9 @@ public class UIController {
         return new ModelAndView("/static/index");
     }
 
-
     @GetMapping("/reset**")
     public ModelAndView viewReset() {
         return new ModelAndView("/templates/reset");
     }
 
 }
-
-
