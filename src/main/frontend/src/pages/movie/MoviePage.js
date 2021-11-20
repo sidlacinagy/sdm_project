@@ -71,6 +71,22 @@ export function MoviePage(props) {
                                 <td>Movie homepage:</td>
                                 <td><a href={movieInfo.homepage}>link</a></td>
                             </tr>
+                            <tr>
+                                <td>Original language:</td>
+                                <td><span>{movieInfo.original_language}</span></td>
+                            </tr>
+                            <tr>
+                                <td>Adult movie:</td>
+                                <td><span>{movieInfo.adult !== undefined ? movieInfo.adult.toString() : "Unknown"}</span></td>
+                            </tr>
+                            <tr>
+                                <td>Budget:</td>
+                                <td><span>{movieInfo.budget}</span></td>
+                            </tr>
+                            <tr>
+                                <td>Revenue:</td>
+                                <td><span>{movieInfo.revenue}</span></td>
+                            </tr>
                         </table>
                     </div>
                     <div className="dashboard-button">

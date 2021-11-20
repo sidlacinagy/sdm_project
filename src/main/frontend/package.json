@@ -49,6 +49,7 @@
     "@reduxjs/toolkit": "^1.6.2",
     "axios": "^0.24.0",
     "react-redux": "^7.2.6",
-    "react-router-dom": "5.2.0"
+    "react-router-dom": "5.2.0",
+    "react-usestateref": "^1.0.8"
   }
 }
