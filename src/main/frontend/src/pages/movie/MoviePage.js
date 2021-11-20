@@ -1,4 +1,4 @@
-import {loadMovie} from "../../api/apicalls";
+import {loadCredits, loadImages, loadMovie, loadRecommendations, loadVideos} from "../../api/apicalls";
 import React, {useEffect, useState} from "react";
 import {Helmet} from "react-helmet";
 
@@ -10,6 +10,30 @@ export function MoviePage(props) {
     useEffect(() => {
         loadMovie((window.location.href).split('?')[1]).then((response) => {
             setMovieInfo(response.data)
+        })
+
+        loadCredits((window.location.href).split('?')[1]).then((response) => {
+            console.log("Credits:")
+            console.log(response.data);
+
+        })
+
+        loadImages((window.location.href).split('?')[1]).then((response) => {
+            console.log("Images:")
+            console.log(response.data);
+
+        })
+
+        loadVideos((window.location.href).split('?')[1]).then((response) => {
+            console.log("Videos:")
+            console.log(response.data);
+
+        })
+
+        loadRecommendations({movie_id:(window.location.href).split('?')[1], page: "1"}).then((response) => {
+            console.log("Recommendations:")
+            console.log(response.data);
+
         })
     }, []);
 

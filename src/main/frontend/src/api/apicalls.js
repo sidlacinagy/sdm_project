@@ -51,6 +51,38 @@ export const loadMovie = (request) => {
     });
 }
 
+export const loadCredits= (request) => {
+    return axios({
+        'method': 'POST',
+        'url': `${process.env.hostUrl || 'http://localhost:8080'}/api/credits`,
+        'data': request
+    });
+}
+
+export const loadImages = (request) => {
+    return axios({
+        'method': 'POST',
+        'url': `${process.env.hostUrl || 'http://localhost:8080'}/api/images`,
+        'data': request
+    });
+}
+
+export const loadRecommendations = (request) => {
+    return axios({
+        'method': 'POST',
+        'url': `${process.env.hostUrl || 'http://localhost:8080'}/api/recommendations`,
+        'data': request
+    });
+}
+
+export const loadVideos = (request) => {
+    return axios({
+        'method': 'POST',
+        'url': `${process.env.hostUrl || 'http://localhost:8080'}/api/videos`,
+        'data': request
+    });
+}
+
 export const reset = (request) => {
     return axios({
         'method': 'POST',

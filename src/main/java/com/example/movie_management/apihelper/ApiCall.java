@@ -9,7 +9,11 @@ public enum ApiCall {
     SEARCH_BY_MOVIE_NAME("https://api.themoviedb.org/3/search/movie?api_key=","&query=%s&page=%s"),
     GET_MOVIE_BY_ID("https://api.themoviedb.org/3/movie/%s?api_key=","&language=en-US"),
     GET_GENRE_LIST("https://api.themoviedb.org/3/genre/movie/list?api_key=","&language=en-US"),
-    GET_TRENDING("https://api.themoviedb.org/3/trending/movie/week?api_key=","");
+    GET_TRENDING("https://api.themoviedb.org/3/trending/movie/week?api_key=",""),
+    GET_CREDITS("https://api.themoviedb.org/3/movie/%s/credits?api_key=","&language=en-US"),
+    GET_IMAGES("https://api.themoviedb.org/3/movie/%s/images?api_key=","&language=en-US"),
+    GET_RECOMMENDATIONS("https://api.themoviedb.org/3/movie/%s/recommendations?api_key=", "&language=en-US&page=%s"),
+    GET_VIDEOS("https://api.themoviedb.org/3/movie/%s/videos?api_key=","&language=en-US");
 
     String call;
 

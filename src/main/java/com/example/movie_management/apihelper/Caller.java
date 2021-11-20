@@ -22,8 +22,6 @@ public class Caller<T> {
 
     private final Class<T> type;
 
-    public static String poster = "https://image.tmdb.org/t/p/original/d5NXSklXo0qyIYkgV94XAgMIckC.jpg";
-
     public Caller(Class<T> type){
         this.type = type;
     }
@@ -57,52 +55,4 @@ public class Caller<T> {
         return content.toString();
     }
 
-    public String getRandomTrendingPoster() {
-
-        Caller<SearchResult> trendingCaller = new Caller<>(SearchResult.class);
-        SearchResult trending = null;
-        try {
-            trending = trendingCaller.call(ApiCall.GET_TRENDING.getCall());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        List<String> trendingPosters = trending.getResults().stream().map(m->"https://image.tmdb.org/t/p/original"+m.getPoster_path()).collect(Collectors.toList());
-        Random rnd = new Random();
-        return trendingPosters.get(rnd.nextInt(trendingPosters.size()));
-    }
-
-    public static void main(String[] args) throws IOException {
-
-        //System.out.println(getRandomTrendingPoster());
-
-
-        Caller<SearchResult> searchResultCaller = new Caller<>(SearchResult.class);
-        Caller<Movie> movieCaller = new Caller<>(Movie.class);
-
-        Scanner scanner= new Scanner(System.in);
-        System.out.print("Enter the title: ");
-        String movieName = scanner.nextLine();
-
-
-        int pageNumber = 1;
-        SearchResult searchResult = searchResultCaller.call(ApiCall.SEARCH_BY_MOVIE_NAME.setParameters(URLEncoder.encode(movieName, StandardCharsets.UTF_8),Integer.toString(pageNumber)));
-        for(SearchResult.ResultMovie result : searchResult.getResults()){
-            System.out.println(result.getTitle());
-        }
-
-        System.out.println("0-"+searchResult.getTotal_results()+": ");
-
-
-        String num = scanner.nextLine();
-        int id = searchResult.getResults().get(Integer.parseInt(num)).getId();
-
-        Movie movie = movieCaller.call(ApiCall.GET_MOVIE_BY_ID.setParameters(Integer.toString(id)));
-        System.out.println("https://image.tmdb.org/t/p/original"+movie.poster_path);
-
-
-        Caller<Genres> genreCaller = new Caller(Genres.class);
-        Genres genres = genreCaller.call(ApiCall.GET_GENRE_LIST.getCall());
-        System.out.println(genres.getGenres().get(0).getName());
-
-    }
 }

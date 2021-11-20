@@ -2,8 +2,9 @@ package com.example.ui.controllers;
 
 import com.example.movie_management.apihelper.ApiCall;
 import com.example.movie_management.apihelper.Caller;
-import com.example.movie_management.movie.Movie;
+import com.example.movie_management.movie.*;
 import com.example.movie_management.search.SearchResult;
+import com.example.ui.requests.RecommendationRequest;
 import com.example.ui.requests.SearchRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,5 +31,33 @@ public class MovieController {
         Caller<Movie> caller = new Caller<>(Movie.class);
         Movie movie = caller.call(ApiCall.GET_MOVIE_BY_ID.setParameters(id));
         return ResponseEntity.ok(movie);
+    }
+
+    @PostMapping(path = "/credits")
+    public ResponseEntity<?> loadCredits(@RequestBody String id) throws IOException {
+        Caller<Credits> caller = new Caller<>(Credits.class);
+        Credits credits = caller.call(ApiCall.GET_CREDITS.setParameters(id));
+        return ResponseEntity.ok(credits);
+    }
+
+    @PostMapping(path = "/images")
+    public ResponseEntity<?> loadImages(@RequestBody String id) throws IOException {
+        Caller<Image> caller = new Caller<>(Image.class);
+        Image image = caller.call(ApiCall.GET_IMAGES.setParameters(id));
+        return ResponseEntity.ok(image);
+    }
+
+    @PostMapping(path = "/recommendations")
+    public ResponseEntity<?> loadRecommendations(@RequestBody RecommendationRequest recommendationRequest) throws IOException {
+        Caller<Recommendation> caller = new Caller<>(Recommendation.class);
+        Recommendation recommendation = caller.call(ApiCall.GET_RECOMMENDATIONS.setParameters(recommendationRequest.getMovie_id(), recommendationRequest.getPage()));
+        return ResponseEntity.ok(recommendation);
+    }
+
+    @PostMapping(path = "/videos")
+    public ResponseEntity<?> loadVideos(@RequestBody String id) throws IOException {
+        Caller<Video> caller = new Caller<>(Video.class);
+        Video video = caller.call(ApiCall.GET_VIDEOS.setParameters(id));
+        return ResponseEntity.ok(video);
     }
 }
