@@ -28,5 +28,6 @@ public class Recommendation {
         int vote_count;
         boolean video;
         double vote_average;
+        String media_type;
     }
 }

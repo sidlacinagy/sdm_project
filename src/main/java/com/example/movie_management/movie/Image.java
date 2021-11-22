@@ -8,13 +8,12 @@ import java.util.List;
 public class Image {
 
     int id;
-
-    List<Backdrop> backdrops;
-
-    List<Poster> posters;
+    List<BackdropOrPosterOrLogo> backdrops;
+    List<BackdropOrPosterOrLogo> posters;
+    List<BackdropOrPosterOrLogo> logos;
 
     @Data
-    public static class Backdrop{
+    public static class BackdropOrPosterOrLogo{
         int aspect_ratio;
         String file_path;
         int height;
@@ -24,14 +23,4 @@ public class Image {
         int width;
     }
 
-    @Data
-    public static class Poster{
-        int aspect_ratio;
-        String file_path;
-        int height;
-        String iso_639_1;
-        int vote_average;
-        int vote_count;
-        int width;
-    }
 }

@@ -5,7 +5,11 @@ import {Helmet} from "react-helmet";
 export function MoviePage(props) {
 
     const [movieInfo, setMovieInfo] = useState({});
-
+    const [cast, setCast] = useState({});
+    const [directors, setDirectors] = useState({});
+    const [images, setImages] = useState({});
+    const [videos, setVideos] = useState({});
+    const [recommendations, setRecommendations] = useState({});
 
     useEffect(() => {
         loadMovie((window.location.href).split('?')[1]).then((response) => {
@@ -13,27 +17,23 @@ export function MoviePage(props) {
         })
 
         loadCredits((window.location.href).split('?')[1]).then((response) => {
-            console.log("Credits:")
-            console.log(response.data);
-
+            setCast(response.data.cast.map((actor) => (
+                <li>
+                    {actor.name}
+                </li>
+            )));
         })
 
         loadImages((window.location.href).split('?')[1]).then((response) => {
-            console.log("Images:")
-            console.log(response.data);
-
+            setImages(response.data);
         })
 
         loadVideos((window.location.href).split('?')[1]).then((response) => {
-            console.log("Videos:")
-            console.log(response.data);
-
+            setVideos(response.data);
         })
 
         loadRecommendations({movie_id:(window.location.href).split('?')[1], page: "1"}).then((response) => {
-            console.log("Recommendations:")
-            console.log(response.data);
-
+            setRecommendations(response.data);
         })
     }, []);
 
@@ -85,6 +85,24 @@ export function MoviePage(props) {
                             </tr>
                             <tr>
                                 <td>Revenue:</td>
+                                <td><span>{movieInfo.revenue}</span></td>
+                            </tr>
+                            <tr>
+                                <td>Cast:</td>
+                                <td><ul>
+                                    {cast}
+                                </ul></td>
+                            </tr>
+                            <tr>
+                                <td>Director:</td>
+                                <td><span>{movieInfo.revenue}</span></td>
+                            </tr>
+                            <tr>
+                                <td>Video:</td>
+                                <td><span>{movieInfo.revenue}</span></td>
+                            </tr>
+                            <tr>
+                                <td>Recommendations:</td>
                                 <td><span>{movieInfo.revenue}</span></td>
                             </tr>
                         </table>
