@@ -67,23 +67,23 @@ export function SearchResult(props) {
     }
 
     function firstPage() {
-        props.history.push("/search?term=" + searchTerm + "&page=1");
+        window.location.href="/search?term=" + searchTerm + "&page=1";
     }
 
     function lastPage() {
-        props.history.push("/search?term=" + searchTerm + "&page=" + totalPages);
+        window.location.href="/search?term=" + searchTerm + "&page=" + totalPages;
     }
 
     function previousPage() {
-        props.history.push("/search?term=" + searchTerm + "&page=" + (parseInt(new URLSearchParams(window.location.search).get("page")) - 1).toString());
+        window.location.href="/search?term=" + searchTerm + "&page=" + (parseInt(new URLSearchParams(window.location.search).get("page")) - 1).toString();
     }
 
     function specificPage(event) {
-        props.history.push("/search?term=" + searchTerm + "&page=" + event.target.id);
+        window.location.href="/search?term=" + searchTerm + "&page=" + event.target.id;
     }
 
     function nextPage() {
-        props.history.push("/search?term=" + searchTerm + "&page=" + (parseInt(new URLSearchParams(window.location.search).get("page")) + 1).toString());
+        window.location.href="/search?term=" + searchTerm + "&page=" + (parseInt(new URLSearchParams(window.location.search).get("page")) + 1).toString();
     }
 
     return (
