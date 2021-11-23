@@ -1,5 +1,5 @@
 import {useDispatch, useSelector} from "react-redux";
-import {unload, userToken} from "../../redux/UserSlice";
+import {userToken} from "../../redux/UserSlice";
 import React, {useState} from "react";
 import {fetchUserData} from "../../api/apicalls";
 import {Helmet} from "react-helmet";
