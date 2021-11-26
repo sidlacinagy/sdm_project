@@ -117,8 +117,8 @@ export function MoviePage(props) {
         []
     );
 
-    function addMovieToWatchLater(movieId){
-        modifyWatchLater(user,{"action":"ADD", "movie_id":movieId}).then()
+    function addMovieToWatchLater(event){
+        modifyWatchLater(user,{"action":"ADD", "movie_id":event.target.id}).then()
     }
 
     function nextCastPage(event) {
@@ -141,15 +141,6 @@ export function MoviePage(props) {
         window.location.href ="/movie?" + event.target.id;
     }
 
-
-    function handleMovieClick(event) {
-        window.location.href ="/movie?" + event.target.id;
-    }
-
-    function handleSwitchToDashboard() {
-        props.history.push("/dashboard");
-    }
-
     return (
         <div className="movie">
             <Helmet>
@@ -165,7 +156,7 @@ export function MoviePage(props) {
                         <div className="info">{movieInfo.overview}</div>
                         <table>
                             <tr>
-                                <button onClick={addMovieToWatchLater(movieInfo.id)}>Add to watchlater</button>
+                                <button id={movieInfo.id} onClick={addMovieToWatchLater}>Add to watchlater</button>
                             </tr>
                             <tr>
                                 <td>Release date:</td>

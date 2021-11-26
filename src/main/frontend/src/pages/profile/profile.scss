@@ -15,7 +15,6 @@
     align-items: center;
     flex-direction: column;
     font-family: 'Montserrat', sans-serif;
-    height: 100vh;
   }
 
   @keyframes gradient {
@@ -114,7 +113,6 @@
     0 10px 10px rgba(0, 0, 0, 0.22);
     border-color: black;
     position: relative;
-    overflow: hidden;
     width: 768px;
     max-width: 100%;
     min-height: 480px;
@@ -161,5 +159,4 @@
     text-transform: uppercase;
     transition: transform 80ms ease-in;
   }
-
 }
