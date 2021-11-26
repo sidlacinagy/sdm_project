@@ -1,64 +1,195 @@
 #searchresult{
 
-  #searchlist{
+  #body {
+    background-color: rgb(7, 2, 24);
+    text-align: center;
+    padding: 0%;
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  #searchlist {
     list-style: none;
     margin: 0;
     border: 0;
+    align-content: center;
+    height: auto;
+    display: inline-block;
+    justify-content: center;
+    align-items: center;
   }
 
-  .movie_title{
-    font-size: 130%;
+  .movie_title {
+    font-size: 170%;
     font-weight: bold;
-    color:black;
+    color: wheat;
+    justify-content: center;
+    text-align: center;
+    display: inline;
+    line-height: 100%;
   }
 
-  .movie_release_date{
-    font-size: 110%;
+  .movie_release_date {
+    font-size: 150%;
     font-weight: 500;
-    color:grey;
+    color: grey;
+    display: block;
+    text-align: center;
   }
 
-  .pages_list{
+  .pages_list {
+    position: relative;
+    left: -1.3em;
     list-style: none;
-    display: inline-block;
+    display: inline-flex;
+    justify-content: center;
+    text-align: center;
   }
 
-  .pages_list li{
-    display: inline-block;
+  .pages_list li {
+    display: inline-flex;
+    justify-content: center;
   }
 
-  .pages_list .true{
-    background-color: orangered;
+  #next,
+  #back {
+    list-style: none;
+    display: inline-flex;
   }
 
-  #searchlist li{
-    transition: all 0.3s ease 0s;
-
-    padding-bottom: 40px;
-    position:relative
-
+  #next button,
+  #back button {
+    backface-visibility: hidden;
+    background-color: #232b4d;
+    border-radius: 6px;
+    border-width: 0;
+    box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset, rgba(50, 50, 93, .1) 0 2px 5px 0, rgba(0, 0, 0, .07) 0 1px 1px 0;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    font-family: -apple-system, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, sans-serif;
+    font-size: 80%;
+    height: 44px;
+    margin: 12px 0 0;
+    outline: none;
+    overflow: hidden;
+    padding: 0 35px;
+    position: relative;
+    text-align: center;
+    text-transform: none;
+    transform: translateZ(0);
+    transition: all .2s, box-shadow .08s ease-in;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: 90px;
+    margin: 0.2em;
   }
 
-
-
-  #searchlist li:hover{
-    color:#0088a9;
-    background-color: #d2d1d3;
+  #next button:hover,
+  #back button:hover {
+    background-color: #0e092c;
+    box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset, rgba(50, 50, 93, .2) 0 6px 15px 0, rgba(0, 0, 0, .1) 0 2px 2px 0, rgba(50, 151, 211, .3) 0 0 0 4px;
   }
 
-  .movie_li_div{
-    display: inline-block;
+  .pages_list li button {
+    backface-visibility: hidden;
+    background-color: #405cf5;
+    border-radius: 6px;
+    border-width: 0;
+    box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset, rgba(50, 50, 93, .1) 0 2px 5px 0, rgba(0, 0, 0, .07) 0 1px 1px 0;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    font-family: -apple-system, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, sans-serif;
+    font-size: 100%;
+    height: 44px;
+    line-height: 1.15;
+    margin: 12px 0 0;
+    outline: none;
+    overflow: hidden;
+    padding: 0 25px;
+    position: relative;
+    text-align: center;
+    text-transform: none;
+    transform: translateZ(0);
+    transition: all .2s, box-shadow .08s ease-in;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    margin: 0.2em;
+  }
+
+  .pages_list li button:disabled {
+    cursor: default;
+  }
+
+  .pages_list li button:hover {
+    background-color: #a495ff;
+    box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset, rgba(50, 50, 93, .2) 0 6px 15px 0, rgba(0, 0, 0, .1) 0 2px 2px 0, rgba(50, 151, 211, .3) 0 0 0 4px;
+  }
+
+  .rating {
+    padding: 0.7em;
+    background-color: #aca6a6;
+    color: black;
+    border-radius: 10px;
+  }
+
+  .pages_list .true {
+    color: black;
+    background-color: rgb(255, 141, 227);
+  }
+
+  .pages_list .true:hover {
+    color: black;
+    background-color: rgb(255, 141, 227);
+  }
+
+  #searchlist li:hover {
+    color: #ffffff;
+    background-color: #29228a;
+  }
+
+  .movie_li_div {
+    display: block;
     align-content: space-between;
+    max-width: 20em;
+    display: block;
+    width: auto;
+    margin-left: auto;
+    margin-top: 0em;
+    margin-right: auto;
   }
 
-  .movie_li_div span{
-    padding-bottom: 35px;
+  #searchlist img {
+    height: 500px;
+    display: block;
+    width: auto;
+    max-width: 350px;
+    margin-left: auto;
+    margin-top: 0em;
+    margin-right: auto;
+    justify-content: center;
+    padding-bottom: 0.1em;
   }
 
-  #searchlist li{
-    border-bottom: 1px solid black;
+  #searchlist li {
+    block-size: 500px;
+    transition: all 0.3s ease 0s;
+    padding-left: 1em;
+    padding-right: 1em;
+    position: relative;
+    height: 700px;
+    width: 350px;
+    text-align: center;
+    margin: 0 20px;
+    font-size: 18px;
+    float: left;
+    justify-content: center;
+    background-color: #0e0a27;
+    margin-bottom: 1em;
+    padding-top: 1em;
+    border-radius: 25px;
   }
-
-
-
 }
