@@ -25,10 +25,7 @@ export function SearchResult(props) {
                         <span className="movie_release_date" id={movie.id}
                               onClick={handleMovieClick}> {movie.release_date === null ? "" : movie.release_date.substring(0, 4)}</span>
                         <br/>
-                        <span id={movie.id}
-                              onClick={handleMovieClick}>Original title: {movie.original_title === null ? "" : movie.original_title}</span>
-                        <br/>
-                        <span id={movie.id} onClick={handleMovieClick}>Ratings</span>
+                        <span id={movie.id} onClick={handleMovieClick} className="rating">Ratings</span>
                     </div>
                 </li>
             )));
@@ -88,6 +85,7 @@ export function SearchResult(props) {
 
     return (
         <div id="searchresult">
+            <div id="body">
             <Helmet>
                 <meta charSet="UTF-8"/>
                 <title>{searchTerm}</title>
@@ -95,18 +93,25 @@ export function SearchResult(props) {
             <ul id="searchlist">
                 {results}
             </ul>
+            <div id="page">
+                <div id="back">
             <button onClick={firstPage}
                     style={parseInt(new URLSearchParams(window.location.search).get("page")) <= 1 ? {display: 'none'} : {}}>First
             </button>
             <button onClick={previousPage}
-                    style={parseInt(new URLSearchParams(window.location.search).get("page")) <= 1 ? {display: 'none'} : {}}>Previous
+                    style={parseInt(new URLSearchParams(window.location.search).get("page")) <= 1 ? {display: 'none'} : {}}>Prev
             </button>
+                </div>
             <ul className="pages_list">{pages}</ul>
+                <div id="next">
             <button onClick={nextPage}
                     style={parseInt(new URLSearchParams(window.location.search).get("page")) >= totalPages ? {display: 'none'} : {}}>Next
             </button>
             <button onClick={lastPage}
                     style={parseInt(new URLSearchParams(window.location.search).get("page")) >= totalPages ? {display: 'none'} : {}}>Last
             </button>
+                </div>
+            </div>
+            </div>
         </div>);
 }
