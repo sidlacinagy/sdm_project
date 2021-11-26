@@ -15,38 +15,40 @@ public class WatchLaterService {
     private WatchLaterRepository watchLaterRepository;
 
     public void addToList(String email, int movieId) {
-        WatchLater watchLater = getValidWatchLater(watchLaterRepository.findById(email), "Cannot add movie to Watch Later list.");
-        if (!watchLater.getMovies().contains(movieId)) {
-            watchLater.getMovies().add(movieId);
-            watchLaterRepository.save(watchLater);
+        Optional<WatchLater> watchLater = watchLaterRepository.findById(email);
+        if (watchLater.isEmpty()){
+            initializeWatchLater(email);
+            watchLater = watchLaterRepository.findById(email);
+        }
+
+        if (!watchLater.get().getMovies().contains(movieId)) {
+            watchLater.get().getMovies().add(movieId);
+            watchLaterRepository.save(watchLater.get());
         }
     }
 
     public List<Integer> getWatchLaterList(String email) {
-        WatchLater watchLater = getValidWatchLater(watchLaterRepository.findById(email), "Watch Later list does not exist.");
-        return watchLater.getMovies();
+        Optional<WatchLater> watchLater = watchLaterRepository.findById(email);
+        if (watchLater.isPresent()) {
+            return watchLater.get().getMovies();
+        }
+        return List.of();
     }
 
     public boolean isMovieAlreadyInList(String email, int movieId) {
-        WatchLater watchLater = getValidWatchLater(watchLaterRepository.findById(email), "Watch Later list does not exist.");
+        WatchLater watchLater = watchLaterRepository.findById(email).orElseThrow(()-> new IllegalStateException("Watch Later list does not exist."));
         return watchLater.getMovies().contains(movieId);
     }
 
-    public void deleteMovieFromWatchLaterList(String email, int movieId) {
-        WatchLater watchLater = getValidWatchLater(watchLaterRepository.findById(email), "Cannot delete movie.");
-        watchLaterRepository.delete(watchLater);
+    public void deleteMovieFromWatchLaterList(String email, Integer movieId) {
+        WatchLater watchLater = watchLaterRepository.findById(email).orElseThrow(()->new IllegalStateException("Cannot delete movie."));
+        watchLater.getMovies().remove(movieId);
+        watchLaterRepository.save(watchLater);
     }
 
     public void initializeWatchLater(String email) {
         watchLaterRepository.save(new WatchLater(email));
     }
 
-    public WatchLater getValidWatchLater(Optional<WatchLater> watchLater, String exception) {
-        if (watchLater.isPresent()) {
-            return watchLater.get();
-        } else {
-            throw new IllegalStateException(exception);
-        }
-    }
 
 }

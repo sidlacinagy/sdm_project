@@ -3,8 +3,11 @@ package com.example.ui.controllers;
 import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.security.spec.InvalidKeySpecException;
+import java.util.List;
 
+import com.example.movie_management.movie.watchlater.WatchLaterService;
 import com.example.ui.requests.AuthenticationRequest;
+import com.example.ui.requests.ModifyWatchLaterRequest;
 import com.example.ui.requests.ResetRequest;
 import com.example.ui.responses.LoginResponse;
 import com.example.user_management_system.registration.RegistrationService;
@@ -40,6 +43,9 @@ public class AuthenticationController {
     @Autowired
     private RegistrationService registrationService;
 
+    @Autowired
+    private WatchLaterService watchLaterService;
+
     @PostMapping("/auth/login")
     public ResponseEntity<?> login(@RequestBody AuthenticationRequest authenticationRequest) throws InvalidKeySpecException,
             NoSuchAlgorithmException {
@@ -55,7 +61,7 @@ public class AuthenticationController {
 
         LoginResponse response = new LoginResponse();
         response.setToken(jwtToken);
-
+        System.out.println(jwtToken);
         return ResponseEntity.ok(response);
     }
 
@@ -78,6 +84,34 @@ public class AuthenticationController {
         return ResponseEntity.ok(userObj);
     }
 
+    @PostMapping(path = "/watchlater")
+    public ResponseEntity<?> modifyWatchLater(Principal user, @RequestBody ModifyWatchLaterRequest modifyWatchLaterRequest) {
+        User userObj = (User) userDetailsService.loadUserByUsername(user.getName());
+        System.out.println(userObj.getEmail());
+        String userEmail= userObj.getEmail();
+        String action = modifyWatchLaterRequest.getAction();
+        System.out.println(modifyWatchLaterRequest.getAction());
+
+        if(action.equals("GET_LIST")){
+            List<Integer> watchLaterList = watchLaterService.getWatchLaterList(userEmail);
+            return ResponseEntity.ok(watchLaterList);
+        }
+        String movie =modifyWatchLaterRequest.getMovie_id();
+        System.out.println(movie);
+
+        int movie_id = Integer.parseInt(movie);
+        if(action.equals("ADD")) {
+            watchLaterService.addToList(userObj.getEmail(), movie_id);
+            return ResponseEntity.ok(movie_id+" was added to WatchLater");
+        }
+        if(action.equals("REMOVE")) {
+            watchLaterService.deleteMovieFromWatchLaterList(userEmail, movie_id);
+            return ResponseEntity.ok(movie_id+" was removed from WatchLater");
+        }
+
+        return ResponseEntity.ok("bad");
+    }
+
     @GetMapping(path = "/logout")
     public ResponseEntity<?> logout() {
         SecurityContextHolder.getContext().setAuthentication(null);
@@ -94,5 +128,7 @@ public class AuthenticationController {
         }
         return ResponseEntity.ok().body("Cannot change password");
     }
+
+
 
 }

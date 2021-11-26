@@ -1,13 +1,23 @@
-import {loadCredits, loadImages, loadMovie, loadRecommendations, loadVideos} from "../../api/apicalls";
+import {
+    loadCredits,
+    loadImages,
+    loadMovie,
+    loadRecommendations,
+    loadVideos,
+    modifyWatchLater
+} from "../../api/apicalls";
 import React, {useEffect, useState} from "react";
 import {Helmet} from "react-helmet";
 import {useHistory} from "react-router-dom";
 import not_found from "../searchresult/not_found.png";
 import reactElementToJSXString from 'react-element-to-jsx-string';
+import {useSelector} from "react-redux";
+import {userToken} from "../../redux/UserSlice";
 
 
 export function MoviePage(props) {
 
+    const user = useSelector(userToken);
     const [movieInfo, setMovieInfo] = useState({});
     const [cast, setCast] = useState([]);
     const [directors, setDirectors] = useState();
@@ -37,9 +47,10 @@ export function MoviePage(props) {
 
             setCast(response.data.cast.map((actor) => (
                 <li>
-                    {actor.name} played {actor.character}
                     <img alt="pic" src={actor.profile_path === null ? not_found : ("https://image.tmdb.org/t/p/w500/" + actor.profile_path)}
                          width="100px" />
+                    <br/>
+                    <span>{actor.name} as{actor.character}</span>
                 </li>
             )))
 
@@ -106,6 +117,10 @@ export function MoviePage(props) {
         []
     );
 
+    function addMovieToWatchLater(movieId){
+        modifyWatchLater(user,{"action":"ADD", "movie_id":movieId}).then()
+    }
+
     function nextCastPage(event) {
         setCurrentCastPage(currentCastPage+1);
     }
@@ -150,6 +165,9 @@ export function MoviePage(props) {
                         <div className="info">{movieInfo.overview}</div>
                         <table>
                             <tr>
+                                <button onClick={addMovieToWatchLater(movieInfo.id)}>Add to watchlater</button>
+                            </tr>
+                            <tr>
                                 <td>Release date:</td>
                                 <td><span>{movieInfo.release_date}</span></td>
                             </tr>
@@ -182,7 +200,6 @@ export function MoviePage(props) {
                                 <td><span>{movieInfo.revenue}</span></td>
                             </tr>
                             <tr>
-                                <td>Cast:</td>
                                 <td>
                                     <div className="dashboard-button" id="back"
                                          style={currentCastPage<1 ? {display: 'none'} : {}}>
@@ -209,7 +226,6 @@ export function MoviePage(props) {
                          src={videos}>
             </iframe> </td></tr> : ""}
                             <tr>
-                                <td>Recommendations:</td>
                                 <td>
                                     <div className="dashboard-button" id="back"
                                          style={currentRecomPage<1 ? {display: 'none'} : {}}>

@@ -35,6 +35,17 @@ export const fetchUserData = (request) => {
     });
 }
 
+export const modifyWatchLater = (authtoken, request) => {
+    return axios({
+        'method': 'POST',
+        'url': `${process.env.hostUrl || 'http://localhost:8082'}/api/watchlater`,
+        'headers': {
+            'Authorization': 'Bearer' + authtoken
+        },
+        'data': request
+    });
+}
+
 export const searchMovie = (request) => {
     return axios({
         'method': 'POST',

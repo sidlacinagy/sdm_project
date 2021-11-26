@@ -160,4 +160,20 @@
         transition: transform 80ms ease-in;
     }
 
+    #currentCast, #currentRecom {
+        list-style: none;
+        padding: 0;
+    }
+
+    #currentCast li{
+        display: inline;
+        padding: 0;
+    }
+
+    #currentRecom li{
+        display: inline;
+        padding: 0;
+    }
+
+
 }

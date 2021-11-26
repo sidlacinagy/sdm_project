@@ -1,7 +1,7 @@
 import {useDispatch, useSelector} from "react-redux";
 import {userToken} from "../../redux/UserSlice";
-import React, {useState} from "react";
-import {fetchUserData} from "../../api/apicalls";
+import React, {useEffect, useState} from "react";
+import {fetchUserData, modifyWatchLater} from "../../api/apicalls";
 import {Helmet} from "react-helmet";
 
 export function ProfileHome(props) {
@@ -9,12 +9,27 @@ export function ProfileHome(props) {
     const dispatch = useDispatch();
 
     const [userdetails, setUserdetails] = useState({});
+    const [watchlater, setWatchlater] = useState();
 
+    useEffect(() => {
     fetchUserData({
         user
     }).then((response) => {
+        console.log(response.data)
         setUserdetails(response.data)
-    });
+    })
+
+    modifyWatchLater({
+        user
+    },{"action": "GET_LIST", "movie_id":"0"}).then((response) => {
+        console.log("watch:")
+        console.log(response.data)
+        setWatchlater(response.data.map((id)=>(
+            <li>{id}</li>
+        )))
+    })
+
+    },[])
 
     function handleSwitchToDashboard() {
         props.history.push("/dashboard");
@@ -53,6 +68,12 @@ export function ProfileHome(props) {
                                 <td><span>{userdetails.registerDate}</span></td>
                             </tr>
                         </table>
+                        <div>Your watchlater list:</div>
+                        <div>
+                            <ul>
+                                {watchlater}
+                            </ul>
+                        </div>
                     </div>
                     <div className="back-button">
                         <div onClick={handleSwitchToDashboard}>Dashboard</div>

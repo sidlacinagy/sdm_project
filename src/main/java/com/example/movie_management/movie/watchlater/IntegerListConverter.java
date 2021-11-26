@@ -4,6 +4,7 @@ import javax.persistence.AttributeConverter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -16,6 +17,6 @@ public class IntegerListConverter implements AttributeConverter<List<Integer>, S
 
     @Override
     public List<Integer> convertToEntityAttribute(String s) {
-        return s != "" ? Stream.of(s.split("-")).map(Integer::parseInt).collect(Collectors.toList()) : new ArrayList<>();
+        return !Objects.equals(s, "") ? Stream.of(s.split("-")).map(Integer::parseInt).collect(Collectors.toList()) : new ArrayList<>();
     }
 }
