@@ -1,4 +1,4 @@
-package com.example.ui.requests;
+package com.example.controllers.requests;
 
 public class AuthenticationRequest {
     private String email;

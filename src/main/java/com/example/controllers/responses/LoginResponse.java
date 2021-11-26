@@ -1,4 +1,4 @@
-package com.example.ui.responses;
+package com.example.controllers.responses;
 
 public class LoginResponse {
     private String token;

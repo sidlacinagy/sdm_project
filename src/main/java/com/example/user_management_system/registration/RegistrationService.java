@@ -8,8 +8,11 @@ import com.example.user_management_system.verification.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Optional;
+import java.util.Properties;
 
 @Service
 public class RegistrationService {
@@ -47,8 +50,11 @@ public class RegistrationService {
 
     public boolean sendVerificationEmail(User user) {
         Token token = createToken(user);
-        try {
-            emailSender.send(emailSender.createVerificationMessage(user.getEmail(), user.getFirstName(), "http://localhost:8080/confirm?token=" + token.getToken()));
+        try(InputStream input = new FileInputStream("src/main/resources/application.properties")) {
+            Properties prop = new Properties();
+            prop.load(input);
+            String port = prop.getProperty("server.port");
+            emailSender.send(emailSender.createVerificationMessage(user.getEmail(), user.getFirstName(), "http://localhost:" + port + "/confirm?token=" + token.getToken()));
         } catch (IOException | MessagingException ioException) {
             return false;
         }
@@ -60,9 +66,12 @@ public class RegistrationService {
         if (user.isEmpty()) {
             return false;
         }
-        try {
+        try(InputStream input = new FileInputStream("src/main/resources/application.properties")) {
+            Properties prop = new Properties();
+            prop.load(input);
+            String port = prop.getProperty("server.port");
             Token token = createToken(user.get());
-            emailSender.send(emailSender.createPasswordResetMessage(email, "http://localhost:8080/reset?token=" + token.getToken()));
+            emailSender.send(emailSender.createPasswordResetMessage(email, "http://localhost:" + port + "/reset?token=" + token.getToken()));
         } catch (IOException | MessagingException ioException) {
             return false;
         }

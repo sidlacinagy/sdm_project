@@ -62,7 +62,7 @@ export const loadMovie = (request) => {
     });
 }
 
-export const loadCredits= (request) => {
+export const loadCredits = (request) => {
     return axios({
         'method': 'POST',
         'url': `${process.env.hostUrl || 'http://localhost:8082'}/api/credits`,
@@ -98,6 +98,44 @@ export const reset = (request) => {
     return axios({
         'method': 'POST',
         'url': `${process.env.hostUrl || 'http://localhost:8082'}/api/reset`,
+        'data': request
+    });
+}
+
+export const createReview = (authtoken, request) => {
+    return axios({
+        'method': 'POST',
+        'url': `${process.env.hostUrl || 'http://localhost:8082'}/api/review_create`,
+        'headers': {
+            'Authorization': 'Bearer' + authtoken
+        },
+        'data': request
+    });
+}
+
+export const deleteReview = (authtoken, request) => {
+    return axios({
+        'method': 'POST',
+        'url': `${process.env.hostUrl || 'http://localhost:8082'}/api/review_delete`,
+        'headers': {
+            'Authorization': 'Bearer' + authtoken
+        },
+        'data': request
+    });
+}
+
+export const getReviewsByUser = (request) => {
+    return axios({
+        'method': 'POST',
+        'url': `${process.env.hostUrl || 'http://localhost:8082'}/api/review_user`,
+        'data': request
+    });
+}
+
+export const getReviewsByMovie = (request) => {
+    return axios({
+        'method': 'POST',
+        'url': `${process.env.hostUrl || 'http://localhost:8082'}/api/review_movie`,
         'data': request
     });
 }

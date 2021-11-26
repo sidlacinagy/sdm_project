@@ -15,4 +15,8 @@ public interface ReviewRepository extends CrudRepository<Review, Review.Key> {
 
     @Query("SELECT r FROM Review r WHERE r.key.movieId = :id")
     Collection<Review> findByMovieId(@Param("id") int movieId);
+
+    @Query("SELECT r FROM Review r WHERE r.key.nickname = :nick and r.key.movieId = :id")
+    Collection<Review> findByNicknameAndMovieId(@Param("nick") String nickname, @Param("id") int movieId);
+    
 }
