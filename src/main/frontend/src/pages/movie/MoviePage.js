@@ -1,4 +1,6 @@
 import {
+    createReview,
+    deleteReview, fetchUserData, getReviewsByMovie,
     loadCredits,
     loadImages,
     loadMovie,
@@ -6,11 +8,12 @@ import {
     loadVideos,
     modifyWatchLater
 } from "../../api/apicalls";
+import Modal from 'react-awesome-modal';
+import ReactStars from 'react-rating-stars-component';
 import React, {useEffect, useState} from "react";
 import {Helmet} from "react-helmet";
 import {useHistory} from "react-router-dom";
 import not_found from "../searchresult/not_found.png";
-import reactElementToJSXString from 'react-element-to-jsx-string';
 import {useSelector} from "react-redux";
 import {userToken} from "../../redux/UserSlice";
 
@@ -24,14 +27,26 @@ export function MoviePage(props) {
     const [images, setImages] = useState({});
     const [videos, setVideos] = useState("");
     const [recommendations, setRecommendations] = useState([]);
-    const[videoTag,setVideoTag]= useState();
+    const [videoTag, setVideoTag] = useState();
     const history = useHistory();
-    const[currentCastPage,setCurrentCastPage]= useState();
-    const[currentCast,setCurrentCast]= useState([]);
-    const[currentRecomPage,setCurrentRecomPage]= useState();
-    const[currentRecom,setCurrentRecom]= useState([]);
-
-
+    const [currentCastPage, setCurrentCastPage] = useState();
+    const [currentCast, setCurrentCast] = useState([]);
+    const [currentRecomPage, setCurrentRecomPage] = useState();
+    const [currentRecom, setCurrentRecom] = useState([]);
+    const [visible, setVisible] = useState(false);
+    const [isPresent, setIsPresent] = useState(false);
+    const [userReview, setUserReview] = useState({});
+    const [review, setReview] = useState({
+        key: {
+            nickname: null,
+            movieId: window.location.href.split('?')[1]
+        },
+        rating: null,
+        comment: null,
+        verified: false,
+        reviewDate: null
+    });
+    const [movieReviews, setMovieReviews] = useState([]);
 
     useEffect(() => {
         loadMovie((window.location.href).split('?')[1]).then((response) => {
@@ -39,7 +54,7 @@ export function MoviePage(props) {
         })
 
         loadCredits((window.location.href).split('?')[1]).then((response) => {
-            setDirectors(response.data.crew.filter(crew => crew.job == "Director").map((crew) => (
+            setDirectors(response.data.crew.filter(crew => crew.job === "Director").map((crew) => (
                 <li>
                     {crew.name}
                 </li>
@@ -48,7 +63,7 @@ export function MoviePage(props) {
             setCast(response.data.cast.map((actor) => (
                 <li>
                     <img alt="pic" src={actor.profile_path === null ? not_found : ("https://image.tmdb.org/t/p/w500/" + actor.profile_path)}
-                         width="100px" />
+                         width="100px"/>
                     <br/>
                     <span>{actor.name} as{actor.character}</span>
                 </li>
@@ -61,14 +76,14 @@ export function MoviePage(props) {
         })
 
         loadVideos((window.location.href).split('?')[1]).then((response) => {
-            setVideos("https://www.youtube.com/embed/"+response.data.results.find(element => element.type==="Trailer").key);
+            setVideos("https://www.youtube.com/embed/" + response.data.results.find(element => element.type === "Trailer").key);
             setVideoTag(<span><td>Video:</td>
             <td> <iframe width="420" height="315" allow="fullscreen;"
                          src={videos}>
             </iframe> </td></span>)
         })
 
-        loadRecommendations({movie_id:(window.location.href).split('?')[1], page: "1"}).then((response) => {
+        loadRecommendations({movie_id: (window.location.href).split('?')[1], page: "1"}).then((response) => {
             setRecommendations(response.data.results.map((movie) => (
 
                 <li id={movie.id} onClick={handleMovieClick}>
@@ -89,21 +104,55 @@ export function MoviePage(props) {
             )));
         })
 
+        getReviewsByMovie((window.location.href).split('?')[1]).then((response) => {
+            fetchUserData({
+                user
+            }).then((res) => {
+                for (let i = 0; i < response.data.length; i++) {
+                    if (response.data[i].key.nickname === res.data.nickname) {
+                        setIsPresent(true);
+                        setUserReview(response.data[i]);
+                        break;
+                    }
+                }
+            });
+            setMovieReviews(response.data.map((review) => (
+                <li>
+                    <div>
+                        <ReactStars
+                            count={5}
+                            value={review.rating}
+                            size={24}
+                            edit={false}
+                            isHalf={true}
+                            activeColor="#ff6200"/>
+                    </div>
+                    <div>{review.comment}</div>
+                    <div>
+                        <span>{review.key.nickname}</span>
+                        <span>{review.reviewDate}</span>
+                    </div>
+                </li>
+            )));
+        })
+
     }, []);
 
-    useEffect(() => {setCurrentCast(Array.of(cast[(currentCastPage * 5)],
-        cast[(1+(currentCastPage * 5))],
-        cast[(2+(currentCastPage * 5))],
-        cast[(3+(currentCastPage * 5))],
-        cast[(4+(currentCastPage * 5))]))
-            } ,[currentCastPage]);
+    useEffect(() => {
+        setCurrentCast(Array.of(cast[(currentCastPage * 5)],
+            cast[(1 + (currentCastPage * 5))],
+            cast[(2 + (currentCastPage * 5))],
+            cast[(3 + (currentCastPage * 5))],
+            cast[(4 + (currentCastPage * 5))]))
+    }, [currentCastPage]);
 
-    useEffect(() => {setCurrentRecom(Array.of(recommendations[(currentRecomPage * 5)],
-        recommendations[(1+(currentRecomPage * 5))],
-        recommendations[(2+(currentRecomPage * 5))],
-        recommendations[(3+(currentRecomPage * 5))],
-        recommendations[(4+(currentRecomPage * 5))]))
-    } ,[currentRecomPage]);
+    useEffect(() => {
+        setCurrentRecom(Array.of(recommendations[(currentRecomPage * 5)],
+            recommendations[(1 + (currentRecomPage * 5))],
+            recommendations[(2 + (currentRecomPage * 5))],
+            recommendations[(3 + (currentRecomPage * 5))],
+            recommendations[(4 + (currentRecomPage * 5))]))
+    }, [currentRecomPage]);
 
     useEffect(
         () => {
@@ -117,28 +166,77 @@ export function MoviePage(props) {
         []
     );
 
-    function addMovieToWatchLater(event){
-        modifyWatchLater(user,{"action":"ADD", "movie_id":event.target.id}).then()
+    function addMovieToWatchLater(event) {
+        modifyWatchLater(user, {"action": "ADD", "movie_id": event.target.id}).then();
     }
 
     function nextCastPage(event) {
-        setCurrentCastPage(currentCastPage+1);
+        setCurrentCastPage(currentCastPage + 1);
     }
 
-    function previousCastPage(event){
-        setCurrentCastPage(currentCastPage-1);
+    function previousCastPage(event) {
+        setCurrentCastPage(currentCastPage - 1);
     }
 
     function nextRecomPage(event) {
-        setCurrentRecomPage(currentRecomPage+1);
+        setCurrentRecomPage(currentRecomPage + 1);
     }
 
-    function previousRecomPage(event){
-        setCurrentRecomPage(currentRecomPage-1);
+    function previousRecomPage(event) {
+        setCurrentRecomPage(currentRecomPage - 1);
     }
 
     function handleMovieClick(event) {
-        window.location.href ="/movie?" + event.target.id;
+        window.location.href = "/movie?" + event.target.id;
+    }
+
+    function createReviewPopup(event) {
+        setVisible(true);
+    }
+
+    function hideReviewPopup(event) {
+        setVisible(false);
+    }
+
+    function handleCommentChange(event) {
+        setReview(prevState => ({
+            ...prevState,
+            comment: event.target.value
+        }));
+    }
+
+    function handleSubmitReview(event) {
+        setIsPresent(true);
+        createReview(user, review).then((response) => {
+            setMovieReviews(
+                [
+                    ...movieReviews,
+                    <li>
+                        <div>
+                            <ReactStars
+                                count={5}
+                                value={response.data.rating}
+                                size={24}
+                                edit={false}
+                                isHalf={true}
+                                activeColor="#ff6200"/>
+                        </div>
+                        <div>{response.data.comment}</div>
+                        <div>
+                            <span>{response.data.key.nickname}</span>
+                            <span>{response.data.reviewDate}</span>
+                        </div>
+                    </li>
+                ]
+            );
+        });
+    }
+
+    function ratingChanged(newRating) {
+        setReview(prevState => ({
+            ...prevState,
+            rating: newRating
+        }));
     }
 
     return (
@@ -193,33 +291,65 @@ export function MoviePage(props) {
                             <tr>
                                 <td>
                                     <div className="dashboard-button" id="back"
-                                         style={currentCastPage<1 ? {display: 'none'} : {}}>
+                                         style={currentCastPage < 1 ? {display: 'none'} : {}}>
                                         <div onClick={() => previousCastPage()}>Back</div>
-                                </div>
+                                    </div>
                                     <ul id="currentCast">
                                         {currentCast}
                                     </ul>
 
                                     <div className="dashboard-button" id="next"
-                                         style={(cast.length)<=(currentCastPage+1)*5 ? {display: 'none'} : {}}>
-                                    <div onClick={() => nextCastPage()}>Next</div>
-                                </div>
+                                         style={(cast.length) <= (currentCastPage + 1) * 5 ? {display: 'none'} : {}}>
+                                        <div onClick={() => nextCastPage()}>Next</div>
+                                    </div>
                                 </td>
                             </tr>
                             <tr>
                                 <td>Director:</td>
-                                <td><ul>
-                                    {directors}
-                                </ul></td>
+                                <td>
+                                    <ul>
+                                        {directors}
+                                    </ul>
+                                </td>
                             </tr>
-                                {videos !== "" ? <tr><td>Video:</td>
-            <td> <iframe width="420" height="315" allow="fullscreen;"
-                         src={videos}>
-            </iframe> </td></tr> : ""}
+                            {videos !== "" ? <tr>
+                                <td>Video:</td>
+                                <td>
+                                    <iframe width="420" height="315" allow="fullscreen;"
+                                            src={videos}>
+                                    </iframe>
+                                </td>
+                            </tr> : ""}
+                            <tr>
+                                {!isPresent ? <button onClick={createReviewPopup}>Write review</button> :
+                                    <button onClick={createReviewPopup}>Modify review</button>}
+                            </tr>
+                            <Modal visible={visible} width="400" height="300" effect="fadeInUp" onClickAway={hideReviewPopup}>
+                                <div>
+                                    <h1>Write new review</h1>
+                                    <ReactStars
+                                        count={5}
+                                        onChange={ratingChanged}
+                                        size={24}
+                                        isHalf={true}
+                                        activeColor="#ff6200"/>
+                                    <input type="textarea"
+                                           name="comment"
+                                           placeholder={isPresent ? userReview.comment : "Tell us your opinion..."}
+                                           onChange={handleCommentChange}/>
+                                    <button onClick={handleSubmitReview}>Send review</button>
+                                    <button onClick={hideReviewPopup}>Close</button>
+                                </div>
+                            </Modal>
+                            <tr>
+                                <ul>
+                                    {movieReviews}
+                                </ul>
+                            </tr>
                             <tr>
                                 <td>
                                     <div className="dashboard-button" id="back"
-                                         style={currentRecomPage<1 ? {display: 'none'} : {}}>
+                                         style={currentRecomPage < 1 ? {display: 'none'} : {}}>
                                         <div onClick={() => previousRecomPage()}>Back</div>
                                     </div>
                                     <ul id="currentRecom">
@@ -227,7 +357,7 @@ export function MoviePage(props) {
                                     </ul>
 
                                     <div className="dashboard-button" id="next"
-                                         style={(recommendations.length)<=(currentRecomPage+1)*5 ? {display: 'none'} : {}}>
+                                         style={(recommendations.length) <= (currentRecomPage + 1) * 5 ? {display: 'none'} : {}}>
                                         <div onClick={() => nextRecomPage()}>Next</div>
                                     </div>
                                 </td>

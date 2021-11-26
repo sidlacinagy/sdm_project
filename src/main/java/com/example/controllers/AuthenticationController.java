@@ -1,15 +1,12 @@
-package com.example.ui.controllers;
+package com.example.controllers;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.security.spec.InvalidKeySpecException;
-import java.util.List;
 
-import com.example.movie_management.movie.watchlater.WatchLaterService;
-import com.example.ui.requests.AuthenticationRequest;
-import com.example.ui.requests.ModifyWatchLaterRequest;
-import com.example.ui.requests.ResetRequest;
-import com.example.ui.responses.LoginResponse;
+import com.example.controllers.requests.AuthenticationRequest;
+import com.example.controllers.requests.ResetRequest;
+import com.example.controllers.responses.LoginResponse;
 import com.example.user_management_system.registration.RegistrationService;
 import com.example.user_management_system.registration.Request;
 import com.example.user_management_system.security.jwt.JWTTokenHelper;
@@ -22,12 +19,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
-
-import static com.example.user_management_system.registration.RegistrationController.isMatchingPassword;
-
+import org.springframework.web.servlet.ModelAndView;
 
 @RestController
-@RequestMapping("/api")
 @CrossOrigin
 public class AuthenticationController {
 
@@ -44,7 +38,7 @@ public class AuthenticationController {
     private RegistrationService registrationService;
 
 
-    @PostMapping("/auth/login")
+    @PostMapping("/api/auth/login")
     public ResponseEntity<?> login(@RequestBody AuthenticationRequest authenticationRequest) throws InvalidKeySpecException,
             NoSuchAlgorithmException {
 
@@ -59,13 +53,11 @@ public class AuthenticationController {
 
         LoginResponse response = new LoginResponse();
         response.setToken(jwtToken);
-        System.out.println(jwtToken);
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping(path = "/register")
+    @PostMapping(path = "/api/register")
     public ResponseEntity<?> postRegistration(@RequestBody Request request) throws IllegalAccessException {
-        System.out.println(request.getFirstName());
         if (request.checkAnyNull()) {
             return ResponseEntity.ok().body("Fill out all the fields");
         }
@@ -76,19 +68,19 @@ public class AuthenticationController {
         return ResponseEntity.ok().body(registrationService.registration(request));
     }
 
-    @GetMapping(path = "/userinfo")
+    @GetMapping(path = "/api/userinfo")
     public ResponseEntity<?> getUserInfo(Principal user) {
         User userObj = (User) userDetailsService.loadUserByUsername(user.getName());
         return ResponseEntity.ok(userObj);
     }
 
-    @GetMapping(path = "/logout")
+    @GetMapping(path = "/api/logout")
     public ResponseEntity<?> logout() {
         SecurityContextHolder.getContext().setAuthentication(null);
         return ResponseEntity.ok().body("Successfully logged out");
     }
 
-    @PostMapping(path = "/reset")
+    @PostMapping(path = "/api/reset")
     public ResponseEntity<?> postResetPassword(@RequestBody ResetRequest resetRequest) {
         if (!isMatchingPassword(resetRequest.getPassword(), resetRequest.getPassword_confirm())) {
             return ResponseEntity.ok().body("Passwords not matching");
@@ -99,6 +91,23 @@ public class AuthenticationController {
         return ResponseEntity.ok().body("Cannot change password");
     }
 
+    @PostMapping(path = "/home", params = "resetPassword")
+    public ModelAndView postResetEmail(@RequestParam String email) {
+        if (registrationService.sendPasswordResetEmail(email)) {
+            return new ModelAndView("redirect:/home");
+        } else {
+            throw new IllegalStateException("Cannot send email.");
+        }
+    }
 
+    @GetMapping(path = "/confirm")
+    public ModelAndView getConfirm(@RequestParam(name = "token") String token) {
+        if (registrationService.enableAccount(token)) return new ModelAndView("redirect:/home");
+        throw new IllegalStateException("Cannot confirm account.");
+    }
+
+    public static boolean isMatchingPassword(String password, String password_confirm) {
+        return password.equals(password_confirm);
+    }
 
 }

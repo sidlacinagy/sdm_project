@@ -16,15 +16,12 @@ export function ProfileHome(props) {
         fetchUserData({
             user
         }).then((response) => {
-            console.log(response.data)
             setUserdetails(response.data)
         })
 
         modifyWatchLater({
             user
         }, {"action": "GET_LIST", "movie_id": "0"}).then((response) => {
-            console.log("watch:")
-            console.log(response.data)
             setWatchlater(response.data.map((movie) => (
                     <li id={movie.id} onClick={handleMovieClick}>
                         <img alt="pic"

@@ -47,7 +47,7 @@ public class Caller<T> {
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(response));
         String inputLine;
-        StringBuffer content = new StringBuffer();
+        StringBuilder content = new StringBuilder();
         while ((inputLine = in.readLine()) != null) {
             content.append(inputLine);
         }

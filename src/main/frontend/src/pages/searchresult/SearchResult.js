@@ -91,7 +91,7 @@ export function SearchResult(props) {
                 <title>{searchTerm}</title>
             </Helmet>
             <ul id="searchlist">
-                {results}
+                {results.length === 0 ? "No results." : results}
             </ul>
             <div id="page">
                 <div id="back">
