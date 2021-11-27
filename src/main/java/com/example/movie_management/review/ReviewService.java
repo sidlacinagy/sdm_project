@@ -1,13 +1,11 @@
 package com.example.movie_management.review;
 
-import com.example.user_management_system.user.User;
 import com.example.user_management_system.user.UserService;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -28,21 +26,27 @@ public class ReviewService {
 
     public Review createReview(Review review) {
         userService.getUserByNickname(review.getKey().getNickname()).orElseThrow(() -> new IllegalStateException("No such username"));
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        review.setReviewDate(LocalDateTime.now().format(formatter));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        review.setReviewDate(LocalDate.now().format(formatter));
         reviewRepository.save(review);
         return review;
     }
 
     public List<Review> findAllByNickname(String nickname) {
-        return new ArrayList<>(reviewRepository.findByNickname(nickname));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        List<Review> reviews = new ArrayList<>(reviewRepository.findByNickname(nickname))
+                .stream()
+                .sorted(Comparator.comparing((review) -> LocalDate.parse(review.getReviewDate(), formatter)))
+                .collect(Collectors.toList());
+        Collections.reverse(reviews);
+        return reviews;
     }
 
     public List<Review> findAllByMovieId(int movieId) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         List<Review> reviews = new ArrayList<>(reviewRepository.findByMovieId(movieId))
                 .stream()
-                .sorted(Comparator.comparing((review) -> LocalDateTime.parse(review.getReviewDate(), formatter)))
+                .sorted(Comparator.comparing((review) -> LocalDate.parse(review.getReviewDate(), formatter)))
                 .collect(Collectors.toList());
         Collections.reverse(reviews);
         return reviews;

@@ -47,6 +47,8 @@ public class MovieController {
 
     @PostMapping(path = "/movie")
     public ResponseEntity<?> loadMovie(@RequestBody String id) throws IOException {
+        if(id.charAt(id.length()-1) == '=')
+            id = id.substring(0, id.length()-1);
         Caller<Movie> caller = new Caller<>(Movie.class);
         Movie movie = caller.call(ApiCall.GET_MOVIE_BY_ID.setParameters(id));
         return ResponseEntity.ok(movie);
@@ -98,7 +100,7 @@ public class MovieController {
 
     @PostMapping(path = "/review_user")
     public ResponseEntity<?> getReviewsByUsername(@RequestBody String nickname) {
-        List<Review> reviews = reviewService.findAllByNickname(nickname);
+        List<Review> reviews = reviewService.findAllByNickname(nickname.substring(0,nickname.length()-1));
         return ResponseEntity.ok(reviews);
     }
 
@@ -106,6 +108,13 @@ public class MovieController {
     public ResponseEntity<?> getReviewsByMovieId(@RequestBody String movieId) {
         List<Review> reviews = reviewService.findAllByMovieId(Integer.parseInt(movieId.substring(0, movieId.length() - 1)));
         return ResponseEntity.ok(reviews);
+    }
+
+    @PostMapping(path="/get_trending")
+    public ResponseEntity<?> getTrendingMovies() throws IOException {
+        Caller<SearchResult> trendingCaller= new Caller<>(SearchResult.class);
+        SearchResult trending = trendingCaller.call(ApiCall.GET_TRENDING.getCall());
+        return ResponseEntity.ok(trending);
     }
 
     @PostMapping(path = "/watchlater")

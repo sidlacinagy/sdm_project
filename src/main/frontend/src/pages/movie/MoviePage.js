@@ -230,6 +230,7 @@ export function MoviePage(props) {
                 ]
             );
         });
+        hideReviewPopup();
     }
 
     function ratingChanged(newRating) {

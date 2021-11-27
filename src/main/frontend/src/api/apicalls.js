@@ -139,3 +139,10 @@ export const getReviewsByMovie = (request) => {
         'data': request
     });
 }
+
+export const getTrending= () => {
+    return axios({
+        'method': 'POST',
+        'url': `${process.env.hostUrl || 'http://localhost:8082'}/api/get_trending`,
+    });
+}
