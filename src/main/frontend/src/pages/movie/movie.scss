@@ -46,10 +46,6 @@
         font-size: 30px;
     }
 
-    .info {
-        font-size: 20px;
-        margin: 10px 0 5px 0;
-    }
 
     span {
         color: #FF4B2B;
@@ -85,6 +81,7 @@
 
     .form {
         background-color: #FFFFFF;
+        width:75vw;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -98,6 +95,7 @@
         font-size: 15px;
         letter-spacing: 1px;
         margin-top: 0;
+        width:100%
     }
 
     tr {
@@ -113,8 +111,9 @@
         0 10px 10px rgba(0, 0, 0, 0.22);
         border-color: black;
         position: relative;
-        overflow: auto;
-        width: 768px;
+        padding:1em;
+        overflow:auto;
+        width: 78vw;
         max-width: 100%;
         min-height: 480px;
     }
@@ -174,6 +173,209 @@
         display: inline;
         padding: 0;
     }
+
+    #maininfo{
+        padding-top:3em;
+        display: flex;
+        height:50em;
+    }
+    #maininfo img{
+        height:48em;
+        width: auto;
+        padding-left:1em;
+        padding-right:1em;
+        float:left;
+    }
+
+    #maininfo iframe{
+        text-align: center;
+    }
+
+    #title{
+        font-size: 500%;
+        float:left;
+    }
+
+    #traileranddesc{
+        width:80%;
+        padding-left:2em;
+        float:right;
+        justify-content: center;
+        text-align: center;
+    }
+
+    #traileranddesc .overview{
+        padding-top:3em;
+        width:600px;
+        float:bottom;
+        font-size: 20px;
+        margin: 10px 0 5px 0;
+
+    }
+
+    #watchlater{
+        padding-top:2em;
+    }
+
+    #secondaryInfo{
+        padding-top:5em;
+        display: inline-block;
+        max-width: 100%;
+    }
+
+    .infoElement{
+        display: inline-block;
+        padding-left:1.5em;
+        padding-right:1.5em;
+        padding-top:3em;
+        font-size: 200%;
+    }
+
+    .infoName{
+        display:inline-block;
+    }
+
+    .infoValue{
+        padding-left:1em;
+        display:inline-block;
+    }
+
+    .directors{
+        display: inline-block;
+        padding-left:1.5em;
+        padding-right:1.5em;
+        padding-top:3em;
+        font-size: 250%;
+
+    }
+
+
+
+    #actors{
+        padding-top:5em;
+        display: flex;
+        width:100%;
+        padding-bottom: 5em;
+        align-items: center;
+    }
+
+    #currentCast{
+        display: inline-block;
+        width:100%;
+    }
+
+    #currentCast img{
+        width: 10em;
+    }
+    .actor{
+        display: inline-block;
+        width:15em;
+        vertical-align:top;
+        height: 25em;
+        border-style: solid;
+        border-radius: 1em;
+        border-color:black;
+        background: #202628;
+        color:white;
+
+    }
+
+    .actor:hover{
+        color:white;
+        background: #343356;
+        transition: 0.4s;
+    }
+
+    .slidingButtonLeft,.slidingButtonRight{
+        background: #000000;
+        font-size:800%;
+        border-radius: 10%;
+        color: #6e6e6e;
+        padding-bottom: 0.1em;
+    }
+
+    .slidingButtonLeft:hover,.slidingButtonRight:hover{
+        background: #7c7b7b;
+        color:black;
+        transition: 0.4s;
+    }
+
+
+    .slidingButtonLeft{
+        position: relative;
+        left:0.5em;
+    }
+
+    .slidingButtonRight{
+        position: relative;
+        right:0.5em;
+    }
+
+    .actorName{
+        font-weight: bold;
+        font-size:120%;
+    }
+
+    .actorCharacter{
+        font-weight: bold;
+        font-size:120%;
+    }
+
+
+
+
+
+
+
+
+
+    #recommendations{
+        padding-top:5em;
+        display: flex;
+        width:100%;
+        padding-bottom: 5em;
+        align-items: center;
+    }
+
+    #currentRecom{
+        display: inline-block;
+        width:100%;
+    }
+
+    #currentRecom img{
+        width: 10em;
+
+    }
+    .movieRecommendation{
+        display: inline-block;
+        width:15em;
+        vertical-align:top;
+        height: 27em;
+        border-style: solid;
+        border-radius: 1em;
+        border-color:black;
+        background: #202628;
+        color:white;
+    }
+
+    .movieRecommendation:hover{
+        color:white;
+        background: #343356;
+        transition: 0.4s;
+    }
+
+    .movie_title{
+        font-weight: bold;
+        font-size: 130%;
+    }
+
+    .rating{
+        font-weight: bold;
+        font-size: 130%;
+        padding-top: 1em;
+    }
+
+
 
 
 }
