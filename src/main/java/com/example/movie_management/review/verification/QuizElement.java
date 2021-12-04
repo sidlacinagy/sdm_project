@@ -11,7 +11,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class QuizElement {
-
     private String question;
 
     private String correctAnswer;

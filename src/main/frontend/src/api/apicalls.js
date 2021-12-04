@@ -146,3 +146,11 @@ export const getTrending= () => {
         'url': `${process.env.hostUrl || 'http://localhost:8082'}/api/get_trending`,
     });
 }
+
+export const getQuiz= (request) => {
+    return axios({
+        'method': 'POST',
+        'url': `${process.env.hostUrl || 'http://localhost:8082'}/api/get_quiz`,
+        'data': request
+    });
+}

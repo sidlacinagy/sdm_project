@@ -6,6 +6,10 @@ import com.example.movie_management.movie.*;
 import com.example.movie_management.movie.watchlater.WatchLaterService;
 import com.example.movie_management.review.Review;
 import com.example.movie_management.review.ReviewService;
+import com.example.movie_management.review.verification.MovieQuiz;
+import com.example.movie_management.review.verification.MovieQuizService;
+import com.example.movie_management.review.verification.QuizElement;
+import com.example.movie_management.review.verification.QuizElementDto;
 import com.example.movie_management.search.SearchResult;
 import com.example.controllers.requests.ModifyWatchLaterRequest;
 import com.example.controllers.requests.RecommendationRequest;
@@ -22,6 +26,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -36,6 +41,9 @@ public class MovieController {
 
     @Autowired
     private ReviewService reviewService;
+
+    @Autowired
+    private MovieQuizService movieQuizService;
 
     @PostMapping(path = "/search")
     public ResponseEntity<?> getSearchedMovie(@RequestBody SearchRequest searchRequest) throws IOException {
@@ -125,6 +133,16 @@ public class MovieController {
             movie.setRatings(reviewService.getRatingForMovie(movie.getId()));
         }
         return ResponseEntity.ok(trending);
+    }
+    @PostMapping(path="/get_quiz")
+    public ResponseEntity<?> getQuizByMovie(@RequestBody String movieId) {
+        if(movieId.charAt(movieId.length()-1) == '=')
+            movieId = movieId.substring(0, movieId.length()-1);
+        Optional<List<QuizElementDto>> movieQuiz = movieQuizService.getQuizElementsForMovie(Integer.parseInt(movieId));
+        if(movieQuiz.isEmpty()){
+            return ResponseEntity.ok("null");
+        }
+        return ResponseEntity.ok(movieQuiz);
     }
 
     @PostMapping(path = "/watchlater")

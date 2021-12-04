@@ -1,6 +1,6 @@
 import {
     createReview,
-    deleteReview, fetchUserData, getReviewsByMovie,
+    deleteReview, fetchUserData, getQuiz, getReviewsByMovie,
     loadCredits,
     loadImages,
     loadMovie,
@@ -34,9 +34,12 @@ export function MoviePage(props) {
     const [currentCast, setCurrentCast] = useState([]);
     const [currentRecomPage, setCurrentRecomPage] = useState();
     const [currentRecom, setCurrentRecom] = useState([]);
-    const [visible, setVisible] = useState(false);
-    const [isPresent, setIsPresent] = useState(false);
+    const [reviewVisible, setReviewVisible] = useState(false);
+    const [quizVisible, setQuizVisible] = useState(false);
+    const [isReviewPresent, setIsReviewPresent] = useState(false);
     const [userReview, setUserReview] = useState({});
+    const [isQuizPresent, setIsQuizPresent] = useState(false);
+    const [quiz, setQuiz] = useState([]);
     const [review, setReview] = useState({
         key: {
             nickname: null,
@@ -63,7 +66,8 @@ export function MoviePage(props) {
 
             setCast(response.data.cast.map((actor) => (
                 <li>
-                    <img alt="pic" src={actor.profile_path === null ? not_found : ("https://image.tmdb.org/t/p/w500/" + actor.profile_path)}
+                    <img alt="pic"
+                         src={actor.profile_path === null ? not_found : ("https://image.tmdb.org/t/p/w500/" + actor.profile_path)}
                          width="100px"/>
                     <br/>
                     <span>{actor.name} as{actor.character}</span>
@@ -85,10 +89,11 @@ export function MoviePage(props) {
         })
 
         loadRecommendations({movie_id: (window.location.href).split('?')[1], page: "1"}).then((response) => {
+            console.log(response.data.results)
             setRecommendations(response.data.results.map((movie) => (
-
                 <li id={movie.id} onClick={handleMovieClick}>
-                    <img alt="pic" src={movie.poster_path === null ? not_found : ("https://image.tmdb.org/t/p/original" + movie.poster_path)}
+                    <img alt="pic"
+                         src={movie.poster_path === null ? not_found : ("https://image.tmdb.org/t/p/original" + movie.poster_path)}
                          width="100px" id={movie.id} onClick={handleMovieClick}/>
                     <div className="movie_li_div" id={movie.id} onClick={handleMovieClick}>
                         <span className="movie_title" id={movie.id} onClick={handleMovieClick}>{movie.title}</span>
@@ -98,7 +103,8 @@ export function MoviePage(props) {
                         <span id={movie.id}
                               onClick={handleMovieClick}>Original title: {movie.original_title === null ? "" : movie.original_title}</span>
                         <br/>
-                        <span id={movie.id} onClick={handleMovieClick}>{movie.ratings === -1 ? "-" : movie.ratings}</span>
+                        <span id={movie.id}
+                              onClick={handleMovieClick}>{movie.ratings === -1 ? "-" : movie.ratings}</span>
                     </div>
                 </li>
 
@@ -111,7 +117,7 @@ export function MoviePage(props) {
             }).then((res) => {
                 for (let i = 0; i < response.data.length; i++) {
                     if (response.data[i].key.nickname === res.data.nickname) {
-                        setIsPresent(true);
+                        setIsReviewPresent(true);
                         setUserReview(response.data[i]);
                         break;
                     }
@@ -137,6 +143,26 @@ export function MoviePage(props) {
             )));
         })
 
+        getQuiz((window.location.href).split('?')[1]).then((response) => {
+            if (response.data !== null) {
+                setQuiz(response.data.map((element) => (
+                    <div>
+                        <span>{element.question}</span>
+                        {element.answers.map((answer) => (
+                            <label> {answer}
+                            <input type="radio" name={element.question} value={answer} id={answer} />
+                            </label>
+
+                        ))}
+                    </div>
+                )))
+                setIsQuizPresent(true)
+                console.log(response.data)
+            }
+
+        })
+
+
     }, []);
 
     useEffect(() => {
@@ -158,7 +184,7 @@ export function MoviePage(props) {
     useEffect(
         () => {
             let timer1 = setTimeout(() => setCurrentCastPage(0), 500);
-            let timer2 = setTimeout(() => setCurrentRecomPage(0), 500);
+            let timer2 = setTimeout(() => setCurrentRecomPage(0), 1000);
             return () => {
                 clearTimeout(timer1);
                 clearTimeout(timer2);
@@ -192,11 +218,19 @@ export function MoviePage(props) {
     }
 
     function createReviewPopup(event) {
-        setVisible(true);
+        setReviewVisible(true);
     }
 
     function hideReviewPopup(event) {
-        setVisible(false);
+        setReviewVisible(false);
+    }
+
+    function createQuizPopup(event) {
+        setQuizVisible(true);
+    }
+
+    function hideQuizPopup(event) {
+        setQuizVisible(false);
     }
 
     function handleCommentChange(event) {
@@ -207,7 +241,7 @@ export function MoviePage(props) {
     }
 
     function handleSubmitReview(event) {
-        setIsPresent(true);
+        setIsReviewPresent(true);
         createReview(user, review).then((response) => {
             setMovieReviews(
                 [
@@ -234,6 +268,10 @@ export function MoviePage(props) {
         hideReviewPopup();
     }
 
+    function handleSubmitQuiz(event){
+        console.log(event.target)
+    }
+
     function ratingChanged(newRating) {
         setReview(prevState => ({
             ...prevState,
@@ -249,7 +287,7 @@ export function MoviePage(props) {
             </Helmet>
             <div id="body">
                 <div className="container">
-                    <MenuBar data={props} />
+                    <MenuBar data={props}/>
                     <div className="form">
                         <h1>{movieInfo.title}</h1>
                         <img alt={movieInfo.title + " poster"}
@@ -261,9 +299,13 @@ export function MoviePage(props) {
                             </tr>
                             <tr>
                                 <td>Ratings:</td>
-                                <td><span>{movieInfo.ratings === -1 ? "Be the first one to rate" : movieInfo.ratings}</span></td>
-                                <td>Imdb Ratings:</td>
-                                <td><span>{movieInfo.vote_average === -1 ? "Be the first one to rate" : movieInfo.vote_average}</span></td>
+                                <td>
+                                    <span>{movieInfo.ratings === -1 ? "Be the first one to rate" : movieInfo.ratings}</span>
+                                </td>
+                                <td>TMDB Ratings:</td>
+                                <td>
+                                    <span>{movieInfo.vote_average === -1 ? "Be the first one to rate" : movieInfo.vote_average}</span>
+                                </td>
                             </tr>
                             <tr>
                                 <td>Release date:</td>
@@ -287,7 +329,9 @@ export function MoviePage(props) {
                             </tr>
                             <tr>
                                 <td>Adult movie:</td>
-                                <td><span>{movieInfo.adult !== undefined ? movieInfo.adult.toString() : "Unknown"}</span></td>
+                                <td>
+                                    <span>{movieInfo.adult !== undefined ? movieInfo.adult.toString() : "Unknown"}</span>
+                                </td>
                             </tr>
                             <tr>
                                 <td>Budget:</td>
@@ -330,12 +374,16 @@ export function MoviePage(props) {
                                 </td>
                             </tr> : ""}
                             <tr>
-                                {!isPresent ? <button onClick={createReviewPopup}>Write review</button> :
+                                {!isReviewPresent ? <button onClick={createReviewPopup}>Write review</button> :
                                     <button onClick={createReviewPopup}>Modify review</button>}
                             </tr>
-                            <Modal visible={visible} width="400" height="300" effect="fadeInUp" onClickAway={hideReviewPopup}>
+                            <Modal visible={reviewVisible} width="400" height="300" effect="fadeInUp"
+                                   onClickAway={hideReviewPopup}>
                                 <div>
                                     <h1>Write new review</h1>
+                                    {isQuizPresent ? <button onClick={createQuizPopup}>Verify your review</button> :
+                                        <span></span>}
+
                                     <ReactStars
                                         count={5}
                                         onChange={ratingChanged}
@@ -344,11 +392,19 @@ export function MoviePage(props) {
                                         activeColor="#ff6200"/>
                                     <input type="textarea"
                                            name="comment"
-                                           placeholder={isPresent ? userReview.comment : "Tell us your opinion..."}
+                                           placeholder={isReviewPresent ? userReview.comment : "Tell us your opinion..."}
                                            onChange={handleCommentChange}/>
                                     <button onClick={handleSubmitReview}>Send review</button>
                                     <button onClick={hideReviewPopup}>Close</button>
                                 </div>
+                            </Modal>
+                            <Modal visible={quizVisible} width="400" height="300" effect="fadeInUp"
+                                   onClickAway={hideQuizPopup}>
+                                <form onClick={handleSubmitQuiz} method="POST">
+                                    <div>{quiz}</div>
+                                    <button type="submit">Done</button>
+                                    <button onClick={hideQuizPopup}>Close</button>
+                                </form>
                             </Modal>
                             <tr>
                                 <ul>
