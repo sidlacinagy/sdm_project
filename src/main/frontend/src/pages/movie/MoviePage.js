@@ -16,6 +16,7 @@ import {useHistory} from "react-router-dom";
 import not_found from "../searchresult/not_found.png";
 import {useSelector} from "react-redux";
 import {userToken} from "../../redux/UserSlice";
+import MenuBar from "../MenuBar";
 
 
 export function MoviePage(props) {
@@ -97,7 +98,7 @@ export function MoviePage(props) {
                         <span id={movie.id}
                               onClick={handleMovieClick}>Original title: {movie.original_title === null ? "" : movie.original_title}</span>
                         <br/>
-                        <span id={movie.id} onClick={handleMovieClick}>Ratings</span>
+                        <span id={movie.id} onClick={handleMovieClick}>{movie.ratings === -1 ? "-" : movie.ratings}</span>
                     </div>
                 </li>
 
@@ -248,6 +249,7 @@ export function MoviePage(props) {
             </Helmet>
             <div id="body">
                 <div className="container">
+                    <MenuBar data={props} />
                     <div className="form">
                         <h1>{movieInfo.title}</h1>
                         <img alt={movieInfo.title + " poster"}
@@ -256,6 +258,12 @@ export function MoviePage(props) {
                         <table>
                             <tr>
                                 <button id={movieInfo.id} onClick={addMovieToWatchLater}>Add to watchlater</button>
+                            </tr>
+                            <tr>
+                                <td>Ratings:</td>
+                                <td><span>{movieInfo.ratings === -1 ? "Be the first one to rate" : movieInfo.ratings}</span></td>
+                                <td>Imdb Ratings:</td>
+                                <td><span>{movieInfo.vote_average === -1 ? "Be the first one to rate" : movieInfo.vote_average}</span></td>
                             </tr>
                             <tr>
                                 <td>Release date:</td>

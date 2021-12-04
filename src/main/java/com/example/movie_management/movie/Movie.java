@@ -1,5 +1,7 @@
 package com.example.movie_management.movie;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.util.List;
@@ -31,6 +33,11 @@ public class Movie{
     public boolean video;
     public double vote_average;
     public int vote_count;
+    @JsonProperty
+    double ratings;
+
+    @JsonProperty
+    double verified_rating;
 
     @Data
     public static class BelongsToCollection{
@@ -65,5 +72,24 @@ public class Movie{
         public String english_name;
         public String iso_639_1;
         public String name;
+    }
+
+    @JsonIgnore
+    public double getRatings(){
+        return ratings;
+    }
+    @JsonIgnore
+    public double getVerifiedRatings(){
+        return verified_rating;
+    }
+
+    @JsonProperty
+    public void setRatings(double ratings) {
+        this.ratings = ratings;
+    }
+
+    @JsonProperty
+    public void setVerified_rating(double verified_rating) {
+        this.verified_rating = verified_rating;
     }
 }

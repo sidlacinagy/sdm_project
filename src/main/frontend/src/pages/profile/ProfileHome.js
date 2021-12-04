@@ -5,6 +5,7 @@ import {fetchUserData, getReviewsByUser, loadMovie, modifyWatchLater} from "../.
 import {Helmet} from "react-helmet";
 import not_found from "../searchresult/not_found.png";
 import ReactStars from "react-rating-stars-component";
+import MenuBar from "../MenuBar";
 
 export function ProfileHome(props) {
     const user = useSelector(userToken);
@@ -68,7 +69,8 @@ export function ProfileHome(props) {
                         <span id={movie.id}
                               onClick={handleMovieClick}>Original title: {movie.original_title === null ? "" : movie.original_title}</span>
                         <br/>
-                        <span id={movie.id} onClick={handleMovieClick}>Ratings</span>
+                        <span id={movie.id} onClick={handleMovieClick}>{movie.ratings === -1 ? "-" : movie.ratings}</span>
+                        <span id={movie.id} onClick={handleMovieClick}>{movie.vote_average === -1 ? "-" : movie.vote_average}</span>
                         <buttom id={movie.id} onClick={handleWatchLaterRemove}>Remove</buttom>
                     </div>
                 </li>
@@ -80,7 +82,7 @@ export function ProfileHome(props) {
     }, [])
 
     function handleSwitchToDashboard() {
-        props.history.push("/dashboard");
+        window.location.href = "/dashboard"
     }
 
     function handleWatchLaterRemove(event) {
@@ -99,6 +101,7 @@ export function ProfileHome(props) {
             </Helmet>
             <div id="body">
                 <div className="container">
+                    <MenuBar data={props} />
                     <div className="form">
                         <h1>Welcome to your profile, <span id="firstSpan">{userdetails.firstName}</span>!</h1>
                         <div className="info">Here is your personal information:</div>

@@ -4,6 +4,7 @@ import {unload, userToken} from '../../redux/UserSlice';
 import {fetchUserData, getTrending, searchMovie, userLogout} from "../../api/apicalls";
 import {Helmet} from 'react-helmet';
 import not_found from "../searchresult/not_found.png";
+import MenuBar from "../MenuBar.js"
 
 export function Dashboard(props) {
     const user = useSelector(userToken);
@@ -30,39 +31,18 @@ export function Dashboard(props) {
                         <span className="movie_release_date" id={movie.id}
                               onClick={handleMovieClick}> {movie.release_date === null ? "" : movie.release_date.substring(0, 4)}</span>
                         <br/>
-                        <span id={movie.id} onClick={handleMovieClick} className="rating">Ratings</span>
+                        <span id={movie.id} onClick={handleMovieClick}>{movie.ratings === -1 ? "-" : movie.ratings}</span>
+                        <span id={movie.id} onClick={handleMovieClick}>{movie.vote_average === -1 ? "-" : movie.vote_average}</span>
                     </div>
                 </li>
             )));
         });
-    }, [])
-
-    fetchUserData({
-        user
-    }).then((response) => {
-
-    });
+    }, []);
 
     function handleMovieClick(event) {
         props.history.push("/movie?" + event.target.id);
     }
 
-    function handleSwitchToProfile() {
-        props.history.push("/profile_home");
-    }
-
-    function handleLogout() {
-        dispatch(unload);
-        userLogout().then((response) => {
-            alert(response.data);
-        });
-        props.history.push("/home");
-    }
-
-    function handleSearch(event) {
-        props.history.push("/search?term=" + searchTerm + "&page=1");
-        event.preventDefault();
-    }
 
     return (
         <div className="dashboard">
@@ -72,23 +52,7 @@ export function Dashboard(props) {
             </Helmet>
             <div id="body">
                 <div className="container" id="container">
-                    <div>
-                        <ul className="menu-bar">
-                            <li>Watch Now</li>
-                            <li>
-                                <form onSubmit={handleSearch} method="POST">
-                                    <input
-                                        type="text"
-                                        placeholder="Search Films"
-                                        value={searchTerm}
-                                        onChange={e => setSearchTerm(e.target.value)}/>
-                                    <button name="search">Search</button>
-                                </form>
-                            </li>
-                            <li onClick={handleSwitchToProfile}>Profile</li>
-                            <li id="logout" onClick={handleLogout}>Log out</li>
-                        </ul>
-                    </div>
+                    <MenuBar data={props} />
                 </div>
                 <ul id="searchlist">
                     {results.length === 0 ? "No results." : results}

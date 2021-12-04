@@ -42,6 +42,9 @@ public class MovieController {
         Caller<SearchResult> caller = new Caller<>(SearchResult.class);
         SearchResult searchResult = caller.call(ApiCall.SEARCH_BY_MOVIE_NAME.setParameters(URLEncoder.encode(searchRequest.getSearchTerm(),
                 StandardCharsets.UTF_8), searchRequest.getPage()));
+        for(SearchResult.ResultMovie movie: searchResult.getResults()){
+            movie.setRatings(reviewService.getRatingForMovie(movie.getId()));
+        }
         return ResponseEntity.ok(searchResult);
     }
 
@@ -51,6 +54,7 @@ public class MovieController {
             id = id.substring(0, id.length()-1);
         Caller<Movie> caller = new Caller<>(Movie.class);
         Movie movie = caller.call(ApiCall.GET_MOVIE_BY_ID.setParameters(id));
+        movie.setRatings(reviewService.getRatingForMovie(movie.getId()));
         return ResponseEntity.ok(movie);
     }
 
@@ -73,6 +77,9 @@ public class MovieController {
         Caller<Recommendation> caller = new Caller<>(Recommendation.class);
         Recommendation recommendation = caller.call(ApiCall.GET_RECOMMENDATIONS.setParameters(recommendationRequest.getMovie_id(),
                 recommendationRequest.getPage()));
+        for(Recommendation.Result movie : recommendation.getResults()){
+            movie.setRatings(reviewService.getRatingForMovie(movie.getId()));
+        }
         return ResponseEntity.ok(recommendation);
     }
 
@@ -114,6 +121,9 @@ public class MovieController {
     public ResponseEntity<?> getTrendingMovies() throws IOException {
         Caller<SearchResult> trendingCaller= new Caller<>(SearchResult.class);
         SearchResult trending = trendingCaller.call(ApiCall.GET_TRENDING.getCall());
+        for(SearchResult.ResultMovie movie : trending.getResults()){
+            movie.setRatings(reviewService.getRatingForMovie(movie.getId()));
+        }
         return ResponseEntity.ok(trending);
     }
 

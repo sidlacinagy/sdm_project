@@ -2,6 +2,7 @@ import {searchMovie} from "../../api/apicalls";
 import React, {useEffect, useState} from "react";
 import {Helmet} from "react-helmet";
 import not_found from "./not_found.png";
+import MenuBar from "../MenuBar";
 
 export function SearchResult(props) {
 
@@ -25,7 +26,8 @@ export function SearchResult(props) {
                         <span className="movie_release_date" id={movie.id}
                               onClick={handleMovieClick}> {movie.release_date === null ? "" : movie.release_date.substring(0, 4)}</span>
                         <br/>
-                        <span id={movie.id} onClick={handleMovieClick} className="rating">Ratings</span>
+                        <span id={movie.id} onClick={handleMovieClick} className="rating">{movie.ratings === -1 ? "-" : movie.ratings}</span>
+                        <span id={movie.id} onClick={handleMovieClick} className="rating">{movie.vote_average === -1 ? "-" : movie.vote_average}</span>
                     </div>
                 </li>
             )));
@@ -90,6 +92,7 @@ export function SearchResult(props) {
                 <meta charSet="UTF-8"/>
                 <title>{searchTerm}</title>
             </Helmet>
+                <MenuBar data={props} />
             <ul id="searchlist">
                 {results.length === 0 ? "No results." : results}
             </ul>

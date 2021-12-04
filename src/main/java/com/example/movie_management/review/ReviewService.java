@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -54,6 +55,18 @@ public class ReviewService {
 
     public List<Review> findAllByNicknameAndMovieId(String nickname, int movieId) {
         return new ArrayList<>(reviewRepository.findByNicknameAndMovieId(nickname, movieId));
+    }
+
+    public Double getRatingForMovie(int movieId){
+        List<Review> reviews = findAllByMovieId(movieId);
+        if(reviews.isEmpty()){
+            return -1.0;
+        }
+        double sum = 0.0;
+        for(Review review: reviews){
+            sum+=review.getRating();
+        }
+        return sum/reviews.size();
     }
 
     public void modifyReview(Review newReview) {
