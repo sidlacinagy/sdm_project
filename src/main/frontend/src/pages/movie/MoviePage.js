@@ -59,19 +59,21 @@ export function MoviePage(props) {
 
         loadCredits((window.location.href).split('?')[1]).then((response) => {
             setDirectors(response.data.crew.filter(crew => crew.job === "Director").map((crew) => (
-                <li>
+                <div class="director">
                     {crew.name}
-                </li>
+                </div>
             )))
 
             setCast(response.data.cast.map((actor) => (
-                <li>
+                <div class="actor">
                     <img alt="pic"
                          src={actor.profile_path === null ? not_found : ("https://image.tmdb.org/t/p/w500/" + actor.profile_path)}
                          width="100px"/>
-                    <br/>
-                    <span>{actor.name} as{actor.character}</span>
-                </li>
+                    <div class="actorName">{actor.name}</div>
+                    <div class="as"> as</div>
+                    <div class="actorCharacter">
+                        {actor.character}</div>
+                </div>
             )))
 
         })
@@ -88,25 +90,22 @@ export function MoviePage(props) {
             </iframe> </td></span>)
         })
 
+
         loadRecommendations({movie_id: (window.location.href).split('?')[1], page: "1"}).then((response) => {
-            console.log(response.data.results)
             setRecommendations(response.data.results.map((movie) => (
-                <li id={movie.id} onClick={handleMovieClick}>
+
+                <div id={movie.id} className="movieRecommendation" onClick={handleMovieClick}>
                     <img alt="pic"
                          src={movie.poster_path === null ? not_found : ("https://image.tmdb.org/t/p/original" + movie.poster_path)}
                          width="100px" id={movie.id} onClick={handleMovieClick}/>
                     <div className="movie_li_div" id={movie.id} onClick={handleMovieClick}>
-                        <span className="movie_title" id={movie.id} onClick={handleMovieClick}>{movie.title}</span>
-                        <span className="movie_release_date" id={movie.id}
-                              onClick={handleMovieClick}> {movie.release_date === null ? "" : movie.release_date.substring(0, 4)}</span>
-                        <br/>
-                        <span id={movie.id}
-                              onClick={handleMovieClick}>Original title: {movie.original_title === null ? "" : movie.original_title}</span>
-                        <br/>
-                        <span id={movie.id}
-                              onClick={handleMovieClick}>{movie.ratings === -1 ? "-" : movie.ratings}</span>
+                        <div className="movie_title" id={movie.id} onClick={handleMovieClick}>{movie.title}</div>
+                        <div className="movie_release_date" id={movie.id}
+                             onClick={handleMovieClick}> {movie.release_date === null ? "" : movie.release_date.substring(0, 4)}</div>
+
+                        <div id={movie.id} onClick={handleMovieClick} className="rating">Ratings</div>
                     </div>
-                </li>
+                </div>
 
             )));
         })
@@ -289,14 +288,105 @@ export function MoviePage(props) {
                 <div className="container">
                     <MenuBar data={props}/>
                     <div className="form">
-                        <h1>{movieInfo.title}</h1>
-                        <img alt={movieInfo.title + " poster"}
-                             src={"https://image.tmdb.org/t/p/original" + movieInfo.poster_path} width="200px"/>
-                        <div className="info">{movieInfo.overview}</div>
+                        <h1 id="title">{movieInfo.title}</h1>
+                        <div id="maininfo">
+                            <div id="poster">
+                                <img alt={movieInfo.title + " poster"}
+                                     src={"https://image.tmdb.org/t/p/original" + movieInfo.poster_path} width="200px"/>
+                            </div>
+                            <div id="traileranddesc">
+                                {videos !== "" ?
+                                    <iframe width="600" height="400" allow="fullscreen;"
+                                            src={videos}>
+                                    </iframe> : ""}
+                                <div className="overview">{movieInfo.overview}</div>
+                                <div id="watchlater">
+                                    <button id={movieInfo.id} className="watchlaterbutton"
+                                            onClick={addMovieToWatchLater}>Add to watchlater
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div className="directors">
+                            <div className="infoName">Director:</div>
+                            <div className="infoValue">
+                                {directors}
+                            </div>
+                        </div>
+
+                        <div id="secondaryInfo">
+
+                            <div className="infoElement">
+                                <div className="infoName">Release date:</div>
+                                <div className="infoValue">{movieInfo.release_date}</div>
+                            </div>
+                            <div className="infoElement">
+                                <div className="infoName">Runtime:</div>
+                                <div className="infoValue">{movieInfo.runtime + " min"}</div>
+                            </div>
+                            <div className="infoElement">
+                                <div className="infoName">Original title:</div>
+                                <div className="infoValue">{movieInfo.original_title}</div>
+                            </div>
+                            <div className="infoElement">
+                                <div className="infoName">Movie homepage:</div>
+                                <div className="infoValue"><a href={movieInfo.homepage}>link</a></div>
+                            </div>
+                            <div className="infoElement">
+                                <div className="infoName">Original language:</div>
+                                <div className="infoValue">{movieInfo.original_language}</div>
+                            </div>
+                            <div className="infoElement">
+                                <div className="infoName">Adult movie:</div>
+                                <div
+                                    className="infoValue">{movieInfo.adult !== undefined ? movieInfo.adult.toString() : "Unknown"}
+                                </div>
+                            </div>
+                            <div className="infoElement">
+                                <div className="infoName">Budget:</div>
+                                <div className="infoValue">{movieInfo.budget}</div>
+                            </div>
+                            <div className="infoElement">
+                                <div className="infoName">Revenue:</div>
+                                <div className="infoValue">{movieInfo.revenue}</div>
+                            </div>
+
+                        </div>
+                        <div id="actors">
+                            <div className="slidingButtonLeft"
+                                 style={currentCastPage < 1 ? {display: 'none'} : {}}>
+                                <div onClick={() => previousCastPage()}>&#8249;</div>
+                            </div>
+                            <div id="currentCast">
+                                {currentCast}
+                            </div>
+
+                            <div className="slidingButtonRight"
+                                 style={(cast.length) <= (currentCastPage + 1) * 5 ? {display: 'none'} : {}}
+                                 onClick={() => nextCastPage()}>
+                                &#8250;
+                            </div>
+                        </div>
+
+                        <div id="recommendations">
+
+                            <div className="slidingButtonLeft"
+                                 style={currentRecomPage < 1 ? {display: 'none'} : {}}>
+                                <div onClick={() => previousRecomPage()}>&#8249;</div>
+                            </div>
+                            <div id="currentRecom">
+                                {currentRecom}
+                            </div>
+
+                            <div className="slidingButtonRight"
+                                 style={(recommendations.length) <= (currentRecomPage + 1) * 5 ? {display: 'none'} : {}}>
+                                <div onClick={() => nextRecomPage()}>&#8250;</div>
+                            </div>
+
+                        </div>
                         <table>
-                            <tr>
-                                <button id={movieInfo.id} onClick={addMovieToWatchLater}>Add to watchlater</button>
-                            </tr>
                             <tr>
                                 <td>Ratings:</td>
                                 <td>
@@ -307,72 +397,6 @@ export function MoviePage(props) {
                                     <span>{movieInfo.vote_average === -1 ? "Be the first one to rate" : movieInfo.vote_average}</span>
                                 </td>
                             </tr>
-                            <tr>
-                                <td>Release date:</td>
-                                <td><span>{movieInfo.release_date}</span></td>
-                            </tr>
-                            <tr>
-                                <td>Runtime:</td>
-                                <td><span>{movieInfo.runtime + " min"}</span></td>
-                            </tr>
-                            <tr>
-                                <td>Original title:</td>
-                                <td><span>{movieInfo.original_title}</span></td>
-                            </tr>
-                            <tr>
-                                <td>Movie homepage:</td>
-                                <td><a href={movieInfo.homepage}>link</a></td>
-                            </tr>
-                            <tr>
-                                <td>Original language:</td>
-                                <td><span>{movieInfo.original_language}</span></td>
-                            </tr>
-                            <tr>
-                                <td>Adult movie:</td>
-                                <td>
-                                    <span>{movieInfo.adult !== undefined ? movieInfo.adult.toString() : "Unknown"}</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Budget:</td>
-                                <td><span>{movieInfo.budget}</span></td>
-                            </tr>
-                            <tr>
-                                <td>Revenue:</td>
-                                <td><span>{movieInfo.revenue}</span></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div className="dashboard-button" id="back"
-                                         style={currentCastPage < 1 ? {display: 'none'} : {}}>
-                                        <div onClick={() => previousCastPage()}>Back</div>
-                                    </div>
-                                    <ul id="currentCast">
-                                        {currentCast}
-                                    </ul>
-
-                                    <div className="dashboard-button" id="next"
-                                         style={(cast.length) <= (currentCastPage + 1) * 5 ? {display: 'none'} : {}}>
-                                        <div onClick={() => nextCastPage()}>Next</div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Director:</td>
-                                <td>
-                                    <ul>
-                                        {directors}
-                                    </ul>
-                                </td>
-                            </tr>
-                            {videos !== "" ? <tr>
-                                <td>Video:</td>
-                                <td>
-                                    <iframe width="420" height="315" allow="fullscreen;"
-                                            src={videos}>
-                                    </iframe>
-                                </td>
-                            </tr> : ""}
                             <tr>
                                 {!isReviewPresent ? <button onClick={createReviewPopup}>Write review</button> :
                                     <button onClick={createReviewPopup}>Modify review</button>}
@@ -410,22 +434,6 @@ export function MoviePage(props) {
                                 <ul>
                                     {movieReviews}
                                 </ul>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div className="dashboard-button" id="back"
-                                         style={currentRecomPage < 1 ? {display: 'none'} : {}}>
-                                        <div onClick={() => previousRecomPage()}>Back</div>
-                                    </div>
-                                    <ul id="currentRecom">
-                                        {currentRecom}
-                                    </ul>
-
-                                    <div className="dashboard-button" id="next"
-                                         style={(recommendations.length) <= (currentRecomPage + 1) * 5 ? {display: 'none'} : {}}>
-                                        <div onClick={() => nextRecomPage()}>Next</div>
-                                    </div>
-                                </td>
                             </tr>
                         </table>
                     </div>
