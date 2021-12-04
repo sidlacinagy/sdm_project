@@ -2,7 +2,7 @@ import {searchMovie} from "../../api/apicalls";
 import React, {useEffect, useState} from "react";
 import {Helmet} from "react-helmet";
 import not_found from "./not_found.png";
-import MenuBar from "../MenuBar";
+import MenuBar from "../menubar/MenuBar";
 
 export function SearchResult(props) {
 
@@ -27,7 +27,8 @@ export function SearchResult(props) {
                               onClick={handleMovieClick}> {movie.release_date === null ? "" : movie.release_date.substring(0, 4)}</span>
                         <br/>
                         <span id={movie.id} onClick={handleMovieClick} className="rating">{movie.ratings === -1 ? "-" : movie.ratings}</span>
-                        <span id={movie.id} onClick={handleMovieClick} className="rating">{movie.vote_average === -1 ? "-" : movie.vote_average}</span>
+                        <span id={movie.id} onClick={handleMovieClick}
+                              className="rating">{movie.vote_average === -1 ? "-" : movie.vote_average}</span>
                     </div>
                 </li>
             )));
@@ -66,55 +67,55 @@ export function SearchResult(props) {
     }
 
     function firstPage() {
-        window.location.href="/search?term=" + searchTerm + "&page=1";
+        window.location.href = "/search?term=" + searchTerm + "&page=1";
     }
 
     function lastPage() {
-        window.location.href="/search?term=" + searchTerm + "&page=" + totalPages;
+        window.location.href = "/search?term=" + searchTerm + "&page=" + totalPages;
     }
 
     function previousPage() {
-        window.location.href="/search?term=" + searchTerm + "&page=" + (parseInt(new URLSearchParams(window.location.search).get("page")) - 1).toString();
+        window.location.href = "/search?term=" + searchTerm + "&page=" + (parseInt(new URLSearchParams(window.location.search).get("page")) - 1).toString();
     }
 
     function specificPage(event) {
-        window.location.href="/search?term=" + searchTerm + "&page=" + event.target.id;
+        window.location.href = "/search?term=" + searchTerm + "&page=" + event.target.id;
     }
 
     function nextPage() {
-        window.location.href="/search?term=" + searchTerm + "&page=" + (parseInt(new URLSearchParams(window.location.search).get("page")) + 1).toString();
+        window.location.href = "/search?term=" + searchTerm + "&page=" + (parseInt(new URLSearchParams(window.location.search).get("page")) + 1).toString();
     }
 
     return (
         <div id="searchresult">
             <div id="body">
-            <Helmet>
-                <meta charSet="UTF-8"/>
-                <title>{searchTerm}</title>
-            </Helmet>
-                <MenuBar data={props} />
-            <ul id="searchlist">
-                {results.length === 0 ? "No results." : results}
-            </ul>
-            <div id="page">
-                <div id="back">
-            <button onClick={firstPage}
-                    style={parseInt(new URLSearchParams(window.location.search).get("page")) <= 1 ? {display: 'none'} : {}}>First
-            </button>
-            <button onClick={previousPage}
-                    style={parseInt(new URLSearchParams(window.location.search).get("page")) <= 1 ? {display: 'none'} : {}}>Prev
-            </button>
+                <Helmet>
+                    <meta charSet="UTF-8"/>
+                    <title>{searchTerm}</title>
+                </Helmet>
+                <MenuBar data={props}/>
+                <ul id="searchlist">
+                    {results.length === 0 ? "No results." : results}
+                </ul>
+                <div id="page">
+                    <div id="back">
+                        <button onClick={firstPage}
+                                style={parseInt(new URLSearchParams(window.location.search).get("page")) <= 1 ? {display: 'none'} : {}}>First
+                        </button>
+                        <button onClick={previousPage}
+                                style={parseInt(new URLSearchParams(window.location.search).get("page")) <= 1 ? {display: 'none'} : {}}>Prev
+                        </button>
+                    </div>
+                    <ul className="pages_list">{pages}</ul>
+                    <div id="next">
+                        <button onClick={nextPage}
+                                style={parseInt(new URLSearchParams(window.location.search).get("page")) >= totalPages ? {display: 'none'} : {}}>Next
+                        </button>
+                        <button onClick={lastPage}
+                                style={parseInt(new URLSearchParams(window.location.search).get("page")) >= totalPages ? {display: 'none'} : {}}>Last
+                        </button>
+                    </div>
                 </div>
-            <ul className="pages_list">{pages}</ul>
-                <div id="next">
-            <button onClick={nextPage}
-                    style={parseInt(new URLSearchParams(window.location.search).get("page")) >= totalPages ? {display: 'none'} : {}}>Next
-            </button>
-            <button onClick={lastPage}
-                    style={parseInt(new URLSearchParams(window.location.search).get("page")) >= totalPages ? {display: 'none'} : {}}>Last
-            </button>
-                </div>
-            </div>
             </div>
         </div>);
 }

@@ -14,6 +14,7 @@ import "./pages/movie/movie.scss";
 import "./index.scss";
 import "./pages/searchresult/searchresult.scss";
 import "./pages/reset/reset.scss";
+import "./pages/menubar/menubar.scss";
 import {SearchResult} from "./pages/searchresult/SearchResult";
 import {Reset} from "./pages/reset/Reset";
 

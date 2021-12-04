@@ -1,6 +1,6 @@
 import React, {Component, useEffect, useState} from "react";
-import {unload, userToken} from "../redux/UserSlice";
-import {userLogout} from "../api/apicalls";
+import {unload, userToken} from "../../redux/UserSlice";
+import {userLogout} from "../../api/apicalls";
 import {useDispatch, useSelector} from "react-redux";
 
 function MenuBar(props) {
@@ -31,7 +31,7 @@ function MenuBar(props) {
     }
 
     return (
-        <div>
+        <div id="menu-bar">
             <ul className="menu-bar">
                 <li onClick={handleSwitchToDashboard}>Dashboard</li>
                 <li>
