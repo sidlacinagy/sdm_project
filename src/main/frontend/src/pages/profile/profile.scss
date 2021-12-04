@@ -1,20 +1,29 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
 
+html, body {
+  height: 100%;
+}
+
 .profile {
 
   * {
     box-sizing: border-box;
   }
 
+  .container {
+    margin-bottom: 3em;
+  }
+
   #body {
-    background: linear-gradient(-45deg, #ff6200, #ff6426, #332f2f, #000000);
+    background: linear-gradient(-45deg, #070218FF, #343a65, #62688a, #ffffff);
     background-size: 400% 400%;
     animation: gradient 15s ease infinite;
     display: flex;
-    justify-content: center;
     align-items: center;
     flex-direction: column;
     font-family: 'Montserrat', sans-serif;
+    height: 100%;
+    min-height: 100vh;
   }
 
   @keyframes gradient {
@@ -31,7 +40,7 @@
 
   h1 {
     font-weight: bold;
-    margin: 0;
+    margin: 0.5em 0 0 0;
   }
 
   p {
@@ -52,22 +61,9 @@
   }
 
   span {
-    color: #FF4B2B;
+    color: #8981ff;
     font-size: 14px;
     font-weight: bold;
-  }
-
-  button {
-    border-radius: 20px;
-    border: 1px solid #FF4B2B;
-    background-color: #FF4B2B;
-    color: #FFFFFF;
-    font-size: 12px;
-    font-weight: bold;
-    padding: 12px 45px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    transition: transform 80ms ease-in;
   }
 
   button:active {
@@ -84,12 +80,12 @@
   }
 
   .form {
-    background-color: #FFFFFF;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
     text-align: center;
+    padding-bottom: 2em;
   }
 
   table {
@@ -107,13 +103,15 @@
   }
 
   .container {
-    background-color: #fff;
+    color: #ffffff;
+    background-color: #2e3f6f;
+    opacity: 0.9;
     border-radius: 10px;
-    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
-    0 10px 10px rgba(0, 0, 0, 0.22);
-    border-color: black;
+    border: solid black 2px;
+    -webkit-box-shadow: 8px -5px 19px 5px rgba(0, 0, 0, 0.95);
+    box-shadow: 8px -5px 19px 5px rgba(0, 0, 0, 0.95);
     position: relative;
-    width: 768px;
+    width: 70%;
     max-width: 100%;
     min-height: 480px;
   }
@@ -145,18 +143,102 @@
     transform: translateX(20%);
   }
 
-  div.back-button {
-    text-align: center;
-    justify-content: center;
-    padding: 12px 45px;
-    border-radius: 20px;
-    border: 1px solid #FF4B2B;
-    background-color: #FF4B2B;
-    color: #FFFFFF;
-    font-size: 12px;
-    font-weight: bold;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    transition: transform 80ms ease-in;
+  #menu-bar {
+    justify-self: flex-start;
+    margin-bottom: 3em;
   }
+
+  .cont {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cont ul {
+    list-style-type: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-row-gap: 3em;
+    grid-column-gap: 3em;
+    margin: 1.5em;
+    padding: 0;
+  }
+
+  .cont ul .movie_li_div div {
+    margin-bottom: 0.5em;
+    margin-top: 0.5em;
+  }
+
+  .first, .second {
+    font-size: 30px;
+    font-weight: bold;
+    margin: 1em 0 1em 0;
+  }
+
+  .star {
+    display: flex;
+    justify-content: center;
+  }
+
+  .reviewList li {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    grid-template-rows: 1fr 0.5fr 1fr;
+    gap: 0.2em 1em;
+    grid-template-areas:
+    "grid_pic grid_star"
+    "grid_title grid_review"
+    "grid_date grid_review";
+  }
+
+  .reviewList li div {
+  }
+
+  .grid_pic {
+    grid-area: grid_pic;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .grid_title {
+    grid-area: grid_title;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .grid_date {
+    grid-area: grid_date;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .grid_star {
+    grid-area: grid_star;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .grid_review {
+    grid-area: grid_review;
+    display: flex;
+    justify-content: center;
+  }
+
+  li {
+    overflow-wrap: anywhere;
+  }
+
+  .remove {
+    color: #930000;
+    font-weight: bold;
+  }
+
+  .remove:hover {
+    color: white;
+  }
+
 }

@@ -1,3 +1,5 @@
+// noinspection DuplicatedCode
+
 import {useDispatch, useSelector} from "react-redux";
 import {userToken} from "../../redux/UserSlice";
 import React, {useEffect, useState} from "react";
@@ -5,7 +7,7 @@ import {fetchUserData, getReviewsByUser, loadMovie, modifyWatchLater} from "../.
 import {Helmet} from "react-helmet";
 import not_found from "../searchresult/not_found.png";
 import ReactStars from "react-rating-stars-component";
-import MenuBar from "../MenuBar";
+import MenuBar from "../menubar/MenuBar";
 
 export function ProfileHome(props) {
     const user = useSelector(userToken);
@@ -21,13 +23,23 @@ export function ProfileHome(props) {
         }).then((response) => {
             setUserdetails(response.data)
             getReviewsByUser(response.data.nickname).then((resp) => {
-                console.log(resp.data)
                 let tempArray = [];
                 for (let i = 0; i < resp.data.length; i++) {
-                    console.log(resp.data[i])
                     loadMovie(resp.data[i].key.movieId).then((movie) => {
                         tempArray.push(<li>
-                            <div>
+                            <div className="grid_pic">
+                                <img alt="pic"
+                                     src={movie.data.poster_path === null ? not_found : ("https://image.tmdb.org/t/p/original" + movie.data.poster_path)}
+                                     width="50px" id={movie.data.id} onClick={handleMovieClick}/>
+                                <br/>
+                            </div>
+                            <div className="grid_title" id={movie.data.id} onClick={handleMovieClick}>
+                                <span>{movie.data.title}</span>
+                            </div>
+                            <div className="grid_date">
+                                <span>at: {resp.data[i].reviewDate}</span>
+                            </div>
+                            <div className="grid_star">
                                 <ReactStars
                                     count={5}
                                     value={resp.data[i].rating}
@@ -36,15 +48,7 @@ export function ProfileHome(props) {
                                     isHalf={true}
                                     activeColor="#ff6200"/>
                             </div>
-                            <div>{resp.data[i].comment}</div>
-                            <div>
-                                <span id={movie.data.id} onClick={handleMovieClick}>for movie:{movie.data.title}</span>
-                                <img alt="pic"
-                                     src={movie.data.poster_path === null ? not_found : ("https://image.tmdb.org/t/p/original" + movie.data.poster_path)}
-                                     width="50px" id={movie.data.id} onClick={handleMovieClick}/>
-                                <br/>
-                                <span>{resp.data[i].reviewDate}</span>
-                            </div>
+                            <div className="grid_review">{resp.data[i].comment}</div>
                         </li>)
                     })
                 }
@@ -56,41 +60,55 @@ export function ProfileHome(props) {
             user
         }, {"action": "GET_LIST", "movie_id": "0"}).then((response) => {
             setWatchlater(response.data.map((movie) => (
-                <li id={movie.id} onClick={handleMovieClick}>
+                <li id={movie.id}>
                     <img alt="pic"
                          src={movie.poster_path === null ? not_found : ("https://image.tmdb.org/t/p/original" + movie.poster_path)}
                          width="100px" id={movie.id} onClick={handleMovieClick}/>
-                    <div className="movie_li_div" id={movie.id} onClick={handleMovieClick}>
+                    <div className="movie_li_div" id={movie.id}>
+                        <div>
                             <span className="movie_title" id={movie.id}
                                   onClick={handleMovieClick}>{movie.title}</span>
-                        <span className="movie_release_date" id={movie.id}
-                              onClick={handleMovieClick}> {movie.release_date === null ? "" : movie.release_date}</span>
-                        <br/>
-                        <span id={movie.id}
-                              onClick={handleMovieClick}>Original title: {movie.original_title === null ? "" : movie.original_title}</span>
-                        <br/>
-                        <span id={movie.id} onClick={handleMovieClick}>{movie.ratings === -1 ? "-" : movie.ratings}</span>
-                        <span id={movie.id} onClick={handleMovieClick}>{movie.vote_average === -1 ? "-" : movie.vote_average}</span>
-                        <buttom id={movie.id} onClick={handleWatchLaterRemove}>Remove</buttom>
+                        </div>
+                        <div>
+                            <span className="movie_release_date" id={movie.id}
+                                  onClick={handleMovieClick}>{movie.release_date === null ? "" : movie.release_date.substr(0, 4)}</span>
+                        </div>
+                        <buttom className="remove" id={movie.id} onClick={handleWatchLaterRemove}>Remove</buttom>
                     </div>
                 </li>
             )))
-
-        })
-
-
+        });
     }, [])
 
-    function handleSwitchToDashboard() {
-        window.location.href = "/dashboard"
-    }
-
     function handleWatchLaterRemove(event) {
-        modifyWatchLater(user, {"action": "REMOVE", "movie_id": event.target.id})
+        modifyWatchLater(user, {"action": "REMOVE", "movie_id": event.target.id}).then(() => {
+            modifyWatchLater({
+                user
+            }, {"action": "GET_LIST", "movie_id": "0"}).then((response) => {
+                setWatchlater(response.data.map((movie) => (
+                    <li id={movie.id}>
+                        <img alt="pic"
+                             src={movie.poster_path === null ? not_found : ("https://image.tmdb.org/t/p/original" + movie.poster_path)}
+                             width="100px" id={movie.id} onClick={handleMovieClick}/>
+                        <div className="movie_li_div" id={movie.id}>
+                            <div>
+                            <span className="movie_title" id={movie.id}
+                                  onClick={handleMovieClick}>{movie.title}</span>
+                            </div>
+                            <div>
+                            <span className="movie_release_date" id={movie.id}
+                                  onClick={handleMovieClick}>{movie.release_date === null ? "" : movie.release_date.substr(0, 4)}</span>
+                            </div>
+                            <buttom className="remove" id={movie.id} onClick={handleWatchLaterRemove}>Remove</buttom>
+                        </div>
+                    </li>
+                )))
+            });
+        });
     }
 
     function handleMovieClick(event) {
-        window.location.href = "/movie?" + event.target.id;
+        props.history.push("/movie?" + event.target.id);
     }
 
     return (
@@ -100,8 +118,8 @@ export function ProfileHome(props) {
                 <title>Your profile</title>
             </Helmet>
             <div id="body">
+                <MenuBar data={props}/>
                 <div className="container">
-                    <MenuBar data={props} />
                     <div className="form">
                         <h1>Welcome to your profile, <span id="firstSpan">{userdetails.firstName}</span>!</h1>
                         <div className="info">Here is your personal information:</div>
@@ -127,20 +145,20 @@ export function ProfileHome(props) {
                                 <td><span>{userdetails.registerDate}</span></td>
                             </tr>
                         </table>
-                        <div>Your watchlater list:</div>
-                        <div>
-                            <ul>
-                                {watchlater}
-                            </ul>
+                        <div className="cont">
+                            <div className="first">Your watchlater list:</div>
+                            <div>
+                                <ul>
+                                    {watchlater}
+                                </ul>
+                            </div>
+                            <div className="second">Your recent reviews:</div>
+                            <div>
+                                <ul className="reviewList">
+                                    {reviews}
+                                </ul>
+                            </div>
                         </div>
-
-                        <div>Your recent reviews:</div>
-                        <div>
-                            <ul>
-                                {reviews}
-                            </ul>
-                        </div>
-                        <button className="back-button" onClick={handleSwitchToDashboard}>Dashboard*</button>
                     </div>
                 </div>
             </div>

@@ -4,7 +4,7 @@ import {unload, userToken} from '../../redux/UserSlice';
 import {fetchUserData, getTrending, searchMovie, userLogout} from "../../api/apicalls";
 import {Helmet} from 'react-helmet';
 import not_found from "../searchresult/not_found.png";
-import MenuBar from "../MenuBar.js"
+import MenuBar from "../menubar/MenuBar.js"
 
 export function Dashboard(props) {
     const user = useSelector(userToken);
@@ -42,7 +42,6 @@ export function Dashboard(props) {
     function handleMovieClick(event) {
         props.history.push("/movie?" + event.target.id);
     }
-
 
     return (
         <div className="dashboard">

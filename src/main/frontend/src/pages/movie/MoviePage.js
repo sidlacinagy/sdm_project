@@ -16,7 +16,7 @@ import {useHistory} from "react-router-dom";
 import not_found from "../searchresult/not_found.png";
 import {useSelector} from "react-redux";
 import {userToken} from "../../redux/UserSlice";
-import MenuBar from "../MenuBar";
+import MenuBar from "../menubar/MenuBar";
 
 
 export function MoviePage(props) {
