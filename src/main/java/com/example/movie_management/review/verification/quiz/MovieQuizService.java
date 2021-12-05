@@ -1,14 +1,11 @@
-package com.example.movie_management.review.verification;
+package com.example.movie_management.review.verification.quiz;
 
 
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -19,14 +16,16 @@ public class MovieQuizService {
     @Autowired
     private MovieQuizRepository movieQuizRepository;
 
-    public void addToQuizRepository(MovieQuiz movieQuiz){
+    public HashMap<String, String> answers = new HashMap<>();
+
+    public void addToQuizRepository(MovieQuiz movieQuiz) {
 
         movieQuizRepository.save(movieQuiz);
     }
 
-    public Optional<String> getCorrectAnswer(int movieId, String question){
+    public Optional<String> getCorrectAnswer(int movieId, String question) {
         Optional<MovieQuiz> quiz = movieQuizRepository.findById(movieId);
-        if(quiz.isPresent()) {
+        if (quiz.isPresent()) {
             for (QuizElement quizElement : quiz.get().getQuizElements()) {
                 if (quizElement.getQuestion().equals(question))
                     return Optional.of(quizElement.getCorrectAnswer());
@@ -35,14 +34,24 @@ public class MovieQuizService {
         return Optional.empty();
     }
 
+    public double getScore(int movieId) {
+        int count=0;
+        for(Map.Entry<String, String> entry: answers.entrySet()){
+            if(entry.getValue().equals(getCorrectAnswer(movieId,entry.getKey()).get())) {
+                count++;
+            }
+        }
+        return count/getQuizElementsForMovie(movieId).get().size();
+    }
+
     public Optional<List<QuizElementDto>> getQuizElementsForMovie(int movieId) {
         Optional<MovieQuiz> quiz = movieQuizRepository.findById(movieId);
-        if(quiz.isEmpty()){
+        if (quiz.isEmpty()) {
             return Optional.empty();
         }
-        List<QuizElementDto> resultElements= new ArrayList<>();
+        List<QuizElementDto> resultElements = new ArrayList<>();
 
-        for(QuizElement quizElement: quiz.get().getQuizElements()){
+        for (QuizElement quizElement : quiz.get().getQuizElements()) {
 
             List<String> answer = List.of(quizElement.getCorrectAnswer());
             List<String> answers = Stream.concat(answer.stream(), quizElement.getWrongAnswers().stream())
@@ -58,6 +67,16 @@ public class MovieQuizService {
         return Optional.of(resultElements);
     }
 
+    public boolean doesQuizExistsForMovie(int movieId) {
+        Optional<MovieQuiz> movieQuiz = movieQuizRepository.findById(movieId);
+        if(movieQuiz.isEmpty() || movieQuiz.get().getQuizElements().isEmpty())
+            return false;
+        return true;
+    }
+
+    public void resetAnswers() {
+        answers.clear();
+    }
 
 
 }

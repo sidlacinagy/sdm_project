@@ -1,4 +1,4 @@
-package com.example.movie_management.review.verification;
+package com.example.movie_management.review.verification.quiz;
 
 
 import org.springframework.data.repository.CrudRepository;

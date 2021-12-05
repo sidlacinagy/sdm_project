@@ -1,4 +1,4 @@
-package com.example.movie_management.review.verification;
+package com.example.movie_management.review.verification.quiz;
 
 import lombok.Builder;
 import lombok.Data;

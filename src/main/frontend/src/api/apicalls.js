@@ -154,3 +154,33 @@ export const getQuiz= (request) => {
         'data': request
     });
 }
+
+export const sendAnswer= (request) => {
+    return axios({
+        'method': 'POST',
+        'url': `${process.env.hostUrl || 'http://localhost:8082'}/api/send_answer`,
+        'data': request
+    });
+}
+
+export const submitAnswers= (authtoken, request) => {
+    return axios({
+        'method': 'POST',
+        'url': `${process.env.hostUrl || 'http://localhost:8082'}/api/submit_answers`,
+        'headers': {
+            'Authorization': 'Bearer' + authtoken
+        },
+        'data': request
+    });
+}
+
+export const getUserVerified= (authtoken, request) => {
+    return axios({
+        'method': 'POST',
+        'url': `${process.env.hostUrl || 'http://localhost:8082'}/api/user_verified`,
+        'headers': {
+            'Authorization': 'Bearer' + authtoken
+        },
+        'data': request
+    });
+}

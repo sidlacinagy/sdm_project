@@ -1,4 +1,4 @@
-package com.example.movie_management.review.verification;
+package com.example.movie_management.review.verification.quiz;
 
 import javax.persistence.AttributeConverter;
 import java.util.ArrayList;

@@ -1,12 +1,12 @@
 import {
     createReview,
-    deleteReview, fetchUserData, getQuiz, getReviewsByMovie,
+    deleteReview, fetchUserData, getQuiz, getReviewsByMovie, getUserVerified,
     loadCredits,
     loadImages,
     loadMovie,
     loadRecommendations,
     loadVideos,
-    modifyWatchLater
+    modifyWatchLater, sendAnswer, submitAnswers
 } from "../../api/apicalls";
 import Modal from 'react-awesome-modal';
 import ReactStars from 'react-rating-stars-component';
@@ -14,6 +14,7 @@ import React, {useEffect, useState} from "react";
 import {Helmet} from "react-helmet";
 import {useHistory} from "react-router-dom";
 import not_found from "../searchresult/not_found.png";
+import verified from "../verified.png";
 import {useSelector} from "react-redux";
 import {userToken} from "../../redux/UserSlice";
 import MenuBar from "../menubar/MenuBar";
@@ -25,7 +26,6 @@ export function MoviePage(props) {
     const [movieInfo, setMovieInfo] = useState({});
     const [cast, setCast] = useState([]);
     const [directors, setDirectors] = useState();
-    const [images, setImages] = useState({});
     const [videos, setVideos] = useState("");
     const [recommendations, setRecommendations] = useState([]);
     const [videoTag, setVideoTag] = useState();
@@ -39,6 +39,7 @@ export function MoviePage(props) {
     const [isReviewPresent, setIsReviewPresent] = useState(false);
     const [userReview, setUserReview] = useState({});
     const [isQuizPresent, setIsQuizPresent] = useState(false);
+    const [isUserVerified, setIsUserVerified] = useState(false);
     const [quiz, setQuiz] = useState([]);
     const [review, setReview] = useState({
         key: {
@@ -51,6 +52,7 @@ export function MoviePage(props) {
         reviewDate: null
     });
     const [movieReviews, setMovieReviews] = useState([]);
+
 
     useEffect(() => {
         loadMovie((window.location.href).split('?')[1]).then((response) => {
@@ -78,10 +80,6 @@ export function MoviePage(props) {
 
         })
 
-        loadImages((window.location.href).split('?')[1]).then((response) => {
-            setImages(response.data);
-        })
-
         loadVideos((window.location.href).split('?')[1]).then((response) => {
             setVideos("https://www.youtube.com/embed/" + response.data.results.find(element => element.type === "Trailer").key);
             setVideoTag(<span><td>Video:</td>
@@ -102,8 +100,10 @@ export function MoviePage(props) {
                         <div className="movie_title" id={movie.id} onClick={handleMovieClick}>{movie.title}</div>
                         <div className="movie_release_date" id={movie.id}
                              onClick={handleMovieClick}> {movie.release_date === null ? "" : movie.release_date.substring(0, 4)}</div>
-
-                        <div id={movie.id} onClick={handleMovieClick} className="rating">Ratings</div>
+                        <div id={movie.id} onClick={handleMovieClick} className="rating">{movie.ratings === -1 ? "-" : movie.ratings}</div>
+                        <div id={movie.id} onClick={handleMovieClick} className="verified-rating">{movie.verified_rating === -1 ? "-" : movie.verified_rating}</div>
+                        <div id={movie.id} onClick={handleMovieClick}
+                              className="tmdb-rating">{movie.vote_average === -1 ? "-" : movie.vote_average}</div>
                     </div>
                 </div>
 
@@ -149,7 +149,7 @@ export function MoviePage(props) {
                         <span>{element.question}</span>
                         {element.answers.map((answer) => (
                             <label> {answer}
-                            <input type="radio" name={element.question} value={answer} id={answer} />
+                            <input type="radio" name={element.question} value={answer} id={answer} onChange={handleAnswerChange}/>
                             </label>
 
                         ))}
@@ -161,6 +161,10 @@ export function MoviePage(props) {
 
         })
 
+        getUserVerified(user, (window.location.href).split('?')[1]).then((response) => {
+            console.log(response.data)
+            setIsUserVerified(response.data)
+        })
 
     }, []);
 
@@ -183,7 +187,7 @@ export function MoviePage(props) {
     useEffect(
         () => {
             let timer1 = setTimeout(() => setCurrentCastPage(0), 500);
-            let timer2 = setTimeout(() => setCurrentRecomPage(0), 1000);
+            let timer2 = setTimeout(() => setCurrentRecomPage(0), 2000);
             return () => {
                 clearTimeout(timer1);
                 clearTimeout(timer2);
@@ -225,6 +229,7 @@ export function MoviePage(props) {
     }
 
     function createQuizPopup(event) {
+        hideQuizPopup()
         setQuizVisible(true);
     }
 
@@ -237,6 +242,11 @@ export function MoviePage(props) {
             ...prevState,
             comment: event.target.value
         }));
+    }
+
+    function handleAnswerChange(event) {
+        console.log(event.target.name+"#"+event.target.value)
+        sendAnswer({element:event.target.name+"#"+event.target.value})
     }
 
     function handleSubmitReview(event) {
@@ -268,7 +278,11 @@ export function MoviePage(props) {
     }
 
     function handleSubmitQuiz(event){
-        console.log(event.target)
+        submitAnswers(user, (window.location.href).split('?')[1]).then((response) => {
+            console.log(response.data)
+        })
+        event.preventDefault()
+        hideQuizPopup()
     }
 
     function ratingChanged(newRating) {
@@ -388,6 +402,10 @@ export function MoviePage(props) {
                         </div>
                         <table>
                             <tr>
+                                <td>Verified Rating:</td>
+                                <td>
+                                    <span>{movieInfo.verified_rating === -1 ? "Be the first to leave a verified review" : movieInfo.verified_rating}</span>
+                                </td>
                                 <td>Ratings:</td>
                                 <td>
                                     <span>{movieInfo.ratings === -1 ? "Be the first one to rate" : movieInfo.ratings}</span>
@@ -405,7 +423,7 @@ export function MoviePage(props) {
                                    onClickAway={hideReviewPopup}>
                                 <div>
                                     <h1>Write new review</h1>
-                                    {isQuizPresent ? <button onClick={createQuizPopup}>Verify your review</button> :
+                                    {isQuizPresent ? (isUserVerified ? <img alt="You are already verified" src={verified} height="50" /> : <button onClick={createQuizPopup}>Verify your review</button>):
                                         <span></span>}
 
                                     <ReactStars
@@ -424,7 +442,7 @@ export function MoviePage(props) {
                             </Modal>
                             <Modal visible={quizVisible} width="400" height="300" effect="fadeInUp"
                                    onClickAway={hideQuizPopup}>
-                                <form onClick={handleSubmitQuiz} method="POST">
+                                <form onSubmit={handleSubmitQuiz}>
                                     <div>{quiz}</div>
                                     <button type="submit">Done</button>
                                     <button onClick={hideQuizPopup}>Close</button>

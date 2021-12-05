@@ -63,10 +63,35 @@ public class ReviewService {
             return -1.0;
         }
         double sum = 0.0;
+        int count=0;
         for(Review review: reviews){
-            sum+=review.getRating();
+            if(!review.isVerified()) {
+                sum += review.getRating();
+                count++;
+            }
+
         }
-        return sum/reviews.size();
+        if(count == 0)
+            return -1.0;
+        return sum/count;
+    }
+
+    public Double getVerifiedRatingForMovie(int movieId){
+        List<Review> reviews = findAllByMovieId(movieId);
+        if(reviews.isEmpty()){
+            return -1.0;
+        }
+        double sum = 0.0;
+        int count = 0;
+        for(Review review: reviews){
+            if(review.isVerified()) {
+                sum += review.getRating();
+                count++;
+            }
+        }
+        if(count == 0)
+            return -1.0;
+        return sum/count;
     }
 
     public void modifyReview(Review newReview) {

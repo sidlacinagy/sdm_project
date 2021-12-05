@@ -6,10 +6,9 @@ import com.example.movie_management.movie.*;
 import com.example.movie_management.movie.watchlater.WatchLaterService;
 import com.example.movie_management.review.Review;
 import com.example.movie_management.review.ReviewService;
-import com.example.movie_management.review.verification.MovieQuiz;
-import com.example.movie_management.review.verification.MovieQuizService;
-import com.example.movie_management.review.verification.QuizElement;
-import com.example.movie_management.review.verification.QuizElementDto;
+import com.example.movie_management.review.verification.VerifiedService;
+import com.example.movie_management.review.verification.quiz.MovieQuizService;
+import com.example.movie_management.review.verification.quiz.QuizElementDto;
 import com.example.movie_management.search.SearchResult;
 import com.example.controllers.requests.ModifyWatchLaterRequest;
 import com.example.controllers.requests.RecommendationRequest;
@@ -45,24 +44,29 @@ public class MovieController {
     @Autowired
     private MovieQuizService movieQuizService;
 
+    @Autowired
+    private VerifiedService verifiedService;
+
     @PostMapping(path = "/search")
     public ResponseEntity<?> getSearchedMovie(@RequestBody SearchRequest searchRequest) throws IOException {
         Caller<SearchResult> caller = new Caller<>(SearchResult.class);
         SearchResult searchResult = caller.call(ApiCall.SEARCH_BY_MOVIE_NAME.setParameters(URLEncoder.encode(searchRequest.getSearchTerm(),
                 StandardCharsets.UTF_8), searchRequest.getPage()));
-        for(SearchResult.ResultMovie movie: searchResult.getResults()){
+        for (SearchResult.ResultMovie movie : searchResult.getResults()) {
             movie.setRatings(reviewService.getRatingForMovie(movie.getId()));
+            movie.setVerified_rating(reviewService.getVerifiedRatingForMovie(movie.getId()));
         }
         return ResponseEntity.ok(searchResult);
     }
 
     @PostMapping(path = "/movie")
     public ResponseEntity<?> loadMovie(@RequestBody String id) throws IOException {
-        if(id.charAt(id.length()-1) == '=')
-            id = id.substring(0, id.length()-1);
+        if (id.charAt(id.length() - 1) == '=')
+            id = id.substring(0, id.length() - 1);
         Caller<Movie> caller = new Caller<>(Movie.class);
         Movie movie = caller.call(ApiCall.GET_MOVIE_BY_ID.setParameters(id));
         movie.setRatings(reviewService.getRatingForMovie(movie.getId()));
+        movie.setVerified_rating(reviewService.getVerifiedRatingForMovie(movie.getId()));
         return ResponseEntity.ok(movie);
     }
 
@@ -85,8 +89,9 @@ public class MovieController {
         Caller<Recommendation> caller = new Caller<>(Recommendation.class);
         Recommendation recommendation = caller.call(ApiCall.GET_RECOMMENDATIONS.setParameters(recommendationRequest.getMovie_id(),
                 recommendationRequest.getPage()));
-        for(Recommendation.Result movie : recommendation.getResults()){
+        for (Recommendation.Result movie : recommendation.getResults()) {
             movie.setRatings(reviewService.getRatingForMovie(movie.getId()));
+            movie.setVerified_rating(reviewService.getVerifiedRatingForMovie(movie.getId()));
         }
         return ResponseEntity.ok(recommendation);
     }
@@ -102,6 +107,7 @@ public class MovieController {
     public ResponseEntity<?> createReview(Principal user, @RequestBody Review review) throws IOException {
         User userObj = (User) userDetailsService.loadUserByUsername(user.getName());
         review.getKey().setNickname(userObj.getNickname());
+        review.setVerified(verifiedService.isUserVerifiedForMovie(userObj.getNickname(), review.getKey().getMovieId()));
         return ResponseEntity.ok(reviewService.createReview(review));
     }
 
@@ -115,7 +121,7 @@ public class MovieController {
 
     @PostMapping(path = "/review_user")
     public ResponseEntity<?> getReviewsByUsername(@RequestBody String nickname) {
-        List<Review> reviews = reviewService.findAllByNickname(nickname.substring(0,nickname.length()-1));
+        List<Review> reviews = reviewService.findAllByNickname(nickname.substring(0, nickname.length() - 1));
         return ResponseEntity.ok(reviews);
     }
 
@@ -125,24 +131,59 @@ public class MovieController {
         return ResponseEntity.ok(reviews);
     }
 
-    @PostMapping(path="/get_trending")
+    @PostMapping(path = "/get_trending")
     public ResponseEntity<?> getTrendingMovies() throws IOException {
-        Caller<SearchResult> trendingCaller= new Caller<>(SearchResult.class);
+        Caller<SearchResult> trendingCaller = new Caller<>(SearchResult.class);
         SearchResult trending = trendingCaller.call(ApiCall.GET_TRENDING.getCall());
-        for(SearchResult.ResultMovie movie : trending.getResults()){
+        for (SearchResult.ResultMovie movie : trending.getResults()) {
             movie.setRatings(reviewService.getRatingForMovie(movie.getId()));
+            movie.setVerified_rating(reviewService.getVerifiedRatingForMovie(movie.getId()));
         }
         return ResponseEntity.ok(trending);
     }
-    @PostMapping(path="/get_quiz")
+
+    @PostMapping(path = "/get_quiz")
     public ResponseEntity<?> getQuizByMovie(@RequestBody String movieId) {
-        if(movieId.charAt(movieId.length()-1) == '=')
-            movieId = movieId.substring(0, movieId.length()-1);
+        if (movieId.charAt(movieId.length() - 1) == '=')
+            movieId = movieId.substring(0, movieId.length() - 1);
         Optional<List<QuizElementDto>> movieQuiz = movieQuizService.getQuizElementsForMovie(Integer.parseInt(movieId));
-        if(movieQuiz.isEmpty()){
+        if (movieQuiz.isEmpty()) {
             return ResponseEntity.ok("null");
         }
         return ResponseEntity.ok(movieQuiz);
+    }
+
+    @PostMapping(path = "/send_answer")
+    public void sendAnswer(@RequestBody String element) {
+        element = element.substring(12, element.length() - 2);
+        System.out.println(element);
+        String[] elements = element.split("#");
+        movieQuizService.answers.put(elements[0], elements[1]);
+        System.out.println(movieQuizService.answers.entrySet());
+    }
+
+    @PostMapping(path = "submit_answers")
+    public ResponseEntity<?> submitAnswers(Principal user, @RequestBody String movieId) {
+        User userObj = (User) userDetailsService.loadUserByUsername(user.getName());
+        if (movieId.charAt(movieId.length() - 1) == '=')
+            movieId = movieId.substring(0, movieId.length() - 1);
+        int id = Integer.parseInt(movieId);
+        double score = movieQuizService.getScore(id);
+        System.out.println(score);
+        if (score < 0.8) {
+            return ResponseEntity.ok("Quiz failed");
+        }
+        verifiedService.addToVerifiedMovies(userObj.getNickname(), id);
+        movieQuizService.resetAnswers();
+        return ResponseEntity.ok("Passed with: " + score * 100 + "%");
+    }
+
+    @PostMapping(path = "user_verified")
+    public ResponseEntity<?> isUserVerifiedForMovie(Principal user, @RequestBody String movieId) {
+        User userObj = (User) userDetailsService.loadUserByUsername(user.getName());
+        if (movieId.charAt(movieId.length() - 1) == '=')
+            movieId = movieId.substring(0, movieId.length() - 1);
+        return ResponseEntity.ok(verifiedService.isUserVerifiedForMovie(userObj.getNickname(), Integer.parseInt(movieId)));
     }
 
     @PostMapping(path = "/watchlater")
