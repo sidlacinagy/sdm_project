@@ -36,8 +36,10 @@ public class WatchLaterService {
     }
 
     public boolean isMovieAlreadyInList(String email, int movieId) {
-        WatchLater watchLater = watchLaterRepository.findById(email).orElseThrow(()-> new IllegalStateException("Watch Later list does not exist."));
-        return watchLater.getMovies().contains(movieId);
+        Optional<WatchLater> watchLater = watchLaterRepository.findById(email);
+        if(watchLater.isEmpty())
+            return false;
+        return watchLater.get().getMovies().contains(movieId);
     }
 
     public void deleteMovieFromWatchLaterList(String email, Integer movieId) {

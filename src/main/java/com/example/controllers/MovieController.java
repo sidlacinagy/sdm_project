@@ -186,6 +186,14 @@ public class MovieController {
         return ResponseEntity.ok(verifiedService.isUserVerifiedForMovie(userObj.getNickname(), Integer.parseInt(movieId)));
     }
 
+    @PostMapping(path = "in_watchlater")
+    public ResponseEntity<?> isInUserWatchLater(Principal user, @RequestBody String movieId) {
+        User userObj = (User) userDetailsService.loadUserByUsername(user.getName());
+        if (movieId.charAt(movieId.length() - 1) == '=')
+            movieId = movieId.substring(0, movieId.length() - 1);
+        return ResponseEntity.ok(watchLaterService.isMovieAlreadyInList(userObj.getEmail(), Integer.parseInt(movieId)));
+    }
+
     @PostMapping(path = "/watchlater")
     public ResponseEntity<?> modifyWatchLater(Principal user, @RequestBody ModifyWatchLaterRequest modifyWatchLaterRequest) throws IOException {
         User userObj = (User) userDetailsService.loadUserByUsername(user.getName());

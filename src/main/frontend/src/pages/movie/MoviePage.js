@@ -1,6 +1,6 @@
 import {
     createReview,
-    deleteReview, fetchUserData, getQuiz, getReviewsByMovie, getUserVerified,
+    deleteReview, fetchUserData, getMovieInWatchLater, getQuiz, getReviewsByMovie, getUserVerified,
     loadCredits,
     loadImages,
     loadMovie,
@@ -40,6 +40,7 @@ export function MoviePage(props) {
     const [reviewVisible, setReviewVisible] = useState(false);
     const [quizVisible, setQuizVisible] = useState(false);
     const [isReviewPresent, setIsReviewPresent] = useState(false);
+    const [isInWatchLater, setIsInWatchLater] = useState(false);
     const [userReview, setUserReview] = useState({});
     const [isQuizPresent, setIsQuizPresent] = useState(false);
     const [isUserVerified, setIsUserVerified] = useState(false);
@@ -161,14 +162,17 @@ export function MoviePage(props) {
                     </div>
                 )))
                 setIsQuizPresent(true)
-                console.log(response.data)
             }
 
         })
 
         getUserVerified(user, (window.location.href).split('?')[1]).then((response) => {
-            console.log(response.data)
             setIsUserVerified(response.data)
+        })
+
+        getMovieInWatchLater(user, (window.location.href).split('?')[1]).then((response) => {
+            console.log(response.data)
+            setIsInWatchLater(response.data)
         })
 
     }, []);
@@ -203,6 +207,7 @@ export function MoviePage(props) {
 
     function addMovieToWatchLater(event) {
         modifyWatchLater(user, {"action": "ADD", "movie_id": event.target.id}).then();
+        window.location.href = "/movie?" + event.target.id;
     }
 
     function nextCastPage(event) {
@@ -320,13 +325,14 @@ export function MoviePage(props) {
                                     </iframe> : ""}
                                 <div className="overview">{movieInfo.overview}</div>
                                 <div id="watchlater">
+                                    {isInWatchLater?<div className="button">Already in WatchLater</div> :
                                     <button id={movieInfo.id} className="watchlaterbutton"
-                                            onClick={addMovieToWatchLater}>Add to watchlater
-                                    </button>
+                                            onClick={addMovieToWatchLater}>Add to WatchLater
+                                    </button>}
                                 </div>
                             </div>
                         </div>
-                        <img alt="Verifiable" src={verifiable} height="50"/>
+                        {isQuizPresent?<img alt="Verifiable" src={verifiable} height="50"/>:<span />}
                         <div className="directors">
                             <div className="infoName">Director:</div>
                             <div className="infoValue">

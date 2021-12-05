@@ -184,3 +184,14 @@ export const getUserVerified= (authtoken, request) => {
         'data': request
     });
 }
+
+export const getMovieInWatchLater= (authtoken, request) => {
+    return axios({
+        'method': 'POST',
+        'url': `${process.env.hostUrl || 'http://localhost:8082'}/api/in_watchlater`,
+        'headers': {
+            'Authorization': 'Bearer' + authtoken
+        },
+        'data': request
+    });
+}

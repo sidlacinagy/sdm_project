@@ -66,6 +66,20 @@
         transition: transform 80ms ease-in;
     }
 
+    .button {
+        padding-top:2em;
+        border-radius: 20px;
+        border: 1px solid #6c6983;
+        background-color: #5d5c6c;
+        color: #FFFFFF;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 12px 45px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        transition: transform 80ms ease-in;
+    }
+
     button:active {
         transform: scale(0.95);
     }
