@@ -15,6 +15,9 @@ import {Helmet} from "react-helmet";
 import {useHistory} from "react-router-dom";
 import not_found from "../searchresult/not_found.png";
 import verified from "../verified.png";
+import verified_tick from "../verified_tick.png";
+import verifiable from "../verifiable.png";
+import tmdb_logo from "../tmdb.png";
 import {useSelector} from "react-redux";
 import {userToken} from "../../redux/UserSlice";
 import MenuBar from "../menubar/MenuBar";
@@ -101,9 +104,10 @@ export function MoviePage(props) {
                         <div className="movie_release_date" id={movie.id}
                              onClick={handleMovieClick}> {movie.release_date === null ? "" : movie.release_date.substring(0, 4)}</div>
                         <div id={movie.id} onClick={handleMovieClick} className="rating">{movie.ratings === -1 ? "-" : movie.ratings}</div>
-                        <div id={movie.id} onClick={handleMovieClick} className="verified-rating">{movie.verified_rating === -1 ? "-" : movie.verified_rating}</div>
-                        <div id={movie.id} onClick={handleMovieClick}
-                              className="tmdb-rating">{movie.vote_average === -1 ? "-" : movie.vote_average}</div>
+                        <div id={movie.id} onClick={handleMovieClick} className="verified-rating">
+                            <img alt="Verified_tick" src={verified_tick} height="30"/>{movie.verified_rating === -1 ? "-" : movie.verified_rating}</div>
+                        <div id={movie.id} onClick={handleMovieClick} className="tmdb-rating">
+                            <img alt="TMDB" src={tmdb_logo} height="30"/>{movie.vote_average === -1 ? "-" : movie.vote_average}</div>
                     </div>
                 </div>
 
@@ -133,6 +137,7 @@ export function MoviePage(props) {
                             isHalf={true}
                             activeColor="#ff6200"/>
                     </div>
+                    {review.verified===true?<img alt="verified" src={verified_tick} height="25"/>:<span />}
                     <div>{review.comment}</div>
                     <div>
                         <span>{review.key.nickname}</span>
@@ -320,9 +325,8 @@ export function MoviePage(props) {
                                     </button>
                                 </div>
                             </div>
-
                         </div>
-
+                        <img alt="Verifiable" src={verifiable} height="50"/>
                         <div className="directors">
                             <div className="infoName">Director:</div>
                             <div className="infoValue">
