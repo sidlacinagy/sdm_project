@@ -104,11 +104,20 @@ export function MoviePage(props) {
                         <div className="movie_title" id={movie.id} onClick={handleMovieClick}>{movie.title}</div>
                         <div className="movie_release_date" id={movie.id}
                              onClick={handleMovieClick}> {movie.release_date === null ? "" : movie.release_date.substring(0, 4)}</div>
-                        <div id={movie.id} onClick={handleMovieClick} className="rating">{movie.ratings === -1 ? "-" : movie.ratings}</div>
-                        <div id={movie.id} onClick={handleMovieClick} className="verified-rating">
-                            <img alt="Verified_tick" src={verified_tick} height="30"/>{movie.verified_rating === -1 ? "-" : movie.verified_rating}</div>
-                        <div id={movie.id} onClick={handleMovieClick} className="tmdb-rating">
-                            <img alt="TMDB" src={tmdb_logo} height="30"/>{movie.vote_average === -1 ? "-" : movie.vote_average}</div>
+                        <div className="ratings">
+                            <div id={movie.id} onClick={handleMovieClick}
+                                 className="rating">{movie.ratings === -1 ? "-" : movie.ratings}</div>
+                            <div id={movie.id} onClick={handleMovieClick} className="verified-rating">
+                                <div id="tickimg">
+                                    <img alt="Verified_tick" src={verified_tick}/>
+                                </div>
+                                {movie.verified_rating === -1 ? "-" : movie.verified_rating}</div>
+                            <div id={movie.id} onClick={handleMovieClick} className="tmdb-rating">
+                                <div id="tmdbimg">
+                                    <img alt="TMDB"
+                                         src={tmdb_logo}/>{movie.vote_average === -1 ? "-" : movie.vote_average}</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -128,8 +137,9 @@ export function MoviePage(props) {
                 }
             });
             setMovieReviews(response.data.map((review) => (
-                <li>
-                    <div>
+                <div className="review">
+                    <div className="reviewHeader">
+                    <div className="reviewStars">
                         <ReactStars
                             count={5}
                             value={review.rating}
@@ -138,27 +148,35 @@ export function MoviePage(props) {
                             isHalf={true}
                             activeColor="#ff6200"/>
                     </div>
-                    {review.verified===true?<img alt="verified" src={verified_tick} height="25"/>:<span />}
-                    <div>{review.comment}</div>
-                    <div>
-                        <span>{review.key.nickname}</span>
-                        <span>{review.reviewDate}</span>
+                    <div className="verifiedReview">
+                    {review.verified === true ? <img alt="verified" src={verified_tick} height="25"/> : <span/>}
                     </div>
-                </li>
+                    </div>
+                    <div className="reviewComment">{review.comment}</div>
+                    <div className="reviewMetaData">
+                        <span className="reviewNickName">{review.key.nickname}</span>
+                        <span className="reviewDate">{review.reviewDate}</span>
+                    </div>
+                </div>
             )));
         })
 
         getQuiz((window.location.href).split('?')[1]).then((response) => {
             if (response.data !== null) {
                 setQuiz(response.data.map((element) => (
-                    <div>
-                        <span>{element.question}</span>
+                    <div className="quizElement">
+                        <span className="question">{element.question}</span>
+                        <div className="answers">
                         {element.answers.map((answer) => (
-                            <label> {answer}
-                            <input type="radio" name={element.question} value={answer} id={answer} onChange={handleAnswerChange}/>
+                            <label className="answer">
+                                <input type="radio" name={element.question} value={answer} id={answer}
+                                       onChange={handleAnswerChange} className="quizInput"/>
+                                       <div className="quizDesign"></div>
+                                <div className="answerText">{answer}</div>
                             </label>
 
                         ))}
+                        </div>
                     </div>
                 )))
                 setIsQuizPresent(true)
@@ -255,8 +273,8 @@ export function MoviePage(props) {
     }
 
     function handleAnswerChange(event) {
-        console.log(event.target.name+"#"+event.target.value)
-        sendAnswer({element:event.target.name+"#"+event.target.value})
+        console.log(event.target.name + "#" + event.target.value)
+        sendAnswer({element: event.target.name + "#" + event.target.value})
     }
 
     function handleSubmitReview(event) {
@@ -265,8 +283,9 @@ export function MoviePage(props) {
             setMovieReviews(
                 [
                     ...movieReviews,
-                    <li>
-                        <div>
+                    <div className="review">
+                        <div className="reviewHeader">
+                        <div className="reviewStars">
                             <ReactStars
                                 count={5}
                                 value={response.data.rating}
@@ -275,19 +294,21 @@ export function MoviePage(props) {
                                 isHalf={true}
                                 activeColor="#ff6200"/>
                         </div>
-                        <div>{response.data.comment}</div>
-                        <div>
-                            <span>{response.data.key.nickname}</span>
-                            <span>{response.data.reviewDate}</span>
+                        <div className="reviewComment">{response.data.comment}</div>
                         </div>
-                    </li>
+                        <div className="reviewMetaData">
+                            <span className="reviewNickName">{response.data.key.nickname}</span>
+                            <span className="reviewDate">{response.data.reviewDate}</span>
+                        </div>
+                    </div>
                 ]
             );
         });
+
         hideReviewPopup();
     }
 
-    function handleSubmitQuiz(event){
+    function handleSubmitQuiz(event) {
         submitAnswers(user, (window.location.href).split('?')[1]).then((response) => {
             console.log(response.data)
         })
@@ -313,6 +334,9 @@ export function MoviePage(props) {
                     <MenuBar data={props}/>
                     <div className="form">
                         <h1 id="title">{movieInfo.title}</h1>
+                        <div id="verifiable">
+                        {isQuizPresent ? <img alt="Verifiable" src={verifiable} height="50"/> : <span/>}
+                        </div>
                         <div id="maininfo">
                             <div id="poster">
                                 <img alt={movieInfo.title + " poster"}
@@ -325,14 +349,14 @@ export function MoviePage(props) {
                                     </iframe> : ""}
                                 <div className="overview">{movieInfo.overview}</div>
                                 <div id="watchlater">
-                                    {isInWatchLater?<div className="button">Already in WatchLater</div> :
-                                    <button id={movieInfo.id} className="watchlaterbutton"
-                                            onClick={addMovieToWatchLater}>Add to WatchLater
-                                    </button>}
+                                    {isInWatchLater ? <div className="button">Already in WatchLater</div> :
+                                        <button id={movieInfo.id} className="watchlaterbutton"
+                                                onClick={addMovieToWatchLater}>Add to WatchLater
+                                        </button>}
                                 </div>
                             </div>
                         </div>
-                        {isQuizPresent?<img alt="Verifiable" src={verifiable} height="50"/>:<span />}
+
                         <div className="directors">
                             <div className="infoName">Director:</div>
                             <div className="infoValue">
@@ -410,64 +434,100 @@ export function MoviePage(props) {
                             </div>
 
                         </div>
-                        <table>
-                            <tr>
-                                <td>Verified Rating:</td>
-                                <td>
-                                    <span>{movieInfo.verified_rating === -1 ? "Be the first to leave a verified review" : movieInfo.verified_rating}</span>
-                                </td>
-                                <td>Ratings:</td>
-                                <td>
-                                    <span>{movieInfo.ratings === -1 ? "Be the first one to rate" : movieInfo.ratings}</span>
-                                </td>
-                                <td>TMDB Ratings:</td>
-                                <td>
-                                    <span>{movieInfo.vote_average === -1 ? "Be the first one to rate" : movieInfo.vote_average}</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                {!isReviewPresent ? <button onClick={createReviewPopup}>Write review</button> :
-                                    <button onClick={createReviewPopup}>Modify review</button>}
-                            </tr>
-                            <Modal visible={reviewVisible} width="400" height="300" effect="fadeInUp"
-                                   onClickAway={hideReviewPopup}>
-                                <div>
-                                    <h1>Write new review</h1>
-                                    {isQuizPresent ? (isUserVerified ? <img alt="You are already verified" src={verified} height="50" /> : <button onClick={createQuizPopup}>Verify your review</button>):
-                                        <span></span>}
 
-                                    <ReactStars
-                                        count={5}
-                                        onChange={ratingChanged}
-                                        size={24}
-                                        isHalf={true}
-                                        activeColor="#ff6200"/>
-                                    <input type="textarea"
-                                           name="comment"
-                                           placeholder={isReviewPresent ? userReview.comment : "Tell us your opinion..."}
-                                           onChange={handleCommentChange}/>
-                                    <button onClick={handleSubmitReview}>Send review</button>
-                                    <button onClick={hideReviewPopup}>Close</button>
+                        <div id="movieRating">
+                            <div id="mainRatings">
+                                <div className="mainRating">
+                                    <div className="ratingTitle">Verified Rating:</div>
+                                    <div
+                                        className="ratingValue">{movieInfo.verified_rating === -1 ? "Be the first to leave a verified review" : movieInfo.verified_rating}</div>
                                 </div>
-                            </Modal>
-                            <Modal visible={quizVisible} width="400" height="300" effect="fadeInUp"
+                                <div className="mainRating">
+                                    <div className="ratingTitle">Non-Verified Rating:</div>
+
+                                    <div
+                                        className="ratingValue">{movieInfo.ratings === -1 ? "Be the first one to rate" : movieInfo.ratings}</div>
+
+                                </div>
+                                <div className="mainRating">
+                                    <div className="ratingTitle">TMDB Ratings:</div>
+                                    <div
+                                        className="ratingValue">{movieInfo.vote_average === -1 ? "Be the first one to rate" : movieInfo.vote_average}</div>
+                                </div>
+                            </div>
+
+
+                            <div id="createReview">
+                                {!isReviewPresent ?
+                                    <button onClick={createReviewPopup} id="reviewButton">Write review</button> :
+                                    <button onClick={createReviewPopup} id="reviewButton">Modify review</button>}
+                            </div>
+                            <div id="popupReview">
+                                <Modal visible={reviewVisible} width="700" height="500" effect="fadeInUp"
+                                       onClickAway={hideReviewPopup}>
+
+                                    <h1>Write new review</h1>
+                                    <div id="verifySpace">
+                                        {isQuizPresent ? (isUserVerified ?
+                                            <img alt="You are already verified" src={verified} height="50"/> :
+                                            <button onClick={createQuizPopup}>Verify your review</button>) :
+                                            <span></span>}
+                                    </div>
+                                    <div id="ratingResult">
+                                        <div id="ratingStars">
+                                            <ReactStars
+                                                count={5}
+                                                onChange={ratingChanged}
+                                                size={24}
+                                                isHalf={true}
+                                                activeColor="#ff6200"/>
+                                        </div>
+                                        <textarea
+                                            name="comment"
+                                            placeholder={isReviewPresent ? userReview.comment : "Tell us your opinion..."}
+                                            onChange={handleCommentChange} id="ratingText" cols="40" rows="5"/>
+
+
+                                    </div>
+                                    <div id="verifyMenu">
+                                        <div className="verifyButton">
+                                            <button onClick={handleSubmitReview}>Send review</button>
+                                        </div>
+                                        <div className="verifyButton">
+                                            <button onClick={hideReviewPopup}>Close</button>
+                                        </div>
+                                    </div>
+
+
+                                </Modal>
+                            </div>
+                            <Modal visible={quizVisible} width="800" height="700" effect="fadeInUp"
                                    onClickAway={hideQuizPopup}>
                                 <form onSubmit={handleSubmitQuiz}>
-                                    <div>{quiz}</div>
-                                    <button type="submit">Done</button>
-                                    <button onClick={hideQuizPopup}>Close</button>
+
+                                    <div id="quiz">{quiz}</div>
+                                    <div id="quizButtons">
+                                        <div className="quizButton">
+                                            <button type="submit">Done</button>
+                                        </div>
+                                        <div className="quizButton">
+                                            <button onClick={hideQuizPopup}>Close</button>
+                                        </div>
+                                    </div>
+
                                 </form>
                             </Modal>
-                            <tr>
-                                <ul>
+
+                                <div id="reviews">
                                     {movieReviews}
-                                </ul>
-                            </tr>
-                        </table>
+                                </div>
+
+
+                        </div>
                     </div>
-                    <div className="dashboard-button">
-                        <div onClick={() => history.goBack()}>Back</div>
-                    </div>
+                     <div id="dashboard-button-div">
+                        <button onClick={() => history.goBack()} id="dashboard-button">Back</button>
+                     </div>
                 </div>
             </div>
 

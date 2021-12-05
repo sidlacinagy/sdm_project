@@ -7,8 +7,7 @@ import com.example.movie_management.movie.watchlater.WatchLaterService;
 import com.example.movie_management.review.Review;
 import com.example.movie_management.review.ReviewService;
 import com.example.movie_management.review.verification.VerifiedService;
-import com.example.movie_management.review.verification.quiz.MovieQuizService;
-import com.example.movie_management.review.verification.quiz.QuizElementDto;
+import com.example.movie_management.review.verification.quiz.*;
 import com.example.movie_management.search.SearchResult;
 import com.example.controllers.requests.ModifyWatchLaterRequest;
 import com.example.controllers.requests.RecommendationRequest;
@@ -144,6 +143,7 @@ public class MovieController {
 
     @PostMapping(path = "/get_quiz")
     public ResponseEntity<?> getQuizByMovie(@RequestBody String movieId) {
+
         if (movieId.charAt(movieId.length() - 1) == '=')
             movieId = movieId.substring(0, movieId.length() - 1);
         Optional<List<QuizElementDto>> movieQuiz = movieQuizService.getQuizElementsForMovie(Integer.parseInt(movieId));
